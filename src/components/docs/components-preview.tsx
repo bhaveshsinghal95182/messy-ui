@@ -209,13 +209,13 @@ const ComponentPreview = ({ component, className }: ComponentPreviewProps) => {
           )}
         </TabsContent>
 
-        {/* Code Panel */}
+        {/* Code Panel - Shows usage example */}
         <TabsContent value="code" className="m-0">
           <CodeBlock
-            code={component.code}
+            code={component.usageCode}
             language="tsx"
-            collapsible={component.code.split("\n").length > 30}
-            maxHeight="500px"
+            collapsible={false}
+            maxHeight="400px"
           />
         </TabsContent>
       </Tabs>

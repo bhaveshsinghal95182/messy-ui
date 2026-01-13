@@ -9,7 +9,7 @@ import {
 } from "@/config/components";
 import ComponentPreview from "@/components/docs/components-preview";
 import PropsTable from "@/components/docs/props-table";
-import InstallCommand from "@/components/docs/install-command";
+import InstallationSection from "@/components/docs/installation-section";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -144,10 +144,7 @@ export default async function ComponentPage({ params }: PageProps) {
       {/* Installation */}
       <section>
         <h2 className="text-xl font-semibold text-foreground mb-4">Installation</h2>
-        <p className="text-muted-foreground mb-4">
-          Install the required dependencies:
-        </p>
-        <InstallCommand packageName={component.installCommand} />
+        <InstallationSection component={component} />
       </section>
 
       <Separator />

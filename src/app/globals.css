@@ -3,7 +3,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -16,27 +16,36 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
+  
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
   --color-chart-2: var(--chart-2);
   --color-chart-1: var(--chart-1);
+  
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
+  
   --color-muted-foreground: var(--muted-foreground);
   --color-muted: var(--muted);
+  
   --color-secondary-foreground: var(--secondary-foreground);
   --color-secondary: var(--secondary);
+  
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
+  
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -44,6 +53,18 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from { height: 0; }
+    to { height: var(--radix-accordion-content-height); }
+  }
+  @keyframes accordion-up {
+    from { height: var(--radix-accordion-content-height); }
+    to { height: 0; }
+  }
 }
 
 :root {
@@ -115,6 +136,15 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+  
+  @media (width >= 1400px) {
+    max-width: 1400px;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -122,4 +152,56 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  /* Disable the default animation */
+  animation: none;
+  
+  /* Enable smooth blending */
+  mix-blend-mode: normal;
 }

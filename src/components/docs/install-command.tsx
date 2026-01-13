@@ -46,7 +46,7 @@ const InstallCommand = ({ packageName, className }: InstallCommandProps) => {
           return (
             <TabsContent key={pm.id} value={pm.id} className="m-0">
               <div className="flex items-center justify-between px-4 py-3 bg-card">
-                <code className="text-sm font-mono text-foreground">
+                <code className="text-sm font-mono text-foreground text-center">
                   {command}
                 </code>
                 <Button

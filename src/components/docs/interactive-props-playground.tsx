@@ -53,7 +53,7 @@ const InteractivePropsPlayground = ({
     // Number
     if (prop.type === "number") {
       const numValue = typeof value === "number" ? value : parseFloat(String(value)) || 0;
-      const isSmallRange = numValue <= 10;
+      const useSlider = prop.control === "slider";
       
       return (
         <div className="space-y-2">
@@ -63,14 +63,14 @@ const InteractivePropsPlayground = ({
             </Label>
             <span className="text-sm text-muted-foreground">{numValue}</span>
           </div>
-          {isSmallRange ? (
+          {useSlider ? (
             <Slider
               id={prop.name}
               value={[numValue]}
               onValueChange={([val]) => handleChange(prop.name, val)}
-              min={0}
-              max={Math.max(10, numValue * 2)}
-              step={0.1}
+              min={prop.min ?? 0}
+              max={prop.max ?? 100}
+              step={prop.step ?? 1}
               className="w-full"
             />
           ) : (

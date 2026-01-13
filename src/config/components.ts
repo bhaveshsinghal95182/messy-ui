@@ -5,6 +5,14 @@ export interface PropDefinition {
   type: string;
   default: string;
   description: string;
+  /** Explicitly specify the control type to avoid dynamic switching */
+  control?: "input" | "slider" | "switch" | "select";
+  /** Min value for slider controls */
+  min?: number;
+  /** Max value for slider controls */
+  max?: number;
+  /** Step value for slider controls */
+  step?: number;
 }
 
 export interface ComponentConfig {
@@ -40,12 +48,17 @@ export const components: ComponentConfig[] = [
         type: "number",
         default: "1234",
         description: "The target number to count to",
+        control: "input",
       },
       {
         name: "duration",
         type: "number",
         default: "2",
         description: "Animation duration in seconds",
+        control: "slider",
+        min: 0.1,
+        max: 10,
+        step: 0.1,
       },
       {
         name: "prefix",

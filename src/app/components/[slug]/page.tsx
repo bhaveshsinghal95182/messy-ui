@@ -1,9 +1,12 @@
-"use client";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { motion } from "motion/react";
+import { redirect } from "next/navigation";
 import { ArrowLeft, ExternalLink } from "lucide-react";
-import { getComponentBySlug, components } from "@/config/components";
+import {
+  getComponentBySlugOrAlias,
+  getAllSlugsAndAliases,
+  components,
+} from "@/config/components";
 import ComponentPreview from "@/components/docs/components-preview";
 import PropsTable from "@/components/docs/props-table";
 import InstallCommand from "@/components/docs/install-command";
@@ -11,16 +14,62 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
-const ComponentPage = () => {
-  const { slug } = useParams<{ slug: string }>();
-  const component = slug ? getComponentBySlug(slug) : undefined;
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+// Generate static params for all component slugs AND their aliases
+export async function generateStaticParams() {
+  const allSlugs = getAllSlugsAndAliases();
+  return allSlugs.map((slug) => ({ slug }));
+}
+
+// Generate dynamic SEO metadata for each component page
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const component = getComponentBySlugOrAlias(slug);
+
+  if (!component) {
+    return {
+      title: "Component Not Found",
+    };
+  }
+
+  // Check if this is an alias - if so, we'll redirect in the page component
+  const isAlias = component.slug !== slug;
+
+  return {
+    title: component.seoTitle,
+    description: component.seoDescription,
+    keywords: component.keywords,
+    alternates: {
+      canonical: `/components/${component.slug}`,
+    },
+    openGraph: {
+      title: component.seoTitle,
+      description: component.seoDescription,
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: component.seoTitle,
+      description: component.seoDescription,
+    },
+  };
+}
+
+export default async function ComponentPage({ params }: PageProps) {
+  const { slug } = await params;
+  const component = getComponentBySlugOrAlias(slug);
 
   if (!component) {
     return (
       <div className="text-center py-12">
-        <h1 className="text-2xl font-bold text-foreground mb-4">Component Not Found</h1>
+        <h1 className="text-2xl font-bold text-foreground mb-4">
+          Component Not Found
+        </h1>
         <p className="text-muted-foreground mb-6">
-          The component you're looking for doesn't exist.
+          The component you&apos;re looking for doesn&apos;t exist.
         </p>
         <Button asChild>
           <Link href="/">
@@ -32,10 +81,17 @@ const ComponentPage = () => {
     );
   }
 
+  // Redirect aliases to canonical URL for SEO
+  if (component.slug !== slug) {
+    redirect(`/components/${component.slug}`);
+  }
+
   // Get related components from same category
   const relatedComponents = components
     .filter((c) => c.category === component.category && c.slug !== component.slug)
     .slice(0, 3);
+
+  const Component = component.component;
 
   return (
     <div className="space-y-8">
@@ -67,6 +123,14 @@ const ComponentPage = () => {
         <p className="text-lg text-muted-foreground max-w-3xl">
           {component.description}
         </p>
+        {/* SEO Keywords as tags */}
+        <div className="flex flex-wrap gap-1.5">
+          {component.keywords.slice(0, 5).map((keyword) => (
+            <Badge key={keyword} variant="outline" className="text-xs">
+              {keyword}
+            </Badge>
+          ))}
+        </div>
       </div>
 
       {/* Preview */}
@@ -121,6 +185,4 @@ const ComponentPage = () => {
       )}
     </div>
   );
-};
-
-export default ComponentPage;
+}

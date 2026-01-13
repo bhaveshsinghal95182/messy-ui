@@ -1,6 +1,5 @@
-"use client";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { motion } from "motion/react";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { components, categories } from "@/config/components";
 import { Badge } from "@/components/ui/badge";
@@ -12,19 +11,46 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-const Page = () => {
+// Static SEO metadata for the home page
+export const metadata: Metadata = {
+  title: "Bhavesh's Component Gallery - Beautiful React Components",
+  description:
+    "A collection of animated, accessible React components built with GSAP and Framer Motion. Animated counters, odometer components, number tickers, and more. Copy the code and make it yours.",
+  keywords: [
+    "react components",
+    "animated components",
+    "animated counter",
+    "odometer counter",
+    "number counter",
+    "gsap animation",
+    "framer motion",
+    "ui library",
+    "component gallery",
+    "react ui",
+    "tailwind components",
+  ],
+  openGraph: {
+    title: "Bhavesh's Component Gallery - Beautiful React Components",
+    description:
+      "A collection of animated, accessible React components built with GSAP and Framer Motion.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Bhavesh's Component Gallery",
+    description:
+      "A collection of animated, accessible React components built with GSAP and Framer Motion.",
+  },
+};
+
+export default function Page() {
   return (
     <div className="space-y-12">
       {/* Hero */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="text-center space-y-4"
-      >
+      <div className="text-center space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
           <Sparkles className="w-4 h-4" />
-          Bhavesh's Component Gallery
+          Bhavesh&apos;s Component Gallery
         </div>
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
           Beautiful React Components
@@ -33,7 +59,7 @@ const Page = () => {
           A collection of animated, accessible components built with React,
           GSAP, and Framer Motion. Copy the code and make it yours.
         </p>
-      </motion.div>
+      </div>
 
       {/* Categories & Components */}
       {categories.map((category, categoryIndex) => {
@@ -42,12 +68,10 @@ const Page = () => {
         );
 
         return (
-          <motion.section
+          <section
             key={category}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: categoryIndex * 0.1 }}
-            className="space-y-4"
+            className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500"
+            style={{ animationDelay: `${categoryIndex * 100}ms` }}
           >
             <div className="flex items-center gap-3">
               <h2 className="text-2xl font-semibold text-foreground">
@@ -58,58 +82,50 @@ const Page = () => {
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {categoryComponents.map((component, index) => (
-                <motion.div
+                <Link
                   key={component.slug}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  href={`/components/${component.slug}`}
+                  className="animate-in fade-in zoom-in-95 duration-300"
+                  style={{ animationDelay: `${index * 50}ms` }}
                 >
-                  <Link href={`/components/${component.slug}`}>
-                    <Card className="h-full group hover:border-primary/50 hover:shadow-lg transition-all duration-300">
-                      <CardHeader className="pb-3">
-                        <div className="flex items-start justify-between">
-                          <CardTitle className="text-lg group-hover:text-primary transition-colors">
-                            {component.name}
-                          </CardTitle>
-                          <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                        </div>
-                        <CardDescription className="line-clamp-2">
-                          {component.description}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="flex flex-wrap gap-1.5">
-                          {component.dependencies.map((dep) => (
-                            <Badge
-                              key={dep}
-                              variant="outline"
-                              className="text-xs"
-                            >
-                              {dep}
-                            </Badge>
-                          ))}
-                          <Badge
-                            variant={
-                              component.sandbox === "iframe"
-                                ? "default"
-                                : "secondary"
-                            }
-                            className="text-xs"
-                          >
-                            {component.sandbox}
+                  <Card className="h-full group hover:border-primary/50 hover:shadow-lg transition-all duration-300">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start justify-between">
+                        <CardTitle className="text-lg group-hover:text-primary transition-colors">
+                          {component.name}
+                        </CardTitle>
+                        <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                      </div>
+                      <CardDescription className="line-clamp-2">
+                        {component.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex flex-wrap gap-1.5">
+                        {component.dependencies.map((dep) => (
+                          <Badge key={dep} variant="outline" className="text-xs">
+                            {dep}
                           </Badge>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                </motion.div>
+                        ))}
+                        <Badge
+                          variant={
+                            component.sandbox === "iframe"
+                              ? "default"
+                              : "secondary"
+                          }
+                          className="text-xs"
+                        >
+                          {component.sandbox}
+                        </Badge>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
               ))}
             </div>
-          </motion.section>
+          </section>
         );
       })}
     </div>
   );
-};
-
-export default Page;
+}

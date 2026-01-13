@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "bhavesh-ui",
+  "homepage": "https://bhavesh-ui.vercel.app",
+  "items": [
+    {
+      "name": "animated-counter",
+      "type": "registry:component",
+      "title": "Animated Counter",
+      "description": "A number counter with odometer-style digit rotation animation using GSAP. Perfect for statistics, metrics, and dashboard displays.",
+      "dependencies": ["gsap"],
+      "files": [
+        {
+          "path": "registry/new-york/animated-counter/animated-counter.tsx",
+          "type": "registry:component"
+        }
+      ]
+    }
+  ]
+}

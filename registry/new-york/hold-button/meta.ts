@@ -225,7 +225,7 @@ const HoldButton = ({
       {/* Shimmer effect during hold */}
       {isHolding && (
         <div
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"
+          className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent animate-shimmer"
           style={{
             backgroundSize: "200% 100%",
             animation: "shimmer 1s infinite linear",

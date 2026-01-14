@@ -13,6 +13,7 @@ import InstallationSection from "@/components/docs/installation-section";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import AnimatedPageContent from "./animated-content";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -91,95 +92,10 @@ export default async function ComponentPage({ params }: PageProps) {
     .filter((c) => c.category === component.category && c.slug !== component.slug)
     .slice(0, 3);
 
-  const Component = component.component;
-
   return (
-    <div className="space-y-8">
-      {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <Link href="/" className="hover:text-foreground transition-colors">
-          Components
-        </Link>
-        <span>/</span>
-        <Link
-          href={`/?category=${component.category}`}
-          className="hover:text-foreground transition-colors"
-        >
-          {component.category}
-        </Link>
-        <span>/</span>
-        <span className="text-foreground">{component.name}</span>
-      </div>
-
-      {/* Header */}
-      <div className="space-y-4">
-        <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-3xl font-bold text-foreground">{component.name}</h1>
-          <Badge variant="outline">{component.category}</Badge>
-          <Badge variant={component.sandbox === "iframe" ? "default" : "secondary"}>
-            {component.sandbox} sandbox
-          </Badge>
-        </div>
-        <p className="text-lg text-muted-foreground max-w-3xl">
-          {component.description}
-        </p>
-        {/* SEO Keywords as tags */}
-        <div className="flex flex-wrap gap-1.5">
-          {component.keywords.slice(0, 5).map((keyword) => (
-            <Badge key={keyword} variant="outline" className="text-xs">
-              {keyword}
-            </Badge>
-          ))}
-        </div>
-      </div>
-
-      {/* Preview */}
-      <section>
-        <h2 className="text-xl font-semibold text-foreground mb-4">Preview</h2>
-        <ComponentPreview component={component} />
-      </section>
-
-      <Separator />
-
-      {/* Installation */}
-      <section>
-        <h2 className="text-xl font-semibold text-foreground mb-4">Installation</h2>
-        <InstallationSection component={component} />
-      </section>
-
-      <Separator />
-
-      {/* Props */}
-      <section>
-        <h2 className="text-xl font-semibold text-foreground mb-4">Props</h2>
-        <PropsTable props={component.props} />
-      </section>
-
-      {/* Related Components */}
-      {relatedComponents.length > 0 && (
-        <>
-          <Separator />
-          <section>
-            <h2 className="text-xl font-semibold text-foreground mb-4">
-              Related Components
-            </h2>
-            <div className="grid gap-3 sm:grid-cols-3">
-              {relatedComponents.map((related) => (
-                <Link
-                  key={related.slug}
-                  href={`/components/${related.slug}`}
-                  className="flex items-center justify-between p-4 rounded-lg border border-border hover:border-primary/50 hover:bg-muted/50 transition-all group"
-                >
-                  <span className="font-medium text-foreground group-hover:text-primary transition-colors">
-                    {related.name}
-                  </span>
-                  <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                </Link>
-              ))}
-            </div>
-          </section>
-        </>
-      )}
-    </div>
+    <AnimatedPageContent
+      component={component}
+      relatedComponents={relatedComponents}
+    />
   );
 }

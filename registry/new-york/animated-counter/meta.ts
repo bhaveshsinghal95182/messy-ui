@@ -133,7 +133,7 @@ const meta: ComponentMeta = {
   category: "Animations",
   description:
     "A number counter that animates from 0 to the target value using GSAP. Great for statistics and metrics.",
-  seoTitle: "Animated Counter - React Component | Bhavesh's UI Library",
+  seoTitle: "Animated Counter - React Component | messy-ui",
   seoDescription:
     "A beautiful animated number counter with odometer-style digit rotation using GSAP. Perfect for statistics, metrics, dashboards, and landing page hero sections. Copy the code and use in your React project.",
   keywords: [
@@ -152,7 +152,7 @@ const meta: ComponentMeta = {
   ],
   aliases: ["odometer-counter", "number-counter", "digit-counter"],
   sandbox: "inline",
-  registryUrl: "https://bhavesh-ui.vercel.app/r/animated-counter.json",
+  registryUrl: "https://messyui.dev/r/animated-counter.json",
   dependencies: ["gsap"],
   notes: [
     { type: "tip", message: "For best results, use tabular-nums font feature on the counter container." },

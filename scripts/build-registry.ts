@@ -16,7 +16,7 @@ import * as path from "path";
 const REGISTRY_DIR = path.resolve(__dirname, "../registry/new-york");
 const PUBLIC_R_DIR = path.resolve(__dirname, "../public/r");
 const REGISTRY_JSON_PATH = path.resolve(__dirname, "../registry.json");
-const BASE_URL = "https://bhavesh-ui.vercel.app";
+const BASE_URL = "https://messyui.dev";
 
 interface RegistryFile {
   path: string;
@@ -175,7 +175,7 @@ async function main() {
   // Write registry.json index
   const registryIndex: RegistryIndex = {
     $schema: "https://ui.shadcn.com/schema/registry.json",
-    name: "bhavesh-ui",
+    name: "messy-ui",
     homepage: BASE_URL,
     items: registryItems.map(({ $schema, ...item }) => item),
   };

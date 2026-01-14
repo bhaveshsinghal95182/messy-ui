@@ -1,36 +1,130 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# messy-ui
+
+A collection of animated, accessible React components built with GSAP and Framer Motion. Copy the code and make it yours.
+
+## Overview
+
+messy-ui is a component library featuring beautifully animated UI components designed for modern React applications. Each component is built with accessibility in mind and can be easily customized to fit your project's design system.
+
+## Features
+
+- Animated components using GSAP and Framer Motion
+- Built with React 19 and Next.js 16
+- Styled with Tailwind CSS v4
+- Dark mode support via next-themes
+- shadcn/ui compatible registry
+- TypeScript support
+- Accessible by default
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- pnpm (recommended) or npm
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# Clone the repository
+git clone https://github.com/your-username/messy-ui.git
+cd messy-ui
+
+# Install dependencies
+pnpm install
+
+# Start the development server
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The development server will start at `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Using Components
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Via shadcn CLI (Recommended)
 
-## Learn More
+You can add components directly to your project using the shadcn CLI:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npx shadcn@latest add https://messyui.dev/r/animated-counter.json
+npx shadcn@latest add https://messyui.dev/r/hold-button.json
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Manual Installation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Visit the component documentation page
+2. Copy the component code from the "Code" tab
+3. Install any required dependencies
+4. Add the component to your project
 
-## Deploy on Vercel
+## Available Components
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Animations
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Animated Counter** - A number counter with odometer-style digit rotation animation using GSAP. Perfect for statistics, metrics, and dashboard displays.
+
+### Buttons
+
+- **Hold Button** - A confirmation button that fills up while being held, perfect for destructive or irreversible actions. Prevents accidental clicks by requiring a sustained press.
+
+## Project Structure
+
+```
+messy-ui/
+├── public/
+│   └── r/                    # Generated registry JSON files
+├── registry/
+│   └── new-york/             # Component source files
+│       ├── animated-counter/
+│       └── hold-button/
+├── scripts/
+│   └── build-registry.ts     # Registry build script
+├── src/
+│   ├── app/                  # Next.js app router pages
+│   ├── components/           # UI and layout components
+│   ├── config/               # Component configuration
+│   └── lib/                  # Utility functions
+└── registry.json             # shadcn registry index
+```
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Start the development server |
+| `pnpm build` | Build for production |
+| `pnpm start` | Start the production server |
+| `pnpm lint` | Run ESLint |
+| `pnpm registry:build` | Build the shadcn registry files |
+
+## Building the Registry
+
+To regenerate the component registry after adding or modifying components:
+
+```bash
+pnpm registry:build
+```
+
+This will:
+1. Read all component directories in `registry/new-york/`
+2. Generate individual JSON files in `public/r/`
+3. Update the `registry.json` index file
+
+## Tech Stack
+
+- [Next.js 16](https://nextjs.org/) - React framework
+- [React 19](https://react.dev/) - UI library
+- [Tailwind CSS v4](https://tailwindcss.com/) - Styling
+- [GSAP](https://greensock.com/gsap/) - Animation library
+- [Framer Motion](https://www.framer.com/motion/) - Animation library
+- [shadcn/ui](https://ui.shadcn.com/) - Component primitives
+- [Radix UI](https://www.radix-ui.com/) - Accessible primitives
+- [TypeScript](https://www.typescriptlang.org/) - Type safety
+
+## Contributing
+
+Contributions are welcome. Please open an issue first to discuss what you would like to change.
+
+## License
+
+MIT

@@ -13,7 +13,7 @@ import {
 
 // Static SEO metadata for the home page
 export const metadata: Metadata = {
-  title: "Bhavesh's Component Gallery - Beautiful React Components",
+  title: "messy-ui - Beautiful React Components",
   description:
     "A collection of animated, accessible React components built with GSAP and Framer Motion. Animated counters, odometer components, number tickers, and more. Copy the code and make it yours.",
   keywords: [
@@ -24,20 +24,22 @@ export const metadata: Metadata = {
     "number counter",
     "gsap animation",
     "framer motion",
-    "ui library",
+    "messy-ui",
     "component gallery",
     "react ui",
     "tailwind components",
+    "gsap react components",
+    "framer motion react components"
   ],
   openGraph: {
-    title: "Bhavesh's Component Gallery - Beautiful React Components",
+    title: "messy-ui - Beautiful React Components",
     description:
       "A collection of animated, accessible React components built with GSAP and Framer Motion.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Bhavesh's Component Gallery",
+    title: "messy-ui",
     description:
       "A collection of animated, accessible React components built with GSAP and Framer Motion.",
   },
@@ -50,10 +52,10 @@ export default function Page() {
       <div className="text-center space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
           <Sparkles className="w-4 h-4" />
-          Bhavesh&apos;s Component Gallery
+          messy-ui
         </div>
-        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
-          Beautiful React Components
+        <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-foreground">
+          Beautifully <span className="italic">Messy</span> React Components
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
           A collection of animated, accessible components built with React,

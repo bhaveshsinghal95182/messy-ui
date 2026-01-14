@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
-  "name": "bhavesh-ui",
-  "homepage": "https://bhavesh-ui.vercel.app",
+  "name": "messy-ui",
+  "homepage": "https://messyui.dev",
   "items": [
     {
       "name": "animated-counter",

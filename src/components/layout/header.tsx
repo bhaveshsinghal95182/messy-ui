@@ -60,7 +60,7 @@ const Header = ({ onMenuToggle, isSidebarOpen }: HeaderProps) => {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 font-semibold">
             <Layers className="h-5 w-5 text-primary" />
-            <span className="hidden sm:inline-block">Component Gallery</span>
+            <span className="hidden sm:inline-block">messy-ui</span>
           </Link>
 
           {/* Spacer */}

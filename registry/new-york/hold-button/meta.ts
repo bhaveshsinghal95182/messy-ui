@@ -286,7 +286,7 @@ const meta: ComponentMeta = {
   category: "Buttons",
   description:
     "A confirmation button that fills up while being held, perfect for destructive or irreversible actions. Prevents accidental clicks by requiring a sustained press.",
-  seoTitle: "Hold Button - React Component | Bhavesh's UI Library",
+  seoTitle: "Hold Button - React Component | messy-ui",
   seoDescription:
     "A hold-to-confirm button component with smooth fill animation for destructive actions. Prevents accidental clicks by requiring users to hold the button. Includes multiple variants, sizes, and visual feedback. Copy the code and use in your React project.",
   keywords: [
@@ -305,7 +305,7 @@ const meta: ComponentMeta = {
   ],
   aliases: ["hold-to-confirm", "press-hold-button", "destructive-button"],
   sandbox: "inline",
-  registryUrl: "https://bhavesh-ui.vercel.app/r/hold-button.json",
+  registryUrl: "https://messyui.dev/r/hold-button.json",
   dependencies: [],
   notes: [
     { type: "tip", message: "Add the shimmer keyframe animation to your globals.css for the shimmer effect during hold." },

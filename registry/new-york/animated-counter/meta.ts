@@ -155,7 +155,11 @@ const meta: ComponentMeta = {
   registryUrl: "https://messyui.dev/r/animated-counter.json",
   dependencies: ["gsap"],
   notes: [
-    { type: "tip", message: "For best results, use tabular-nums font feature on the counter container." },
+    {
+      type: "tip",
+      message:
+        "For best results, use tabular-nums font feature on the counter container.",
+    },
     { type: "info", message: "This component requires GSAP 3.x or higher." },
   ],
   props: [

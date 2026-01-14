@@ -1,33 +1,49 @@
+import { lazy } from "react";
 import { ComponentConfig, ComponentMeta } from "./types";
 
 // Import registry components with their co-located metadata
 import {
-  AnimatedCounter,
   meta as animatedCounterMeta,
   usageCode as animatedCounterUsage,
   componentCode as animatedCounterCode,
 } from "@/registry/new-york/animated-counter";
 
 import {
-  HoldButton,
   meta as holdButtonMeta,
   usageCode as holdButtonUsage,
   componentCode as holdButtonCode,
 } from "@/registry/new-york/hold-button";
 
 import {
-  ThemeToggle,
   meta as themeToggleMeta,
   usageCode as themeToggleUsage,
   componentCode as themeToggleCode,
 } from "@/registry/new-york/theme-toggle";
+
+const AnimatedCounter = lazy(() =>
+  import("@/registry/new-york/animated-counter").then((mod) => ({
+    default: mod.AnimatedCounter,
+  }))
+);
+
+const HoldButton = lazy(() =>
+  import("@/registry/new-york/hold-button").then((mod) => ({
+    default: mod.HoldButton,
+  }))
+);
+
+const ThemeToggle = lazy(() =>
+  import("@/registry/new-york/theme-toggle").then((mod) => ({
+    default: mod.ThemeToggle,
+  }))
+);
 
 /**
  * Build full ComponentConfig from co-located metadata and code.
  */
 function buildComponentConfig(
   meta: ComponentMeta,
-  component: React.ComponentType,
+  component: React.ComponentType | React.LazyExoticComponent<any>,
   usageCode: string,
   componentCode: string
 ): ComponentConfig {

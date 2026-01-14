@@ -3,10 +3,11 @@
 import { components } from "@/config/components";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { ArrowRight, Sparkles } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight, Sparkles, Image as ImageIcon } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Badge } from "@/components/ui/badge";
 
 // Animation variants
 const containerVariants = {
@@ -35,7 +36,7 @@ const cardVariants = {
 export default function ComponentsPage() {
   return (
     <div className="min-h-screen pb-20">
-      {/* Hero Section */}
+      {/* Hero Section remains same */}
       <section className="relative py-16 px-6 overflow-hidden">
         {/* Gradient background orbs */}
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-linear-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl -z-10" />
@@ -85,6 +86,7 @@ interface ComponentCardProps {
 
 function ComponentCard({ component }: ComponentCardProps) {
   const Component = component.component;
+  const showLivePreview = component.sandbox === "inline";
 
   return (
     <motion.div variants={cardVariants}>
@@ -105,12 +107,55 @@ function ComponentCard({ component }: ComponentCardProps) {
             {/* Hover glow effect */}
             <div className="absolute inset-0 bg-linear-to-t from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-            {/* Component Preview */}
-            <Suspense fallback={<Skeleton className="w-32 h-12 rounded-lg" />}>
-              <div className="relative z-10 transform group-hover:scale-105 transition-transform duration-300">
-                <Component />
-              </div>
-            </Suspense>
+            {/* Component Preview or Thumbnail */}
+            <div className="relative z-10 w-full h-full transform group-hover:scale-105 transition-transform duration-300">
+              {showLivePreview ? (
+                <div className="flex px-8 items-center justify-center w-full h-full">
+                  <Suspense
+                    fallback={<Skeleton className="w-full h-12 rounded-lg" />}
+                  >
+                    <Component />
+                  </Suspense>
+                </div>
+              ) : component.thumbnailUrl ? (
+                typeof component.thumbnailUrl === "string" ? (
+                  // Single image for both themes
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={component.thumbnailUrl}
+                    alt={component.name}
+                    className="w-full h-full object-cover rounded-md shadow-sm"
+                  />
+                ) : (
+                  // Separate images for light/dark themes
+                  <>
+                    {/* Light Mode Image - Hidden in Dark Mode */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={component.thumbnailUrl.light}
+                      alt={`${component.name} Light`}
+                      className="w-full h-full object-cover rounded-md shadow-sm dark:hidden"
+                    />
+                    {/* Dark Mode Image - Hidden in Light Mode */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={component.thumbnailUrl.dark}
+                      alt={`${component.name} Dark`}
+                      className="w-full h-full object-cover rounded-md shadow-sm hidden dark:block"
+                    />
+                  </>
+                )
+              ) : (
+                <div className="flex flex-col items-center justify-center h-full text-muted-foreground/50 group-hover:text-primary/70 transition-colors">
+                  <div className="w-16 h-16 rounded-xl bg-background/50 border-2 border-dashed border-current flex items-center justify-center mb-3">
+                    <ImageIcon className="w-8 h-8" />
+                  </div>
+                  <span className="text-xs font-medium uppercase tracking-wider">
+                    Preview
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Content Area */}

@@ -99,6 +99,12 @@ export interface ComponentMeta {
   sandbox: "inline" | "iframe";
   /** Shadcn CLI registry URL for this component */
   registryUrl: string;
+  /**
+   * Optional thumbnail URL for the component gallery
+   * If not provided, a fallback pattern will be used
+   * Can be a single string (used for both) or an object with light/dark variants
+   */
+  thumbnailUrl?: string | { light: string; dark: string };
   props: PropDefinition[];
   
   /** 
@@ -133,7 +139,7 @@ export interface ComponentMeta {
  */
 export interface ComponentConfig extends ComponentMeta {
   /** React component for preview rendering */
-  component: ComponentType;
+  component: ComponentType | React.LazyExoticComponent<any>;
   /** Short usage example code shown in the preview Code tab */
   usageCode: string;
   /** 

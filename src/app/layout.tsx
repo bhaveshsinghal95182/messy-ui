@@ -18,6 +18,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "messy-ui - Beautiful React Components",
   description: "A collection of animated, accessible React components built with GSAP and Framer Motion.",
+  icons: {
+    icon: "/logo.svg",
+  },
 };
 
 export const instrumentSerif = Instrument_Serif({

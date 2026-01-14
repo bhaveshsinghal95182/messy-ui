@@ -15,6 +15,13 @@ import {
   componentCode as holdButtonCode,
 } from "@/registry/new-york/hold-button";
 
+import {
+  ThemeToggle,
+  meta as themeToggleMeta,
+  usageCode as themeToggleUsage,
+  componentCode as themeToggleCode,
+} from "@/registry/new-york/theme-toggle";
+
 /**
  * Build full ComponentConfig from co-located metadata and code.
  */
@@ -45,6 +52,12 @@ export const components: ComponentConfig[] = [
     HoldButton,
     holdButtonUsage,
     holdButtonCode
+  ),
+  buildComponentConfig(
+    themeToggleMeta,
+    ThemeToggle,
+    themeToggleUsage,
+    themeToggleCode
   ),
 ];
 

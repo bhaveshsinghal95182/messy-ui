@@ -38,6 +38,30 @@
           "background-size": "200% 100%"
         }
       }
+    },
+    {
+      "name": "theme-toggle",
+      "type": "registry:component",
+      "title": "Theme Toggle",
+      "description": "A theme toggle button with clip-path view transition animation for smooth dark/light mode switching.",
+      "dependencies": ["next-themes"],
+      "registryDependencies": ["https://ui.shadcn.com/r/styles/new-york/lib/utils.json"],
+      "files": [
+        {
+          "path": "registry/new-york/theme-toggle/theme-toggle.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/new-york/theme-toggle/theme-toggle.css",
+          "type": "registry:style"
+        }
+      ],
+      "css": {
+        "::view-transition-old(root), ::view-transition-new(root)": {
+          "animation": "none",
+          "mix-blend-mode": "normal"
+        }
+      }
     }
   ]
 }

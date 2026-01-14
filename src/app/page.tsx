@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
-import { components, categories } from "@/config/components";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { components } from "@/config/components";
 
 // Static SEO metadata for the home page
 export const metadata: Metadata = {
@@ -29,7 +23,7 @@ export const metadata: Metadata = {
     "react ui",
     "tailwind components",
     "gsap react components",
-    "framer motion react components"
+    "framer motion react components",
   ],
   openGraph: {
     title: "messy-ui - Beautiful React Components",
@@ -55,7 +49,9 @@ export default function Page() {
           messy-ui
         </div>
         <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-foreground">
-          Beautifully <span className="italic">Messy</span> React Components
+          Beautifully{" "}
+          <span className="italic font-serif font-medium">Messy</span> React
+          Components
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
           A collection of animated, accessible components built with React,
@@ -63,71 +59,21 @@ export default function Page() {
         </p>
       </div>
 
-      {/* Categories & Components */}
-      {categories.map((category, categoryIndex) => {
-        const categoryComponents = components.filter(
-          (c) => c.category === category
-        );
+      <div className="flex items-center justify-center w-full">
+        <Link href="/components">
+          <Button className="w-full max-w-xs font-semibold text-lg font-sans cursor-pointer">
+            Components
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </Link>
+      </div>
 
-        return (
-          <section
-            key={category}
-            className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500"
-            style={{ animationDelay: `${categoryIndex * 100}ms` }}
-          >
-            <div className="flex items-center gap-3">
-              <h2 className="text-2xl font-semibold text-foreground">
-                {category}
-              </h2>
-              <Badge variant="secondary">{categoryComponents.length}</Badge>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {categoryComponents.map((component, index) => (
-                <Link
-                  key={component.slug}
-                  href={`/components/${component.slug}`}
-                  className="animate-in fade-in zoom-in-95 duration-300"
-                  style={{ animationDelay: `${index * 50}ms` }}
-                >
-                  <Card className="h-full group hover:border-primary/50 hover:shadow-lg transition-all duration-300">
-                    <CardHeader className="pb-3">
-                      <div className="flex items-start justify-between">
-                        <CardTitle className="text-lg group-hover:text-primary transition-colors">
-                          {component.name}
-                        </CardTitle>
-                        <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                      </div>
-                      <CardDescription className="line-clamp-2">
-                        {component.description}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex flex-wrap gap-1.5">
-                        {component.dependencies.map((dep) => (
-                          <Badge key={dep} variant="outline" className="text-xs">
-                            {dep}
-                          </Badge>
-                        ))}
-                        <Badge
-                          variant={
-                            component.sandbox === "iframe"
-                              ? "default"
-                              : "secondary"
-                          }
-                          className="text-xs"
-                        >
-                          {component.sandbox}
-                        </Badge>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
-            </div>
-          </section>
-        );
-      })}
+      <Card>
+        <CardHeader>Total Components</CardHeader>
+        <CardContent>
+          <p className="text-2xl font-semibold">{components.length}</p>
+        </CardContent>
+      </Card>
     </div>
   );
 }

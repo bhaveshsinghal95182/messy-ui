@@ -26,7 +26,7 @@ const CodeBlock = ({
   maxHeight = "400px",
 }: CodeBlockProps) => {
   const [copied, setCopied] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(collapsible);
+  const [isExpanded, setIsExpanded] = useState(true);
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
 

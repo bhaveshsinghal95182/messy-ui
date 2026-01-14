@@ -214,7 +214,7 @@ const ComponentPreview = ({ component, className }: ComponentPreviewProps) => {
           <CodeBlock
             code={component.usageCode}
             language="tsx"
-            collapsible={false}
+            collapsible={true}
             maxHeight="400px"
           />
         </TabsContent>

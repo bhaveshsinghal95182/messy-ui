@@ -50,7 +50,7 @@ export default function Page() {
         </div>
         <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-foreground">
           Beautifully{" "}
-          <span className="italic font-serif font-medium">Messy</span> React
+          <span className="italic font-serif tracking-tight">Messy</span> React
           Components
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">

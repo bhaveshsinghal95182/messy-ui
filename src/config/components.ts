@@ -8,6 +8,13 @@ import {
   componentCode as animatedCounterCode,
 } from "@/registry/new-york/animated-counter";
 
+import {
+  HoldButton,
+  meta as holdButtonMeta,
+  usageCode as holdButtonUsage,
+  componentCode as holdButtonCode,
+} from "@/registry/new-york/hold-button";
+
 /**
  * Build full ComponentConfig from co-located metadata and code.
  */
@@ -32,6 +39,12 @@ export const components: ComponentConfig[] = [
     AnimatedCounter,
     animatedCounterUsage,
     animatedCounterCode
+  ),
+  buildComponentConfig(
+    holdButtonMeta,
+    HoldButton,
+    holdButtonUsage,
+    holdButtonCode
   ),
 ];
 

@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { components } from "@/config/components";
+import { Logo3D } from "@/components/logo-3d";
 
 // Static SEO metadata for the home page
 export const metadata: Metadata = {
@@ -41,39 +40,39 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <div className="space-y-12">
-      {/* Hero */}
-      <div className="text-center space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
-          <Sparkles className="w-4 h-4" />
-          messy-ui
+    <div className="min-h-[calc(100vh-200px)] flex items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center w-full">
+        {/* Left side - Content */}
+        <div className="space-y-6 animate-in fade-in slide-in-from-left-4 duration-500 text-center lg:text-left">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
+            <Sparkles className="w-4 h-4" />
+            Messy but beautiful
+          </div>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-foreground">
+            Beautifully{" "}
+            <span className="italic font-serif tracking-tight">Messy</span>{" "}
+            <br className="hidden lg:block" />
+            React Components
+          </h1>
+          <p className="text-md text-muted-foreground max-w-xl">
+            A collection of animated, accessible components built with React,
+            GSAP, and Framer Motion. Copy the code and make it yours.
+          </p>
+          <div className="flex justify-center lg:justify-start">
+            <Link href="/components">
+              <Button className="font-semibold text-lg font-sans cursor-pointer px-8">
+                Browse Components
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
-        <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-foreground">
-          Beautifully{" "}
-          <span className="italic font-serif tracking-tight">Messy</span> React
-          Components
-        </h1>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          A collection of animated, accessible components built with React,
-          GSAP, and Framer Motion. Copy the code and make it yours.
-        </p>
-      </div>
 
-      <div className="flex items-center justify-center w-full">
-        <Link href="/components">
-          <Button className="w-full max-w-xs font-semibold text-lg font-sans cursor-pointer">
-            Components
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </Link>
+        {/* Right side - 3D Logo */}
+        <div className="animate-in fade-in slide-in-from-right-4 duration-700 delay-200">
+          <Logo3D />
+        </div>
       </div>
-
-      <Card>
-        <CardHeader>Total Components</CardHeader>
-        <CardContent>
-          <p className="text-2xl font-semibold">{components.length}</p>
-        </CardContent>
-      </Card>
     </div>
   );
 }

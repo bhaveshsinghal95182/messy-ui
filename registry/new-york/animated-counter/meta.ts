@@ -154,7 +154,10 @@ const meta: ComponentMeta = {
   sandbox: "inline",
   registryUrl: "https://bhavesh-ui.vercel.app/r/animated-counter.json",
   dependencies: ["gsap"],
-  installCommand: "gsap",
+  notes: [
+    { type: "tip", message: "For best results, use tabular-nums font feature on the counter container." },
+    { type: "info", message: "This component requires GSAP 3.x or higher." },
+  ],
   props: [
     {
       name: "target",

@@ -184,13 +184,13 @@ const ComponentPreview = ({ component, className }: ComponentPreviewProps) => {
             )}
             {component.sandbox === "iframe" ? (
               <DeviceFrame device={device}>
-                <div className="min-h-[300px] overflow-auto">
+                <div className="min-h-[300px] overflow-auto flex items-center justify-center">
                   {PreviewContent}
                 </div>
               </DeviceFrame>
             ) : (
               <DeviceFrame device={device}>
-                <div className="min-h-[200px]">{PreviewContent}</div>
+                <div className="min-h-[200px] flex items-center justify-center">{PreviewContent}</div>
               </DeviceFrame>
             )}
           </motion.div>

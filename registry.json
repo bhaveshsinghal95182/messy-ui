@@ -15,6 +15,29 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "hold-button",
+      "type": "registry:component",
+      "title": "Hold Button",
+      "description": "A confirmation button that fills up while being held, perfect for destructive or irreversible actions.",
+      "registryDependencies": ["https://ui.shadcn.com/r/styles/new-york/lib/utils.json"],
+      "files": [
+        {
+          "path": "registry/new-york/hold-button/hold-button.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "css": {
+        "@keyframes shimmer": {
+          "0%": { "background-position": "200% 0" },
+          "100%": { "background-position": "-200% 0" }
+        },
+        ".animate-shimmer": {
+          "animation": "shimmer 1s infinite linear",
+          "background-size": "200% 100%"
+        }
+      }
     }
   ]
 }

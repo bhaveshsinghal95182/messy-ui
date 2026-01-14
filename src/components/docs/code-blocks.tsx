@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 
 interface CodeBlockProps {
   code: string;
-  language?: "tsx" | "jsx" | "js" | "ts" | "html" | "css" | "json";
+  language?: "tsx" | "jsx" | "js" | "ts" | "html" | "css" | "json" | "bash";
   showLineNumbers?: boolean;
   className?: string;
   collapsible?: boolean;

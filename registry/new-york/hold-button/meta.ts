@@ -307,7 +307,42 @@ const meta: ComponentMeta = {
   sandbox: "inline",
   registryUrl: "https://bhavesh-ui.vercel.app/r/hold-button.json",
   dependencies: [],
-  installCommand: "",
+  notes: [
+    { type: "tip", message: "Add the shimmer keyframe animation to your globals.css for the shimmer effect during hold." },
+    { type: "info", message: "Uses cn() utility from shadcn/ui. Make sure you have it installed." },
+  ],
+  cliDependencies: [
+    {
+      label: "Install cn utility (if not already installed)",
+      commands: {
+        npx: "npx shadcn@latest add lib/utils",
+        pnpm: "pnpm dlx shadcn@latest add lib/utils",
+        bun: "bunx shadcn@latest add lib/utils",
+      },
+    },
+  ],
+  snippets: [
+    {
+      label: "Add shimmer animation to globals.css",
+      language: "css",
+      targetPath: "styles/hold-button-shimmer.css",
+      registryType: "registry:style",
+      code: `/* Shimmer animation for HoldButton */
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 1s infinite linear;
+  background-size: 200% 100%;
+}`,
+    },
+  ],
   props: [
     {
       name: "label",

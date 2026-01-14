@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { Check, Copy, Terminal, FileCode } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Check, Copy, Terminal, FileCode, Info, AlertTriangle, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CodeBlock from "./code-blocks";
-import { ComponentConfig } from "@/config/components";
+import { ComponentConfig, ComponentFile, InstallationNote, CodeSnippet } from "@/config/types";
 import { cn } from "@/lib/utils";
 
 interface InstallationSectionProps {
@@ -14,32 +14,68 @@ interface InstallationSectionProps {
 }
 
 const packageManagers = [
-  { id: "npm", label: "npm", command: (pkg: string) => `npm install ${pkg}` },
-  { id: "pnpm", label: "pnpm", command: (pkg: string) => `pnpm add ${pkg}` },
-  { id: "yarn", label: "yarn", command: (pkg: string) => `yarn add ${pkg}` },
-  { id: "bun", label: "bun", command: (pkg: string) => `bun add ${pkg}` },
+  { id: "npm", label: "npm", command: (pkgs: string[]) => `npm install ${pkgs.join(" ")}` },
+  { id: "pnpm", label: "pnpm", command: (pkgs: string[]) => `pnpm add ${pkgs.join(" ")}` },
+  { id: "yarn", label: "yarn", command: (pkgs: string[]) => `yarn add ${pkgs.join(" ")}` },
+  { id: "bun", label: "bun", command: (pkgs: string[]) => `bun add ${pkgs.join(" ")}` },
 ];
 
-const cliCommands = [
-  { id: "npx", label: "npx", command: (url: string) => `npx shadcn@latest add ${url}` },
-  { id: "pnpm", label: "pnpm", command: (url: string) => `pnpm dlx shadcn@latest add ${url}` },
-  { id: "bunx", label: "bunx", command: (url: string) => `bunx shadcn@latest add ${url}` },
+const cliRunners = [
+  { id: "npx", label: "npx" },
+  { id: "pnpm", label: "pnpm" },
+  { id: "bun", label: "bun" },
 ];
+
+// Note styling based on type
+const noteStyles: Record<InstallationNote["type"], { icon: typeof Info; className: string }> = {
+  info: {
+    icon: Info,
+    className: "bg-blue-500/10 border-blue-500/30 text-blue-400",
+  },
+  warning: {
+    icon: AlertTriangle,
+    className: "bg-amber-500/10 border-amber-500/30 text-amber-400",
+  },
+  tip: {
+    icon: Lightbulb,
+    className: "bg-emerald-500/10 border-emerald-500/30 text-emerald-400",
+  },
+};
 
 const InstallationSection = ({ component, className }: InstallationSectionProps) => {
-  const [copiedCli, setCopiedCli] = useState<string | null>(null);
-  const [copiedDep, setCopiedDep] = useState<string | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [language, setLanguage] = useState<"ts" | "js">("ts");
 
-  const handleCopy = async (text: string, type: "cli" | "dep", id: string) => {
-    await navigator.clipboard.writeText(text);
-    if (type === "cli") {
-      setCopiedCli(id);
-      setTimeout(() => setCopiedCli(null), 2000);
-    } else {
-      setCopiedDep(id);
-      setTimeout(() => setCopiedDep(null), 2000);
+  // Parse component code - can be string or ComponentFile[]
+  const files = useMemo((): ComponentFile[] => {
+    if (typeof component.componentCode === "string") {
+      // Legacy single string format
+      return [{
+        filename: `${component.slug}.tsx`,
+        targetPath: `components/ui/${component.slug}.tsx`,
+        code: component.componentCode,
+      }];
     }
+    return component.componentCode;
+  }, [component.componentCode, component.slug]);
+
+  // Check if any file has JS version
+  const hasJsVersion = useMemo(() => {
+    return files.some(f => f.jsCode);
+  }, [files]);
+
+  const handleCopy = async (text: string, id: string) => {
+    await navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
   };
+
+  // Calculate step numbers dynamically based on what's present
+  const hasCLIDeps = component.cliDependencies && component.cliDependencies.length > 0;
+  const hasNpmDeps = component.dependencies && component.dependencies.length > 0;
+  const hasSnippets = component.snippets && component.snippets.length > 0;
+  
+  let stepNumber = 0;
 
   return (
     <div className={cn("space-y-4", className)}>
@@ -64,21 +100,25 @@ const InstallationSection = ({ component, className }: InstallationSectionProps)
             <Tabs defaultValue="npx" className="w-full">
               <div className="bg-muted/50 border-b border-border px-2">
                 <TabsList className="h-10 bg-transparent">
-                  {cliCommands.map((cmd) => (
+                  {cliRunners.map((runner) => (
                     <TabsTrigger
-                      key={cmd.id}
-                      value={cmd.id}
+                      key={runner.id}
+                      value={runner.id}
                       className="text-xs data-[state=active]:bg-background"
                     >
-                      {cmd.label}
+                      {runner.label}
                     </TabsTrigger>
                   ))}
                 </TabsList>
               </div>
-              {cliCommands.map((cmd) => {
-                const command = cmd.command(component.registryUrl);
+              {cliRunners.map((runner) => {
+                const command = runner.id === "npx" 
+                  ? `npx shadcn@latest add ${component.registryUrl}`
+                  : runner.id === "pnpm"
+                  ? `pnpm dlx shadcn@latest add ${component.registryUrl}`
+                  : `bunx shadcn@latest add ${component.registryUrl}`;
                 return (
-                  <TabsContent key={cmd.id} value={cmd.id} className="m-0">
+                  <TabsContent key={runner.id} value={runner.id} className="m-0">
                     <div className="flex items-center justify-between px-4 py-3 bg-card">
                       <code className="text-sm font-mono text-foreground break-all">
                         {command}
@@ -86,10 +126,10 @@ const InstallationSection = ({ component, className }: InstallationSectionProps)
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleCopy(command, "cli", cmd.id)}
+                        onClick={() => handleCopy(command, `cli-${runner.id}`)}
                         className="h-7 px-2 ml-4 shrink-0"
                       >
-                        {copiedCli === cmd.id ? (
+                        {copiedId === `cli-${runner.id}` ? (
                           <Check className="w-4 h-4 text-green-500" />
                         ) : (
                           <Copy className="w-4 h-4" />
@@ -105,75 +145,253 @@ const InstallationSection = ({ component, className }: InstallationSectionProps)
 
         {/* Manual Installation Tab */}
         <TabsContent value="manual" className="mt-4 space-y-6">
-          {/* Step 1: Install Dependencies */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-medium">
-                1
-              </span>
-              <h4 className="font-medium text-foreground">Install dependencies</h4>
+          {/* Installation Notes */}
+          {component.notes && component.notes.length > 0 && (
+            <div className="space-y-2">
+              {component.notes.map((note, index) => {
+                const style = noteStyles[note.type];
+                const Icon = style.icon;
+                return (
+                  <div
+                    key={index}
+                    className={cn(
+                      "flex items-start gap-3 p-3 rounded-lg border",
+                      style.className
+                    )}
+                  >
+                    <Icon className="w-4 h-4 mt-0.5 shrink-0" />
+                    <p className="text-sm">{note.message}</p>
+                  </div>
+                );
+              })}
             </div>
-            <div className="rounded-lg border border-border overflow-hidden">
-              <Tabs defaultValue="npm" className="w-full">
-                <div className="bg-muted/50 border-b border-border px-2">
-                  <TabsList className="h-10 bg-transparent">
-                    {packageManagers.map((pm) => (
-                      <TabsTrigger
-                        key={pm.id}
-                        value={pm.id}
-                        className="text-xs data-[state=active]:bg-background"
-                      >
-                        {pm.label}
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
-                </div>
-                {packageManagers.map((pm) => {
-                  const command = pm.command(component.installCommand);
-                  return (
-                    <TabsContent key={pm.id} value={pm.id} className="m-0">
-                      <div className="flex items-center justify-between px-4 py-3 bg-card">
-                        <code className="text-sm font-mono text-foreground">
-                          {command}
-                        </code>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleCopy(command, "dep", pm.id)}
-                          className="h-7 px-2 ml-4 shrink-0"
-                        >
-                          {copiedDep === pm.id ? (
-                            <Check className="w-4 h-4 text-green-500" />
-                          ) : (
-                            <Copy className="w-4 h-4" />
-                          )}
-                        </Button>
-                      </div>
-                    </TabsContent>
-                  );
-                })}
-              </Tabs>
-            </div>
-          </div>
+          )}
 
-          {/* Step 2: Copy Component Code */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-medium">
-                2
-              </span>
-              <h4 className="font-medium text-foreground">Copy component code</h4>
+          {/* Step: CLI Dependencies (if any) */}
+          {hasCLIDeps && (
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-medium">
+                  {++stepNumber}
+                </span>
+                <h4 className="font-medium text-foreground">Install required components</h4>
+              </div>
+              <div className="space-y-3">
+                {component.cliDependencies!.map((dep, depIndex) => (
+                  <div key={depIndex} className="space-y-2">
+                    <p className="text-sm text-muted-foreground pl-8">{dep.label}</p>
+                    <div className="rounded-lg border border-border overflow-hidden">
+                      <Tabs defaultValue="npx" className="w-full">
+                        <div className="bg-muted/50 border-b border-border px-2">
+                          <TabsList className="h-10 bg-transparent">
+                            {cliRunners.map((runner) => (
+                              <TabsTrigger
+                                key={runner.id}
+                                value={runner.id}
+                                className="text-xs data-[state=active]:bg-background"
+                              >
+                                {runner.label}
+                              </TabsTrigger>
+                            ))}
+                          </TabsList>
+                        </div>
+                        {cliRunners.map((runner) => {
+                          const command = dep.commands[runner.id as keyof typeof dep.commands];
+                          return (
+                            <TabsContent key={runner.id} value={runner.id} className="m-0">
+                              <div className="flex items-center justify-between px-4 py-3 bg-card">
+                                <code className="text-sm font-mono text-foreground break-all">
+                                  {command}
+                                </code>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleCopy(command, `dep-${depIndex}-${runner.id}`)}
+                                  className="h-7 px-2 ml-4 shrink-0"
+                                >
+                                  {copiedId === `dep-${depIndex}-${runner.id}` ? (
+                                    <Check className="w-4 h-4 text-green-500" />
+                                  ) : (
+                                    <Copy className="w-4 h-4" />
+                                  )}
+                                </Button>
+                              </div>
+                            </TabsContent>
+                          );
+                        })}
+                      </Tabs>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
+          )}
+
+          {/* Step: Install NPM Dependencies */}
+          {hasNpmDeps && (
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-medium">
+                  {++stepNumber}
+                </span>
+                <h4 className="font-medium text-foreground">Install dependencies</h4>
+              </div>
+              <div className="rounded-lg border border-border overflow-hidden">
+                <Tabs defaultValue="npm" className="w-full">
+                  <div className="bg-muted/50 border-b border-border px-2">
+                    <TabsList className="h-10 bg-transparent">
+                      {packageManagers.map((pm) => (
+                        <TabsTrigger
+                          key={pm.id}
+                          value={pm.id}
+                          className="text-xs data-[state=active]:bg-background"
+                        >
+                          {pm.label}
+                        </TabsTrigger>
+                      ))}
+                    </TabsList>
+                  </div>
+                  {packageManagers.map((pm) => {
+                    const command = pm.command(component.dependencies);
+                    return (
+                      <TabsContent key={pm.id} value={pm.id} className="m-0">
+                        <div className="flex items-center justify-between px-4 py-3 bg-card">
+                          <code className="text-sm font-mono text-foreground">
+                            {command}
+                          </code>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleCopy(command, `npm-${pm.id}`)}
+                            className="h-7 px-2 ml-4 shrink-0"
+                          >
+                            {copiedId === `npm-${pm.id}` ? (
+                              <Check className="w-4 h-4 text-green-500" />
+                            ) : (
+                              <Copy className="w-4 h-4" />
+                            )}
+                          </Button>
+                        </div>
+                      </TabsContent>
+                    );
+                  })}
+                </Tabs>
+              </div>
+            </div>
+          )}
+
+          {/* Step: Copy Component Files */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-medium">
+                  {++stepNumber}
+                </span>
+                <h4 className="font-medium text-foreground">Copy component code</h4>
+              </div>
+              
+              {/* Language Toggle */}
+              {hasJsVersion && (
+                <div className="flex items-center border border-border rounded-lg overflow-hidden">
+                  <button
+                    onClick={() => setLanguage("ts")}
+                    className={cn(
+                      "px-3 py-1.5 text-xs font-medium transition-colors",
+                      language === "ts" 
+                        ? "bg-primary text-primary-foreground" 
+                        : "bg-muted/50 text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    TypeScript
+                  </button>
+                  <button
+                    onClick={() => setLanguage("js")}
+                    className={cn(
+                      "px-3 py-1.5 text-xs font-medium transition-colors",
+                      language === "js" 
+                        ? "bg-primary text-primary-foreground" 
+                        : "bg-muted/50 text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    JavaScript
+                  </button>
+                </div>
+              )}
+            </div>
+
             <p className="text-sm text-muted-foreground">
               Copy and paste the following code into your project:
             </p>
-            <CodeBlock
-              code={component.componentCode}
-              language="tsx"
-              collapsible={component.componentCode.split("\n").length > 30}
-              maxHeight="500px"
-            />
+
+            {/* Single file or Multiple files with tabs */}
+            {files.length === 1 ? (
+              <div className="space-y-2">
+                <p className="text-xs text-muted-foreground font-mono pl-1">
+                  {files[0].targetPath}
+                </p>
+                <CodeBlock
+                  code={language === "js" && files[0].jsCode ? files[0].jsCode : files[0].code}
+                  language={language === "js" ? "jsx" : "tsx"}
+                  collapsible={files[0].code.split("\n").length > 30}
+                  maxHeight="500px"
+                />
+              </div>
+            ) : (
+              <Tabs defaultValue={files[0].filename} className="w-full">
+                <div className="rounded-lg border border-border overflow-hidden">
+                  <div className="bg-muted/50 border-b border-border px-2">
+                    <TabsList className="h-10 bg-transparent">
+                      {files.map((file) => (
+                        <TabsTrigger
+                          key={file.filename}
+                          value={file.filename}
+                          className="text-xs data-[state=active]:bg-background font-mono"
+                        >
+                          {file.filename}
+                        </TabsTrigger>
+                      ))}
+                    </TabsList>
+                  </div>
+                  {files.map((file) => {
+                    const code = language === "js" && file.jsCode ? file.jsCode : file.code;
+                    return (
+                      <TabsContent key={file.filename} value={file.filename} className="m-0">
+                        <div className="p-1">
+                          <p className="text-xs text-muted-foreground font-mono px-3 py-2">
+                            {file.targetPath}
+                          </p>
+                          <CodeBlock
+                            code={code}
+                            language={language === "js" ? "jsx" : "tsx"}
+                            collapsible={code.split("\n").length > 30}
+                            maxHeight="500px"
+                          />
+                        </div>
+                      </TabsContent>
+                    );
+                  })}
+                </div>
+              </Tabs>
+            )}
           </div>
+
+          {/* Step: Additional Code Snippets (CSS, config, etc.) */}
+          {hasSnippets && component.snippets!.map((snippet, index) => (
+            <div key={index} className="space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-medium">
+                  {++stepNumber}
+                </span>
+                <h4 className="font-medium text-foreground">{snippet.label}</h4>
+              </div>
+              <CodeBlock
+                code={snippet.code}
+                language={snippet.language}
+                collapsible={snippet.code.split("\n").length > 15}
+                maxHeight="300px"
+              />
+            </div>
+          ))}
         </TabsContent>
       </Tabs>
     </div>
@@ -181,3 +399,4 @@ const InstallationSection = ({ component, className }: InstallationSectionProps)
 };
 
 export default InstallationSection;
+

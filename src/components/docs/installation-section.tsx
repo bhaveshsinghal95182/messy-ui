@@ -5,6 +5,7 @@ import { Check, Copy, Terminal, FileCode, Info, AlertTriangle, Lightbulb } from 
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CodeBlock from "./code-blocks";
+import CommandBlock from "./command-block";
 import { ComponentConfig, ComponentFile, InstallationNote, CodeSnippet } from "@/config/types";
 import { cn } from "@/lib/utils";
 
@@ -119,22 +120,12 @@ const InstallationSection = ({ component, className }: InstallationSectionProps)
                   : `bunx shadcn@latest add ${component.registryUrl}`;
                 return (
                   <TabsContent key={runner.id} value={runner.id} className="m-0">
-                    <div className="flex items-center justify-between px-4 py-3 bg-card">
-                      <code className="text-sm font-mono text-foreground break-all">
-                        {command}
-                      </code>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleCopy(command, `cli-${runner.id}`)}
-                        className="h-7 px-2 ml-4 shrink-0"
-                      >
-                        {copiedId === `cli-${runner.id}` ? (
-                          <Check className="w-4 h-4 text-green-500" />
-                        ) : (
-                          <Copy className="w-4 h-4" />
-                        )}
-                      </Button>
+                    <div className="px-4 py-3 bg-card">
+                      <CommandBlock
+                        command={command}
+                        onCopy={() => handleCopy(command, `cli-${runner.id}`)}
+                        copied={copiedId === `cli-${runner.id}`}
+                      />
                     </div>
                   </TabsContent>
                 );
@@ -199,22 +190,12 @@ const InstallationSection = ({ component, className }: InstallationSectionProps)
                           const command = dep.commands[runner.id as keyof typeof dep.commands];
                           return (
                             <TabsContent key={runner.id} value={runner.id} className="m-0">
-                              <div className="flex items-center justify-between px-4 py-3 bg-card">
-                                <code className="text-sm font-mono text-foreground break-all">
-                                  {command}
-                                </code>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => handleCopy(command, `dep-${depIndex}-${runner.id}`)}
-                                  className="h-7 px-2 ml-4 shrink-0"
-                                >
-                                  {copiedId === `dep-${depIndex}-${runner.id}` ? (
-                                    <Check className="w-4 h-4 text-green-500" />
-                                  ) : (
-                                    <Copy className="w-4 h-4" />
-                                  )}
-                                </Button>
+                              <div className="px-4 py-3 bg-card">
+                                <CommandBlock
+                                  command={command}
+                                  onCopy={() => handleCopy(command, `dep-${depIndex}-${runner.id}`)}
+                                  copied={copiedId === `dep-${depIndex}-${runner.id}`}
+                                />
                               </div>
                             </TabsContent>
                           );
@@ -255,22 +236,12 @@ const InstallationSection = ({ component, className }: InstallationSectionProps)
                     const command = pm.command(component.dependencies);
                     return (
                       <TabsContent key={pm.id} value={pm.id} className="m-0">
-                        <div className="flex items-center justify-between px-4 py-3 bg-card">
-                          <code className="text-sm font-mono text-foreground">
-                            {command}
-                          </code>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleCopy(command, `npm-${pm.id}`)}
-                            className="h-7 px-2 ml-4 shrink-0"
-                          >
-                            {copiedId === `npm-${pm.id}` ? (
-                              <Check className="w-4 h-4 text-green-500" />
-                            ) : (
-                              <Copy className="w-4 h-4" />
-                            )}
-                          </Button>
+                        <div className="px-4 py-3 bg-card">
+                          <CommandBlock
+                            command={command}
+                            onCopy={() => handleCopy(command, `npm-${pm.id}`)}
+                            copied={copiedId === `npm-${pm.id}`}
+                          />
                         </div>
                       </TabsContent>
                     );

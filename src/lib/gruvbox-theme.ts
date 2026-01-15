@@ -81,7 +81,7 @@ export const gruvboxLight = {
   },
   'pre[class*="language-"]': {
     color: '#3c3836',
-    background: '#fbf1c7',
+    background: '#fffef2',
     fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace',
     fontSize: '14px',
     textAlign: 'left',

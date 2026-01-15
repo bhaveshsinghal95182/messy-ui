@@ -88,7 +88,7 @@ const CodeBlock = ({
           showLineNumbers={showLineNumbers}
           customStyle={{
             margin: 0,
-            background: isDark ? "#1d2021" : "#fbf1c7",
+            background: isDark ? "#1d2021" : "#fffef2",
             fontSize: "13px",
           }}
           lineNumberStyle={{

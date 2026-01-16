@@ -20,6 +20,12 @@ import {
   componentCode as themeToggleCode,
 } from "@/registry/new-york/theme-toggle";
 
+import {
+  meta as ctaButtonMeta,
+  usageCode as ctaButtonUsage,
+  componentCode as ctaButtonCode,
+} from "@/registry/new-york/cta-button";
+
 const AnimatedCounter = lazy(() =>
   import("@/registry/new-york/animated-counter").then((mod) => ({
     default: mod.AnimatedCounter,
@@ -35,6 +41,12 @@ const HoldButton = lazy(() =>
 const ThemeToggle = lazy(() =>
   import("@/registry/new-york/theme-toggle").then((mod) => ({
     default: mod.ThemeToggle,
+  }))
+);
+
+const CTAButton = lazy(() =>
+  import("@/registry/new-york/cta-button").then((mod) => ({
+    default: mod.CTAButton,
   }))
 );
 
@@ -74,6 +86,12 @@ export const components: ComponentConfig[] = [
     ThemeToggle,
     themeToggleUsage,
     themeToggleCode
+  ),
+  buildComponentConfig(
+    ctaButtonMeta,
+    CTAButton,
+    ctaButtonUsage,
+    ctaButtonCode
   ),
 ];
 

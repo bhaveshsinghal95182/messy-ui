@@ -18,7 +18,7 @@ export const componentCode = `"use client";
 import * as React from "react";
 import { useTheme } from "next-themes";
 import { flushSync } from "react-dom";
-import { cn } from "@/lib/utils";
+import { cn } from "./utils";
 import "./theme-toggle.css";
 
 interface ThemeToggleProps {

@@ -21,11 +21,15 @@
       "type": "registry:component",
       "title": "Hold Button",
       "description": "A confirmation button that fills up while being held, perfect for destructive or irreversible actions.",
-      "registryDependencies": ["https://ui.shadcn.com/r/styles/new-york/lib/utils.json"],
+      "dependencies": ["clsx", "tailwind-merge"],
       "files": [
         {
           "path": "registry/new-york/hold-button/hold-button.tsx",
           "type": "registry:component"
+        },
+        {
+          "path": "registry/new-york/hold-button/utils.ts",
+          "type": "registry:lib"
         }
       ],
       "css": {
@@ -44,8 +48,7 @@
       "type": "registry:component",
       "title": "Theme Toggle",
       "description": "A theme toggle button with clip-path view transition animation for smooth dark/light mode switching.",
-      "dependencies": ["next-themes"],
-      "registryDependencies": ["https://ui.shadcn.com/r/styles/new-york/lib/utils.json"],
+      "dependencies": ["next-themes", "clsx", "tailwind-merge"],
       "files": [
         {
           "path": "registry/new-york/theme-toggle/theme-toggle.tsx",
@@ -54,6 +57,10 @@
         {
           "path": "registry/new-york/theme-toggle/theme-toggle.css",
           "type": "registry:style"
+        },
+        {
+          "path": "registry/new-york/theme-toggle/utils.ts",
+          "type": "registry:lib"
         }
       ],
       "css": {
@@ -62,6 +69,23 @@
           "mix-blend-mode": "normal"
         }
       }
+    },
+    {
+      "name": "cta-button",
+      "type": "registry:component",
+      "title": "CTA Button",
+      "description": "An animated call-to-action button with a traveling arrow and expanding background effect. Uses mix-blend-mode for automatic light/dark theme support.",
+      "dependencies": ["motion", "lucide-react", "clsx", "tailwind-merge"],
+      "files": [
+        {
+          "path": "registry/new-york/cta-button/cta-button.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/new-york/cta-button/utils.ts",
+          "type": "registry:lib"
+        }
+      ]
     }
   ]
 }

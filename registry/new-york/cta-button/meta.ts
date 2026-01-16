@@ -28,7 +28,7 @@ export const componentCode = `"use client";
 import { motion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { type ReactNode } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "./utils";
 
 interface CTAButtonProps {
   /** Text to render before the button */

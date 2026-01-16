@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useCallback, useEffect } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "./utils";
 
 interface HoldButtonProps {
   /** Text shown initially */

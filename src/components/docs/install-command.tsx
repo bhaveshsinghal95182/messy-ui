@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CommandBlock from "./command-block";
 import { cn } from "@/lib/utils";
 
@@ -41,6 +41,7 @@ const InstallCommand = ({ packageName, className }: InstallCommandProps) => {
                 {pm.label}
               </TabsTrigger>
             ))}
+            <TabsIndicator />
           </TabsList>
         </div>
         {packageManagers.map((pm) => {

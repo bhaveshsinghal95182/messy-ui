@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { Check, Copy, Terminal, FileCode, Info, AlertTriangle, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CodeBlock from "./code-blocks";
 import CommandBlock from "./command-block";
 import { ComponentConfig, ComponentFile, InstallationNote, CodeSnippet } from "@/config/types";
@@ -90,6 +90,7 @@ const InstallationSection = ({ component, className }: InstallationSectionProps)
             <FileCode className="w-4 h-4" />
             Manual
           </TabsTrigger>
+          <TabsIndicator />
         </TabsList>
 
         {/* CLI Installation Tab */}
@@ -110,6 +111,7 @@ const InstallationSection = ({ component, className }: InstallationSectionProps)
                       {runner.label}
                     </TabsTrigger>
                   ))}
+                  <TabsIndicator />
                 </TabsList>
               </div>
               {cliRunners.map((runner) => {
@@ -184,6 +186,7 @@ const InstallationSection = ({ component, className }: InstallationSectionProps)
                                 {runner.label}
                               </TabsTrigger>
                             ))}
+                            <TabsIndicator />
                           </TabsList>
                         </div>
                         {cliRunners.map((runner) => {
@@ -230,6 +233,7 @@ const InstallationSection = ({ component, className }: InstallationSectionProps)
                           {pm.label}
                         </TabsTrigger>
                       ))}
+                      <TabsIndicator />
                     </TabsList>
                   </div>
                   {packageManagers.map((pm) => {
@@ -321,6 +325,7 @@ const InstallationSection = ({ component, className }: InstallationSectionProps)
                           {file.filename}
                         </TabsTrigger>
                       ))}
+                      <TabsIndicator />
                     </TabsList>
                   </div>
                   {files.map((file) => {

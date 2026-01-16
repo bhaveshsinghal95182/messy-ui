@@ -11,7 +11,7 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Collapsible,
@@ -105,6 +105,7 @@ const ComponentPreview = ({ component, className }: ComponentPreviewProps) => {
             >
               Code
             </TabsTrigger>
+            <TabsIndicator />
           </TabsList>
 
           <div className="flex items-center gap-1">

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Logo3D } from "@/components/logo-3d";
+import CTAButton from "@/components/layout/cta-button";
 
 // Static SEO metadata for the home page
 export const metadata: Metadata = {
@@ -58,14 +59,7 @@ export default function Page() {
             A collection of animated, accessible components built with React,
             GSAP, and Framer Motion. Copy the code and make it yours.
           </p>
-          <div className="flex justify-center lg:justify-start">
-            <Link href="/components">
-              <Button className="font-semibold text-lg font-sans cursor-pointer px-8">
-                Browse Components
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
+          <CTAButton bgColorClass="bg-rose-500" bgColorHex="#ff2056"/>
         </div>
 
         {/* Right side - 3D Logo */}

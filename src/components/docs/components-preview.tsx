@@ -204,6 +204,7 @@ const ComponentPreview = ({ component, className }: ComponentPreviewProps) => {
                   props={component.props}
                   currentProps={mergedProps}
                   onPropsChange={setCustomProps}
+                  componentName={component.name.replace(/\s+/g, "")}
                 />
               </CollapsibleContent>
             </Collapsible>

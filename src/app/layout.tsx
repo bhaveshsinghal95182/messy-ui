@@ -3,7 +3,7 @@ import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/layout/theme-provider";
 import DocsLayout from "@/components/layout/docs-layout";
-import { Analytics } from "@vercel/analytics/next";  
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,10 +16,58 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "messy-ui - Beautiful React Components",
-  description: "A collection of animated, accessible React components built with GSAP and Framer Motion.",
+  metadataBase: new URL("https://messyui.dev"),
+  title:
+    "messy-ui - Beautiful React Components powered by Framer Motion and GSAP",
+  description:
+    "A collection of animated, accessible React components built with GSAP and Framer Motion for teams that value performance and accessibility.",
   icons: {
     icon: "/logo.svg",
+  },
+  authors: [
+    {
+      name: "Bhavesh Singhal",
+      url: "https://github.com/bhaveshsinghal95182",
+    },
+  ],
+  creator: "Bhavesh Singhal",
+  publisher: "Bhavesh Singhal",
+  alternates: {
+    canonical: "/",
+    languages: {
+      "en-US": "/en-US",
+      "ar-EG": "/ar-EG",
+    },
+  },
+  openGraph: {
+    title:
+      "messy-ui - Beautiful React Components powered by Framer Motion and GSAP",
+    description:
+      "A collection of animated, accessible React components built with GSAP and Framer Motion for teams that value performance and accessibility.",
+    type: "website",
+    url: "https://messyui.dev",
+    siteName: "messy-ui",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "messy-ui - Beautiful React Components powered by Framer Motion and GSAP",
+      },
+    ],
+  },
+  robots: {
+    follow: true,
+    index: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: false,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 

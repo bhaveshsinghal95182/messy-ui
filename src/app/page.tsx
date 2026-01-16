@@ -47,7 +47,7 @@ export default function Page() {
         <div className="space-y-6 animate-in fade-in slide-in-from-left-4 duration-500 text-center lg:text-left">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
             <Sparkles className="w-4 h-4" />
-            Messy but beautiful
+            Only library that offers gsap components
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-foreground">
             Beautifully{" "}

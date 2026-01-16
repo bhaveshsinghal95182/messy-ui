@@ -3,7 +3,7 @@
 import { motion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { type ReactNode } from "react";
-import { cn } from "./utils";
+import { cn } from "@/lib/utils";
 
 interface CTAButtonProps {
   /** Text to render before the button */

@@ -67,12 +67,12 @@ export default function AnimatedPageContent({
         variants={itemVariants}
         className="flex items-center gap-2 text-sm text-muted-foreground"
       >
-        <Link href="/" className="hover:text-foreground transition-colors">
+        <Link href="/components" className="hover:text-foreground transition-colors">
           Components
         </Link>
         <span>/</span>
         <Link
-          href={`/?category=${component.category}`}
+          href={`/components?category=${component.category}`}
           className="hover:text-foreground transition-colors"
         >
           {component.category}

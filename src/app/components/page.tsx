@@ -1,11 +1,12 @@
 "use client";
 
-import { components } from "@/config/components";
+import { components, categories } from "@/config/components";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { motion } from "motion/react";
-import Image from "next/image";
-import { ArrowRight, Sparkles, Image as ImageIcon } from "lucide-react";
+import { ArrowRight, ArrowLeft, Sparkles, Image as ImageIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -33,10 +34,18 @@ const cardVariants = {
   },
 };
 
-export default function ComponentsPage() {
+function ComponentsContent() {
+  const searchParams = useSearchParams();
+  const selectedCategory = searchParams.get("category");
+  
+  // Filter components by category if selected
+  const filteredComponents = selectedCategory
+    ? components.filter((c) => c.category === selectedCategory)
+    : components;
+
   return (
     <div className="min-h-screen pb-20">
-      {/* Hero Section remains same */}
+      {/* Hero Section */}
       <section className="relative py-16 px-6 overflow-hidden">
         {/* Gradient background orbs */}
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-linear-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl -z-10" />
@@ -48,20 +57,62 @@ export default function ComponentsPage() {
           transition={{ duration: 0.6 }}
           className="max-w-4xl mx-auto text-center"
         >
-          <Badge variant="secondary" className="mb-4 px-4 py-1.5 text-sm">
-            <Sparkles className="w-3.5 h-3.5 mr-2" />
-            {components.length} Components Available
-          </Badge>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 bg-linear-to-r from-foreground via-foreground/80 to-foreground bg-clip-text">
-            Component Gallery
-          </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Beautifully crafted, animated React components ready to enhance your
-            next project. Built with GSAP, Framer Motion, and modern best
-            practices.
-          </p>
+          {selectedCategory ? (
+            <>
+              <Button variant="ghost" size="sm" asChild className="mb-4">
+                <Link href="/components">
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  All Components
+                </Link>
+              </Button>
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 bg-linear-to-r from-foreground via-foreground/80 to-foreground bg-clip-text">
+                {selectedCategory}
+              </h1>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                {filteredComponents.length} component{filteredComponents.length !== 1 ? 's' : ''} in this category
+              </p>
+            </>
+          ) : (
+            <>
+              <Badge variant="secondary" className="mb-4 px-4 py-1.5 text-sm">
+                <Sparkles className="w-3.5 h-3.5 mr-2" />
+                {components.length} Components Available
+              </Badge>
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 bg-linear-to-r from-foreground via-foreground/80 to-foreground bg-clip-text">
+                Component Gallery
+              </h1>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Beautifully crafted, animated React components ready to enhance your
+                next project. Built with GSAP, Framer Motion, and modern best
+                practices.
+              </p>
+            </>
+          )}
         </motion.div>
       </section>
+
+      {/* Category Navigation */}
+      {!selectedCategory && (
+        <section className="px-6 mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.4 }}
+            className="max-w-6xl mx-auto flex flex-wrap justify-center gap-2"
+          >
+            {categories.map((category) => (
+              <Link key={category} href={`/components?category=${category}`}>
+                <Badge 
+                  variant="outline" 
+                  className="px-4 py-2 text-sm cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+                >
+                  {category}
+                </Badge>
+              </Link>
+            ))}
+          </motion.div>
+        </section>
+      )}
 
       {/* Components Grid */}
       <section className="px-6">
@@ -71,12 +122,42 @@ export default function ComponentsPage() {
           animate="show"
           className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          {components.map((component) => (
+          {filteredComponents.map((component) => (
             <ComponentCard key={component.slug} component={component} />
           ))}
         </motion.div>
       </section>
     </div>
+  );
+}
+
+// Loading fallback for Suspense
+function ComponentsLoading() {
+  return (
+    <div className="min-h-screen pb-20">
+      <section className="relative py-16 px-6 overflow-hidden">
+        <div className="max-w-4xl mx-auto text-center">
+          <Skeleton className="h-6 w-48 mx-auto mb-4" />
+          <Skeleton className="h-12 w-80 mx-auto mb-4" />
+          <Skeleton className="h-6 w-96 mx-auto" />
+        </div>
+      </section>
+      <section className="px-6">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <Skeleton key={i} className="h-64 rounded-xl" />
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+export default function ComponentsPage() {
+  return (
+    <Suspense fallback={<ComponentsLoading />}>
+      <ComponentsContent />
+    </Suspense>
   );
 }
 

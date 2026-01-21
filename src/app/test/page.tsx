@@ -1,9 +1,10 @@
 import AnimatedTabs from "@/components/ui/animated-tabs";
+import {Separator} from "@/registry/new-york/separator/separator";
 
 export default function TestPage() {
   return (
     <div>
-      <AnimatedTabs
+      {/* <AnimatedTabs
         tabs={[
           {
             id: "tab1",
@@ -21,7 +22,11 @@ export default function TestPage() {
             content: <div>Content 3</div>,
           },
         ]}
-      />
+      /> */}
+      <div className="w-full h-screen flex items-center justify-center">
+
+      <Separator />
+      </div>
     </div>
   );
 }

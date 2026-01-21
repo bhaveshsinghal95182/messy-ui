@@ -88,10 +88,12 @@ export function Separator({
       duration: duration,
       ease: "none",
       onUpdate: () => {
-        const t = wobbleData.progress * duration * frequency;
+        // t represents actual elapsed time (0 to duration)
+        const t = wobbleData.progress * duration;
         // Damped cosine wave: starts at amplitude, oscillates with decay
-        const decay = Math.exp(-damping * t * 2);
-        const oscillation = Math.cos(t * Math.PI * 2);
+        // frequency controls oscillations per second
+        const decay = Math.exp(-damping * frequency * t);
+        const oscillation = Math.cos(frequency * t * Math.PI * 2);
         stateRef.current.displacement = amplitude * decay * oscillation;
         updatePath();
       },

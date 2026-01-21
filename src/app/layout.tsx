@@ -22,8 +22,16 @@ export const metadata: Metadata = {
   description:
     "A collection of animated, accessible React components built with GSAP and Framer Motion for teams that value performance and accessibility.",
   icons: {
-    icon: "/logo.svg",
+    icon: [
+      { url: "/favicon_io/favicon.ico", sizes: "any" },
+      { url: "/favicon_io/favicon-16x16.png", type: "image/png", sizes: "16x16" },
+      { url: "/favicon_io/favicon-32x32.png", type: "image/png", sizes: "32x32" },
+    ],
+    apple: [
+      { url: "/favicon_io/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
   },
+  manifest: "/favicon_io/site.webmanifest",
   authors: [
     {
       name: "Bhavesh Singhal",

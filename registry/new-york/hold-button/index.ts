@@ -1,4 +1,4 @@
 import HoldButton from "./hold-button";
-import meta, { usageCode, componentCode } from "./meta";
+import meta, { usageCode, componentFiles } from "./meta";
 
-export { HoldButton, meta, usageCode, componentCode };
+export { HoldButton, meta, usageCode, componentFiles };

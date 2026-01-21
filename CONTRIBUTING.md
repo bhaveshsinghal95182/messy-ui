@@ -61,10 +61,17 @@ export default function Example() {
   return <YourComponent size={150} />;
 }`;
 
-// Full component code for manual installation
-export const componentCode = `"use client";
-// Paste your entire component code here as a string
-`;
+// Component files to be loaded at build time
+// This references your actual source files instead of duplicating code
+import { ComponentFileRef } from "@/config/types";
+
+export const componentFiles: ComponentFileRef[] = [
+  {
+    filename: "your-component.tsx",
+    targetPath: "ui/your-component.tsx",
+    sourcePath: "./your-component.tsx",
+  },
+];
 
 const meta: ComponentMeta = {
   slug: "your-component",
@@ -121,9 +128,9 @@ Create `registry/new-york/your-component/index.ts`:
 
 ```typescript
 import { YourComponent } from "./your-component";
-import meta, { usageCode, componentCode } from "./meta";
+import meta, { usageCode, componentFiles } from "./meta";
 
-export { YourComponent, meta, usageCode, componentCode };
+export { YourComponent, meta, usageCode, componentFiles };
 ```
 
 ### 4. Register the Component
@@ -151,12 +158,13 @@ Add your component to these files:
 #### `src/config/components.ts`
 
 ```typescript
-// Add import
+// Add imports
 import {
   meta as yourComponentMeta,
   usageCode as yourComponentUsage,
-  componentCode as yourComponentCode,
+  componentFiles as yourComponentFiles,
 } from "@/registry/new-york/your-component";
+import { loadComponentFiles, getRegistryPath } from "@/lib/component-loader";
 
 // Add lazy load
 const YourComponent = lazy(() =>
@@ -172,7 +180,7 @@ export const components: ComponentConfig[] = [
     yourComponentMeta,
     YourComponent,
     yourComponentUsage,
-    yourComponentCode
+    loadComponentFiles(getRegistryPath("your-component"), yourComponentFiles)
   ),
 ];
 ```

@@ -48,6 +48,19 @@ export interface ComponentFile {
 }
 
 /**
+ * Reference to a component source file for build-time loading.
+ * Used in meta.ts to specify which files should be loaded at build time.
+ */
+export interface ComponentFileRef {
+  /** Display name shown in tabs (e.g., "separator.tsx") */
+  filename: string;
+  /** Target path relative to components folder (e.g., "ui/separator.tsx") */
+  targetPath: string;
+  /** Relative path to the source file from the component's registry folder */
+  sourcePath: string;
+}
+
+/**
  * Important note to display to users during installation
  */
 export interface InstallationNote {
@@ -144,7 +157,8 @@ export interface ComponentConfig extends ComponentMeta {
   usageCode: string;
   /** 
    * Component code for manual installation
-   * Can be a single string (legacy/simple) or array of ComponentFile for multi-file components
+   * Can be a single string (legacy/simple), array of ComponentFile (loaded),
+   * or array of ComponentFileRef (to be loaded by server components)
    */
-  componentCode: string | ComponentFile[];
+  componentCode: string | ComponentFile[] | ComponentFileRef[];
 }

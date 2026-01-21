@@ -1,4 +1,4 @@
 import { Separator } from "./separator";
-import meta, { usageCode, componentCode } from "./meta";
+import meta, { usageCode, componentFiles } from "./meta";
 
-export { Separator, meta, usageCode, componentCode };
+export { Separator, meta, usageCode, componentFiles };

@@ -1,35 +1,35 @@
 import { lazy } from "react";
-import { ComponentConfig, ComponentMeta } from "./types";
+import { ComponentConfig, ComponentFile, ComponentMeta, ComponentFileRef } from "./types";
 
 // Import registry components with their co-located metadata
 import {
   meta as animatedCounterMeta,
   usageCode as animatedCounterUsage,
-  componentCode as animatedCounterCode,
+  componentFiles as animatedCounterFiles,
 } from "@/registry/new-york/animated-counter";
 
 import {
   meta as holdButtonMeta,
   usageCode as holdButtonUsage,
-  componentCode as holdButtonCode,
+  componentFiles as holdButtonFiles,
 } from "@/registry/new-york/hold-button";
 
 import {
   meta as themeToggleMeta,
   usageCode as themeToggleUsage,
-  componentCode as themeToggleCode,
+  componentFiles as themeToggleFiles,
 } from "@/registry/new-york/theme-toggle";
 
 import {
   meta as ctaButtonMeta,
   usageCode as ctaButtonUsage,
-  componentCode as ctaButtonCode,
+  componentFiles as ctaButtonFiles,
 } from "@/registry/new-york/cta-button";
 
 import {
   meta as separatorMeta,
   usageCode as separatorUsage,
-  componentCode as separatorCode,
+  componentFiles as separatorFiles,
 } from "@/registry/new-york/separator";
 
 const AnimatedCounter = lazy(() =>
@@ -64,12 +64,14 @@ const Separator = lazy(() =>
 
 /**
  * Build full ComponentConfig from co-located metadata and code.
+ * componentCode can be a string (legacy), ComponentFile[] (multi-file loaded),
+ * or ComponentFileRef[] (to be loaded by server components later)
  */
 function buildComponentConfig(
   meta: ComponentMeta,
   component: React.ComponentType | React.LazyExoticComponent<any>,
   usageCode: string,
-  componentCode: string
+  componentCode: string | ComponentFile[] | ComponentFileRef[]
 ): ComponentConfig {
   return {
     ...meta,
@@ -85,31 +87,31 @@ export const components: ComponentConfig[] = [
     animatedCounterMeta,
     AnimatedCounter,
     animatedCounterUsage,
-    animatedCounterCode
+    animatedCounterFiles
   ),
   buildComponentConfig(
     holdButtonMeta,
     HoldButton,
     holdButtonUsage,
-    holdButtonCode
+    holdButtonFiles
   ),
   buildComponentConfig(
     themeToggleMeta,
     ThemeToggle,
     themeToggleUsage,
-    themeToggleCode
+    themeToggleFiles
   ),
   buildComponentConfig(
     ctaButtonMeta,
     CTAButton,
     ctaButtonUsage,
-    ctaButtonCode
+    ctaButtonFiles
   ),
   buildComponentConfig(
     separatorMeta,
     Separator,
     separatorUsage,
-    separatorCode
+    separatorFiles
   ),
 ];
 

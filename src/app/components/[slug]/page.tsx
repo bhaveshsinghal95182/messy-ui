@@ -7,6 +7,7 @@ import {
   getAllSlugsAndAliases,
   components,
 } from "@/config/components";
+import { resolveComponentCode } from "@/lib/component-loader";
 import ComponentPreview from "@/components/docs/components-preview";
 import PropsTable from "@/components/docs/props-table";
 import InstallationSection from "@/components/docs/installation-section";
@@ -43,6 +44,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: component.seoTitle,
     description: component.seoDescription,
     keywords: component.keywords,
+    robots: isAlias ? { index: false, follow: true } : undefined,
     alternates: {
       canonical: `/components/${component.slug}`,
     },
@@ -92,9 +94,16 @@ export default async function ComponentPage({ params }: PageProps) {
     .filter((c) => c.category === component.category && c.slug !== component.slug)
     .slice(0, 3);
 
+  // Resolve component code files (server-side only)
+  // This loads ComponentFileRef[] into ComponentFile[] before passing to client
+  const resolvedComponent = {
+    ...component,
+    componentCode: resolveComponentCode(component.slug, component.componentCode),
+  };
+
   return (
     <AnimatedPageContent
-      component={component}
+      component={resolvedComponent}
       relatedComponents={relatedComponents}
     />
   );

@@ -1,4 +1,4 @@
 import ThemeToggle from "./theme-toggle";
-import meta, { usageCode, componentCode, cssCode } from "./meta";
+import meta, { usageCode, componentFiles, cssCode } from "./meta";
 
-export { ThemeToggle, meta, usageCode, componentCode, cssCode };
+export { ThemeToggle, meta, usageCode, componentFiles, cssCode };

@@ -108,17 +108,22 @@ export default function ContentDivider() {
 }`;
 ```
 
-### 2. `componentCode` (string | ComponentFile[])
-The full component source code for **manual installation**. Can be:
-- **String**: Single file component
-- **ComponentFile[]**: Multi-file components (e.g., component + hooks)
+### 2. `componentFiles` (ComponentFileRef[])
+File references for **build-time loading**. Instead of duplicating component code as a string, you reference the actual source files:
 
 ```typescript
-export const componentCode = `"use client";
-import { useRef, useEffect } from "react";
-// ... full component implementation
-export function Separator(props) { ... }`;
+import { ComponentFileRef } from "@/config/types";
+
+export const componentFiles: ComponentFileRef[] = [
+  {
+    filename: "separator.tsx",
+    targetPath: "ui/separator.tsx",
+    sourcePath: "./separator.tsx",
+  },
+];
 ```
+
+These files are loaded at build time using `fs.readFileSync` in `components.ts`, keeping your code DRY.
 
 ### 3. `meta` (ComponentMeta)
 Configuration object with all metadata:
@@ -187,18 +192,20 @@ The `usageCode` is displayed in the **Code tab** of the preview section, showing
 
 ---
 
-### Where `componentCode` Goes
+### Where `componentFiles` Goes
 
 ```mermaid
 flowchart LR
-    META["meta.ts<br/>componentCode"] --> CONFIG["components.ts<br/>ComponentConfig"]
+    META["meta.ts<br/>componentFiles"] --> LOADER["component-loader.ts<br/>loadComponentFiles()"]
+    LOADER --> CONFIG["components.ts<br/>ComponentConfig"]
     CONFIG --> INSTALL["InstallationSection"]
     INSTALL --> MANUAL["Manual Tab"]
     
+    style LOADER fill:#fbbf24,stroke:#f59e0b
     style MANUAL fill:#60a5fa,stroke:#3b82f6
 ```
 
-The `componentCode` is displayed in the **Manual installation tab**, allowing users to copy-paste the full component source.
+The `componentFiles` references are resolved at build time by `loadComponentFiles()`, which reads the actual source files. The loaded code is then displayed in the **Manual installation tab**.
 
 ---
 
@@ -235,7 +242,7 @@ flowchart TB
     
     subgraph Step2["Step 2: Export from index.ts"]
         B1["export { Component }"]
-        B2["export { meta, usageCode, componentCode }"]
+        B2["export { meta, usageCode, componentFiles }"]
     end
     
     subgraph Step3["Step 3: Register in components.ts"]
@@ -267,11 +274,13 @@ flowchart TB
 In `src/config/components.ts`, the `buildComponentConfig` function merges everything:
 
 ```typescript
+import { loadComponentFiles, getRegistryPath } from "@/lib/component-loader";
+
 function buildComponentConfig(
   meta: ComponentMeta,
   component: React.ComponentType | React.LazyExoticComponent<any>,
   usageCode: string,
-  componentCode: string
+  componentCode: string | ComponentFile[]
 ): ComponentConfig {
   return {
     ...meta,           // All metadata properties
@@ -280,6 +289,14 @@ function buildComponentConfig(
     componentCode,     // Full source for manual install
   };
 }
+
+// Example usage with file loading:
+buildComponentConfig(
+  separatorMeta,
+  Separator,
+  separatorUsage,
+  loadComponentFiles(getRegistryPath("separator"), separatorFiles)
+);
 ```
 
 ---

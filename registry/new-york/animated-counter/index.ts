@@ -1,4 +1,4 @@
 import AnimatedCounter from "./animated-counter";
-import meta, { usageCode, componentCode } from "./meta";
+import meta, { usageCode, componentFiles } from "./meta";
 
-export { AnimatedCounter, meta, usageCode, componentCode };
+export { AnimatedCounter, meta, usageCode, componentFiles };

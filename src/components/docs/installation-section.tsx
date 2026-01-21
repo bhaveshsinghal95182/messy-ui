@@ -31,7 +31,7 @@ const InstallationSection = ({ component, className }: InstallationSectionProps)
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [language, setLanguage] = useState<"ts" | "js">("ts");
 
-  // Parse component code - can be string or ComponentFile[]
+  // Parse component code - can be string or ComponentFile[] (ComponentFileRef[] is resolved server-side)
   const files = useMemo((): ComponentFile[] => {
     if (typeof component.componentCode === "string") {
       // Legacy single string format
@@ -41,7 +41,13 @@ const InstallationSection = ({ component, className }: InstallationSectionProps)
         code: component.componentCode,
       }];
     }
-    return component.componentCode;
+    // ComponentFileRef[] should be resolved to ComponentFile[] by server component
+    // Check if it's already resolved (has 'code' property)
+    if (component.componentCode.length > 0 && 'code' in component.componentCode[0]) {
+      return component.componentCode as ComponentFile[];
+    }
+    // Fallback: ComponentFileRef[] not resolved (shouldn't happen in production)
+    return [];
   }, [component.componentCode, component.slug]);
 
   // Check if any file has JS version

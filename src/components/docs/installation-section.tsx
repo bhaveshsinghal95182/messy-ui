@@ -1,12 +1,11 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Check, Copy, Terminal, FileCode, Info, AlertTriangle, Lightbulb } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Terminal, FileCode } from "lucide-react";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CodeBlock from "./code-blocks";
 import CommandBlock from "./command-block";
-import { ComponentConfig, ComponentFile, InstallationNote, CodeSnippet } from "@/config/types";
+import { ComponentConfig, ComponentFile } from "@/config/types";
 import { cn } from "@/lib/utils";
 
 interface InstallationSectionProps {
@@ -28,21 +27,6 @@ const cliRunners = [
 ];
 
 // Note styling based on type
-const noteStyles: Record<InstallationNote["type"], { icon: typeof Info; className: string }> = {
-  info: {
-    icon: Info,
-    className: "bg-blue-500/10 border-blue-500/30 text-blue-400",
-  },
-  warning: {
-    icon: AlertTriangle,
-    className: "bg-amber-500/10 border-amber-500/30 text-amber-400",
-  },
-  tip: {
-    icon: Lightbulb,
-    className: "bg-emerald-500/10 border-emerald-500/30 text-emerald-400",
-  },
-};
-
 const InstallationSection = ({ component, className }: InstallationSectionProps) => {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [language, setLanguage] = useState<"ts" | "js">("ts");
@@ -80,6 +64,7 @@ const InstallationSection = ({ component, className }: InstallationSectionProps)
 
   return (
     <div className={cn("space-y-4", className)}>
+      
       <Tabs defaultValue="cli" className="w-full">
         <TabsList className="grid w-full grid-cols-2 max-w-[300px]">
           <TabsTrigger value="cli" className="gap-2">
@@ -138,28 +123,6 @@ const InstallationSection = ({ component, className }: InstallationSectionProps)
 
         {/* Manual Installation Tab */}
         <TabsContent value="manual" className="mt-4 space-y-6">
-          {/* Installation Notes */}
-          {component.notes && component.notes.length > 0 && (
-            <div className="space-y-2">
-              {component.notes.map((note, index) => {
-                const style = noteStyles[note.type];
-                const Icon = style.icon;
-                return (
-                  <div
-                    key={index}
-                    className={cn(
-                      "flex items-start gap-3 p-3 rounded-lg border",
-                      style.className
-                    )}
-                  >
-                    <Icon className="w-4 h-4 mt-0.5 shrink-0" />
-                    <p className="text-sm">{note.message}</p>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
           {/* Step: CLI Dependencies (if any) */}
           {hasCLIDeps && (
             <div className="space-y-3">

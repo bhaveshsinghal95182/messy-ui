@@ -3,17 +3,36 @@
 import Link from "next/link";
 import { motion, type Variants } from "motion/react";
 import { ExternalLink } from "lucide-react";
-import { ComponentConfig } from "@/config/types";
+import { ComponentConfig, InstallationNote } from "@/config/types";
 import ComponentPreview from "@/components/docs/components-preview";
 import PropsTable from "@/components/docs/props-table";
 import InstallationSection from "@/components/docs/installation-section";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Info, AlertTriangle, Lightbulb } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface AnimatedPageContentProps {
   component: ComponentConfig;
   relatedComponents: ComponentConfig[];
 }
+
+const noteStyles: Record<InstallationNote["type"], { icon: typeof Info; className: string }> = {
+  info: {
+    icon: Info,
+    className: "bg-blue-500/10 border-blue-500/30 text-blue-400",
+  },
+  warning: {
+    icon: AlertTriangle,
+    className: "bg-amber-500/10 border-amber-500/30 text-amber-400",
+  },
+  tip: {
+    icon: Lightbulb,
+    className: "bg-emerald-500/10 border-emerald-500/30 text-emerald-400",
+  },
+};
+
+
 
 // Stagger animation variants
 const containerVariants: Variants = {
@@ -120,6 +139,28 @@ export default function AnimatedPageContent({
         <h2 className="text-xl font-semibold text-foreground mb-4">Preview</h2>
         <ComponentPreview component={component} />
       </motion.section>
+
+      {/* Installation Notes - shown above tabs */}
+      {component.notes && component.notes.length > 0 && (
+        <div className="space-y-2">
+          {component.notes.map((note, index) => {
+            const style = noteStyles[note.type];
+            const Icon = style.icon;
+            return (
+              <div
+                key={index}
+                className={cn(
+                  "flex items-start gap-3 p-3 rounded-lg border",
+                  style.className
+                )}
+              >
+                <Icon className="w-4 h-4 mt-0.5 shrink-0" />
+                <p className="text-sm">{note.message}</p>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       <Separator />
 

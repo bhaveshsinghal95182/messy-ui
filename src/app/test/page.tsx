@@ -25,7 +25,7 @@ export default function TestPage() {
       /> */}
       <div className="w-full h-screen flex items-center justify-center">
 
-      <Separator />
+<Separator className="w-1/5 invert" />
       </div>
     </div>
   );

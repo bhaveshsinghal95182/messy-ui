@@ -26,6 +26,12 @@ import {
   componentCode as ctaButtonCode,
 } from "@/registry/new-york/cta-button";
 
+import {
+  meta as separatorMeta,
+  usageCode as separatorUsage,
+  componentCode as separatorCode,
+} from "@/registry/new-york/separator";
+
 const AnimatedCounter = lazy(() =>
   import("@/registry/new-york/animated-counter").then((mod) => ({
     default: mod.AnimatedCounter,
@@ -47,6 +53,12 @@ const ThemeToggle = lazy(() =>
 const CTAButton = lazy(() =>
   import("@/registry/new-york/cta-button").then((mod) => ({
     default: mod.CTAButton,
+  }))
+);
+
+const Separator = lazy(() =>
+  import("@/registry/new-york/separator").then((mod) => ({
+    default: mod.Separator,
   }))
 );
 
@@ -92,6 +104,12 @@ export const components: ComponentConfig[] = [
     CTAButton,
     ctaButtonUsage,
     ctaButtonCode
+  ),
+  buildComponentConfig(
+    separatorMeta,
+    Separator,
+    separatorUsage,
+    separatorCode
   ),
 ];
 

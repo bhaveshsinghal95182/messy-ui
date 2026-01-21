@@ -86,6 +86,19 @@
           "type": "registry:lib"
         }
       ]
+    },
+    {
+      "name": "separator",
+      "type": "registry:component",
+      "title": "Separator",
+      "description": "An interactive separator with a wobbling string animation. The line bends toward the mouse cursor and oscillates with a satisfying spring effect when released.",
+      "dependencies": ["gsap"],
+      "files": [
+        {
+          "path": "registry/new-york/separator/separator.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }

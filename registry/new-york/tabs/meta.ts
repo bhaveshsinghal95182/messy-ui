@@ -41,7 +41,7 @@ const meta: ComponentMeta = {
     },
     {
       type: "info",
-      message: "You can use these components just like shadcn tabs.",
+      message: "You can use this components just like shadcn tabs.",
     },
   ],
   sandbox: "inline",

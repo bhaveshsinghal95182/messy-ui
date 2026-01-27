@@ -99,6 +99,19 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "tabs",
+      "type": "registry:component",
+      "title": "Tabs",
+      "description": "Shadcn-compatible tabs component with smooth animations and context awareness, built on Base UI.",
+      "dependencies": ["@base-ui/react"],
+      "files": [
+        {
+          "path": "registry/new-york/tabs/tabs.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }

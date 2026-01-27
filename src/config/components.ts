@@ -1,5 +1,10 @@
 import { lazy } from "react";
-import { ComponentConfig, ComponentFile, ComponentMeta, ComponentFileRef } from "./types";
+import {
+  ComponentConfig,
+  ComponentFile,
+  ComponentMeta,
+  ComponentFileRef,
+} from "./types";
 
 // Import registry components with their co-located metadata
 import {
@@ -32,34 +37,46 @@ import {
   componentFiles as separatorFiles,
 } from "@/registry/new-york/separator";
 
+import {
+  meta as tabsMeta,
+  usageCode as tabsUsage,
+  componentFiles as tabsFiles,
+} from "@/registry/new-york/tabs";
+
 const AnimatedCounter = lazy(() =>
   import("@/registry/new-york/animated-counter").then((mod) => ({
     default: mod.AnimatedCounter,
-  }))
+  })),
 );
 
 const HoldButton = lazy(() =>
   import("@/registry/new-york/hold-button").then((mod) => ({
     default: mod.HoldButton,
-  }))
+  })),
 );
 
 const ThemeToggle = lazy(() =>
   import("@/registry/new-york/theme-toggle").then((mod) => ({
     default: mod.ThemeToggle,
-  }))
+  })),
 );
 
 const CTAButton = lazy(() =>
   import("@/registry/new-york/cta-button").then((mod) => ({
     default: mod.CTAButton,
-  }))
+  })),
 );
 
 const Separator = lazy(() =>
   import("@/registry/new-york/separator").then((mod) => ({
     default: mod.Separator,
-  }))
+  })),
+);
+
+const Tabs = lazy(() =>
+  import("@/registry/new-york/tabs").then((mod) => ({
+    default: mod.TabsCode,
+  })),
 );
 
 /**
@@ -71,7 +88,7 @@ function buildComponentConfig(
   meta: ComponentMeta,
   component: React.ComponentType | React.LazyExoticComponent<any>,
   usageCode: string,
-  componentCode: string | ComponentFile[] | ComponentFileRef[]
+  componentCode: string | ComponentFile[] | ComponentFileRef[],
 ): ComponentConfig {
   return {
     ...meta,
@@ -87,32 +104,33 @@ export const components: ComponentConfig[] = [
     animatedCounterMeta,
     AnimatedCounter,
     animatedCounterUsage,
-    animatedCounterFiles
+    animatedCounterFiles,
   ),
   buildComponentConfig(
     holdButtonMeta,
     HoldButton,
     holdButtonUsage,
-    holdButtonFiles
+    holdButtonFiles,
   ),
   buildComponentConfig(
     themeToggleMeta,
     ThemeToggle,
     themeToggleUsage,
-    themeToggleFiles
+    themeToggleFiles,
   ),
   buildComponentConfig(
     ctaButtonMeta,
     CTAButton,
     ctaButtonUsage,
-    ctaButtonFiles
+    ctaButtonFiles,
   ),
   buildComponentConfig(
     separatorMeta,
     Separator,
     separatorUsage,
-    separatorFiles
+    separatorFiles,
   ),
+  buildComponentConfig(tabsMeta, Tabs, tabsUsage, tabsFiles),
 ];
 
 // Re-export types
@@ -122,17 +140,17 @@ export type { ComponentConfig, ComponentMeta, PropDefinition } from "./types";
 export const categories = [...new Set(components.map((c) => c.category))];
 
 export const getComponentBySlug = (
-  slug: string
+  slug: string,
 ): ComponentConfig | undefined => {
   return components.find((c) => c.slug === slug);
 };
 
 /** Find component by its main slug or any of its aliases */
 export const getComponentBySlugOrAlias = (
-  slugOrAlias: string
+  slugOrAlias: string,
 ): ComponentConfig | undefined => {
   return components.find(
-    (c) => c.slug === slugOrAlias || c.aliases.includes(slugOrAlias)
+    (c) => c.slug === slugOrAlias || c.aliases.includes(slugOrAlias),
   );
 };
 
@@ -142,7 +160,7 @@ export const getAllSlugsAndAliases = (): string[] => {
 };
 
 export const getComponentsByCategory = (
-  category: string
+  category: string,
 ): ComponentConfig[] => {
   return components.filter((c) => c.category === category);
 };

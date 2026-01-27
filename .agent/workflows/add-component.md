@@ -21,6 +21,32 @@ registry/new-york/<component-name>/
 
 ---
 
+## Handling Compound Components
+
+If your component is composite (e.g., `Tabs`, `Accordion`) and doesn't have a single default export that works standalone:
+
+1. Create a `registry/new-york/<component-name>/example.tsx` that exports a usage example (e.g., `export function ComponentNameCode()`).
+   Make sure to add `"use client";` at the top of this file if it's being used as a preview.
+   ```tsx
+   "use client";
+   import { ComponentName } from "./component-name";
+   
+   export function ComponentNameCode() {
+     return <ComponentName />;
+   }
+   ```
+2. Export this example in `index.ts`.
+3. In `src/config/components.ts`, lazy load this example instead of the component itself:
+   ```typescript
+   const ComponentName = lazy(() =>
+     import("@/registry/new-york/component-name").then((mod) => ({
+       default: mod.ComponentNameCode,
+     }))
+   );
+   ```
+
+---
+
 ## Step 1: Create the Component
 
 Create `registry/new-york/<component-name>/<component-name>.tsx`:
@@ -46,7 +72,7 @@ export function MyComponent({ propName = "default" }: MyComponentProps) {
 Create `registry/new-york/<component-name>/meta.ts`:
 
 ```typescript
-import { ComponentMeta } from "@/config/types";
+import { ComponentMeta, ComponentFileRef } from "@/config/types";
 
 // Usage example shown in preview Code tab
 export const usageCode = `import { MyComponent } from "@/components/my-component";
@@ -55,9 +81,14 @@ export default function Example() {
   return <MyComponent propName="value" />;
 }`;
 
-// Full component code for manual installation (copy entire component)
-export const componentCode = `"use client";
-// ... full component code as a string ...`;
+// Component files to be loaded at build time
+export const componentFiles: ComponentFileRef[] = [
+  {
+    filename: "my-component.tsx",
+    targetPath: "components/my-component.tsx",
+    sourcePath: "./my-component.tsx",
+  },
+];
 
 const meta: ComponentMeta = {
   slug: "my-component",
@@ -117,9 +148,9 @@ Create `registry/new-york/<component-name>/index.ts`:
 
 ```typescript
 import { MyComponent } from "./my-component";
-import meta, { usageCode, componentCode } from "./meta";
+import meta, { usageCode, componentFiles } from "./meta";
 
-export { MyComponent, meta, usageCode, componentCode };
+export { MyComponent, meta, usageCode, componentFiles };
 ```
 
 ---
@@ -155,7 +186,7 @@ Update `src/config/components.ts`:
 import {
   meta as myComponentMeta,
   usageCode as myComponentUsage,
-  componentCode as myComponentCode,
+  componentFiles as myComponentFiles,
 } from "@/registry/new-york/my-component";
 
 // Add lazy component
@@ -172,7 +203,7 @@ export const components: ComponentConfig[] = [
     myComponentMeta,
     MyComponent,
     myComponentUsage,
-    myComponentCode
+    myComponentFiles
   ),
 ];
 ```

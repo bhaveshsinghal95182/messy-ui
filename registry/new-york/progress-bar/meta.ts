@@ -29,7 +29,7 @@ export const componentFiles: ComponentFileRef[] = [
 const meta: ComponentMeta = {
   slug: "progress-bar",
   name: "Progress Bar",
-  category: "Elements",
+  category: "Layout",
   description: "A reading progress bar that visualizes scroll position.",
   seoTitle: "Progress Bar - React Component | messy-ui",
   seoDescription:

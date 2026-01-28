@@ -43,6 +43,13 @@ import {
   componentFiles as tabsFiles,
 } from "@/registry/new-york/tabs";
 
+import {
+  meta as progressBarMeta,
+  usageCode as progressBarUsage,
+  componentFiles as progressBarFiles,
+  ProgressBarExample,
+} from "@/registry/new-york/progress-bar";
+
 const AnimatedCounter = lazy(() =>
   import("@/registry/new-york/animated-counter").then((mod) => ({
     default: mod.AnimatedCounter,
@@ -131,6 +138,12 @@ export const components: ComponentConfig[] = [
     separatorFiles,
   ),
   buildComponentConfig(tabsMeta, Tabs, tabsUsage, tabsFiles),
+  buildComponentConfig(
+    progressBarMeta,
+    ProgressBarExample,
+    progressBarUsage,
+    progressBarFiles,
+  ),
 ];
 
 // Re-export types

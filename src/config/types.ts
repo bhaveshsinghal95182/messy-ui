@@ -6,7 +6,9 @@ export interface PropDefinition {
   default: string;
   description: string;
   /** Explicitly specify the control type to avoid dynamic switching */
-  control?: "input" | "slider" | "switch" | "select";
+  control?: "input" | "slider" | "switch" | "select" | "select-custom";
+  /** Options for select/select-custom controls */
+  options?: string[] | number[];
   /** Min value for slider controls */
   min?: number;
   /** Max value for slider controls */
@@ -22,7 +24,7 @@ export interface PropDefinition {
 export interface CLICommand {
   /** Label shown in the UI (e.g., "Install shadcn button", "Initialize Prisma") */
   label: string;
-  /** 
+  /**
    * Command variants for different package managers
    * Use {url} as placeholder for registry URL if needed
    */
@@ -81,7 +83,7 @@ export interface CodeSnippet {
   code: string;
   /** Language for syntax highlighting */
   language: "tsx" | "jsx" | "js" | "ts" | "html" | "css" | "json" | "bash";
-  /** 
+  /**
    * Target file path for shadcn registry (e.g., "styles/shimmer.css")
    * If provided, this file will be included in the shadcn registry JSON
    */
@@ -89,7 +91,11 @@ export interface CodeSnippet {
   /**
    * Registry type for shadcn (defaults to "registry:file")
    */
-  registryType?: "registry:style" | "registry:file" | "registry:hook" | "registry:lib";
+  registryType?:
+    | "registry:style"
+    | "registry:file"
+    | "registry:hook"
+    | "registry:lib";
 }
 
 /**
@@ -119,26 +125,26 @@ export interface ComponentMeta {
    */
   thumbnailUrl?: string | { light: string; dark: string };
   props: PropDefinition[];
-  
-  /** 
+
+  /**
    * NPM package dependencies (shown in manual installation)
    * Will be joined with spaces for install command
    */
   dependencies: string[];
-  
+
   /**
    * CLI commands to run before manual installation (optional)
    * Use for shadcn dependencies, prisma init, or any other CLI tools
    * These are shown BEFORE the npm install step
    */
   cliDependencies?: CLICommand[];
-  
+
   /**
    * Important notes/messages to show users during installation
    * Displayed at the top of the installation section
    */
   notes?: InstallationNote[];
-  
+
   /**
    * Additional code snippets to show (CSS, config files, etc.)
    * Displayed as a separate step in manual installation
@@ -155,7 +161,7 @@ export interface ComponentConfig extends ComponentMeta {
   component: ComponentType | React.LazyExoticComponent<any>;
   /** Short usage example code shown in the preview Code tab */
   usageCode: string;
-  /** 
+  /**
    * Component code for manual installation
    * Can be a single string (legacy/simple), array of ComponentFile (loaded),
    * or array of ComponentFileRef (to be loaded by server components)

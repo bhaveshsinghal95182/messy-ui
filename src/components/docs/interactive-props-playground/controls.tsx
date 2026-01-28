@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { ControlProps } from "./types";
 import { parseEnumOptions } from "./utils";
+import { CustomSelectControl } from "./custom-select-control";
 
 export function BooleanControl({ prop, value, onChange }: ControlProps) {
   return (
@@ -101,12 +102,45 @@ export function StringControl({ prop, value, onChange }: ControlProps) {
   );
 }
 
+export function SelectControl({ prop, value, onChange }: ControlProps) {
+  const options = prop.options?.map(String) || [];
+
+  return (
+    <div className="space-y-2">
+      <Label htmlFor={prop.name} className="text-sm font-medium">
+        {prop.name}
+      </Label>
+      <Select
+        value={String(value)}
+        onValueChange={(val) => onChange(prop.name, val)}
+      >
+        <SelectTrigger id={prop.name} className="h-8">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {options.map((option) => (
+            <SelectItem key={option} value={option}>
+              {option}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
+
 export function PropControl({ prop, value, onChange }: ControlProps) {
   if (prop.type === "boolean") {
     return <BooleanControl prop={prop} value={value} onChange={onChange} />;
   }
   if (prop.type === "number") {
     return <NumberControl prop={prop} value={value} onChange={onChange} />;
+  }
+  if (prop.control === "select") {
+    return <SelectControl prop={prop} value={value} onChange={onChange} />;
+  }
+  if (prop.control === "select-custom") {
+    return <CustomSelectControl prop={prop} value={value} onChange={onChange} />;
   }
   if (prop.type.includes("|") && prop.type.includes('"')) {
     return <EnumControl prop={prop} value={value} onChange={onChange} />;

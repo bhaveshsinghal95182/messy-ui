@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import Header from "./header";
 import Sidebar from "./sidebar";
 
@@ -10,6 +11,11 @@ interface DocsLayoutProps {
 
 const DocsLayout = ({ children }: DocsLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const pathname = usePathname();
+
+  if (pathname?.startsWith("/preview")) {
+    return <>{children}</>;
+  }
 
   return (
     <div className="min-h-screen bg-background">

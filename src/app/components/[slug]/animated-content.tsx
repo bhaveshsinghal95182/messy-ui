@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Info, AlertTriangle, Lightbulb } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ProgressBar from "@/registry/new-york/progress-bar/progress-bar";
 
 interface AnimatedPageContentProps {
   component: ComponentConfig;
@@ -81,6 +82,7 @@ export default function AnimatedPageContent({
       initial="hidden"
       animate="visible"
     >
+      <ProgressBar className="bg-foreground" origin="left" height={1.5} />
       {/* Breadcrumb */}
       <motion.div
         variants={itemVariants}

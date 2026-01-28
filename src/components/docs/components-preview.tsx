@@ -185,9 +185,16 @@ const ComponentPreview = ({ component, className }: ComponentPreviewProps) => {
             )}
             {component.sandbox === "iframe" ? (
               <DeviceFrame device={device}>
-                <div className="min-h-[300px] overflow-auto flex items-center justify-center">
-                  {PreviewContent}
-                </div>
+                <iframe
+                  src={`/preview/${component.slug}?${new URLSearchParams(
+                    Object.entries(mergedProps).reduce((acc, [key, value]) => {
+                      if (value !== undefined) acc[key] = String(value);
+                      return acc;
+                    }, {} as Record<string, string>)
+                  ).toString()}`}
+                  className="w-full h-[600px] border-none bg-background"
+                  title={`${component.name} preview`}
+                />
               </DeviceFrame>
             ) : (
               <DeviceFrame device={device}>

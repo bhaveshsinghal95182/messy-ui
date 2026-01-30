@@ -1,19 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import {
   getComponentBySlugOrAlias,
   getAllSlugsAndAliases,
   components,
 } from "@/config/components";
 import { resolveComponentCode } from "@/lib/component-loader";
-import ComponentPreview from "@/components/docs/components-preview";
-import PropsTable from "@/components/docs/props-table";
-import InstallationSection from "@/components/docs/installation-section";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import AnimatedPageContent from "./animated-content";
 
 interface PageProps {

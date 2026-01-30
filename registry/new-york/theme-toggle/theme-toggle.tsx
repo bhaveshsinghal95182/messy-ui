@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { useTheme } from "next-themes";
-import { flushSync } from "react-dom";
-import { cn } from "@/lib/utils";
-import "./theme-toggle.css";
+import * as React from 'react';
+import { useTheme } from 'next-themes';
+import { flushSync } from 'react-dom';
+import { cn } from '@/lib/utils';
+import './theme-toggle.css';
 
 interface ThemeToggleProps {
   /** Additional class names */
@@ -25,13 +25,13 @@ const ThemeToggle = ({ className }: ThemeToggleProps) => {
 
     // Fallback for browsers without View Transitions API
     if (!document.startViewTransition) {
-      setTheme(theme === "dark" ? "light" : "dark");
+      setTheme(theme === 'dark' ? 'light' : 'dark');
       return;
     }
 
     await document.startViewTransition(() => {
       flushSync(() => {
-        setTheme(theme === "dark" ? "light" : "dark");
+        setTheme(theme === 'dark' ? 'light' : 'dark');
       });
     }).ready;
 
@@ -49,8 +49,8 @@ const ThemeToggle = ({ className }: ThemeToggleProps) => {
       },
       {
         duration: 500,
-        easing: "ease-in-out",
-        pseudoElement: "::view-transition-new(root)",
+        easing: 'ease-in-out',
+        pseudoElement: '::view-transition-new(root)',
       }
     );
   }
@@ -58,7 +58,7 @@ const ThemeToggle = ({ className }: ThemeToggleProps) => {
   if (!mounted) {
     return (
       <button
-        className={cn("theme-toggle", className)}
+        className={cn('theme-toggle', className)}
         aria-label="Toggle theme"
         disabled
       >
@@ -72,9 +72,9 @@ const ThemeToggle = ({ className }: ThemeToggleProps) => {
   return (
     <button
       ref={ref}
-      className={cn("theme-toggle", className)}
+      className={cn('theme-toggle', className)}
       onClick={themeToggle}
-      aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+      aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
       type="button"
     >
       <span className="theme-toggle__icon">

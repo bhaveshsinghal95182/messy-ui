@@ -4,9 +4,9 @@ import {
   TabsTrigger,
   TabsContent,
   TabsIndicator,
-} from "./tabs";
-import meta, { usageCode, componentFiles } from "./meta";
-import { TabsCode } from "./example";
+} from './tabs';
+import meta, { usageCode, componentFiles } from './meta';
+import { TabsCode } from './example';
 
 export {
   Tabs,

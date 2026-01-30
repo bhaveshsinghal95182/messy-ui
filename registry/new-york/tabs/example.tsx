@@ -1,12 +1,6 @@
-"use client";
+'use client';
 
-import {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
-  TabsIndicator,
-} from "./tabs";
+import { Tabs, TabsList, TabsTrigger, TabsIndicator } from './tabs';
 
 export function TabsCode() {
   return (

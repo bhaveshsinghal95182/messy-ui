@@ -1,6 +1,6 @@
-"use client";
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
+'use client';
+import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
 
 // Maximum rotations per digit to prevent performance issues
 const MAX_ROTATIONS = 20;
@@ -14,7 +14,7 @@ interface AnimatedCounterProps {
 
 // Individual digit component that rolls based on total rotations
 const OdometerDigit = ({
-  targetDigit,
+  targetDigit: _targetDigit,
   rotations,
   duration = 2,
 }: {
@@ -36,7 +36,7 @@ const OdometerDigit = ({
       {
         y: -rotations * digitHeight,
         duration,
-        ease: "power2.out",
+        ease: 'power2.out',
       }
     );
   }, [rotations, duration]);
@@ -64,8 +64,8 @@ const OdometerDigit = ({
 const AnimatedCounter = ({
   target = 1234,
   duration = 2,
-  prefix = "",
-  suffix = "+",
+  prefix = '',
+  suffix = '+',
 }: AnimatedCounterProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const hasAnimated = useRef(false);
@@ -75,7 +75,9 @@ const AnimatedCounter = ({
 
   // Calculate capped rotations for each digit position
   // We cap rotations but ensure we land on the correct final digit
-  const getDigitData = (position: number): { targetDigit: number; rotations: number } => {
+  const getDigitData = (
+    position: number
+  ): { targetDigit: number; rotations: number } => {
     const divisor = Math.pow(10, position);
     const fullRotations = Math.floor(target / divisor);
     const targetDigit = fullRotations % 10;
@@ -91,7 +93,7 @@ const AnimatedCounter = ({
     // Calculate how many full 0-9 cycles fit + the target digit
     const fullCycles = Math.floor(MAX_ROTATIONS / 10);
     const cappedRotations = fullCycles * 10 + targetDigit;
-    
+
     return { targetDigit, rotations: cappedRotations };
   };
 
@@ -108,7 +110,7 @@ const AnimatedCounter = ({
     gsap.fromTo(
       containerRef.current,
       { scale: 0.9, opacity: 0 },
-      { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" }
+      { scale: 1, opacity: 1, duration: 0.4, ease: 'back.out(1.7)' }
     );
   }, []);
 

@@ -1,4 +1,4 @@
-import ProgressBar from "@/registry/new-york/progress-bar/progress-bar";
+import ProgressBar from '@/registry/new-york/progress-bar/progress-bar';
 
 export default function TestPage() {
   return (

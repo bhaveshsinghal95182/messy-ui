@@ -1,39 +1,40 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { motion, type Variants } from "motion/react";
-import { ExternalLink } from "lucide-react";
-import { ComponentConfig, InstallationNote } from "@/config/types";
-import ComponentPreview from "@/components/docs/components-preview";
-import PropsTable from "@/components/docs/props-table";
-import InstallationSection from "@/components/docs/installation-section";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Info, AlertTriangle, Lightbulb } from "lucide-react";
-import { cn } from "@/lib/utils";
-import ProgressBar from "@/registry/new-york/progress-bar/progress-bar";
+import Link from 'next/link';
+import { motion, type Variants } from 'motion/react';
+import { ExternalLink } from 'lucide-react';
+import { ComponentConfig, InstallationNote } from '@/config/types';
+import ComponentPreview from '@/components/docs/components-preview';
+import PropsTable from '@/components/docs/props-table';
+import InstallationSection from '@/components/docs/installation-section';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { Info, AlertTriangle, Lightbulb } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import ProgressBar from '@/registry/new-york/progress-bar/progress-bar';
 
 interface AnimatedPageContentProps {
   component: ComponentConfig;
   relatedComponents: ComponentConfig[];
 }
 
-const noteStyles: Record<InstallationNote["type"], { icon: typeof Info; className: string }> = {
+const noteStyles: Record<
+  InstallationNote['type'],
+  { icon: typeof Info; className: string }
+> = {
   info: {
     icon: Info,
-    className: "bg-blue-500/10 border-blue-500/30 text-blue-400",
+    className: 'bg-blue-500/10 border-blue-500/30 text-blue-400',
   },
   warning: {
     icon: AlertTriangle,
-    className: "bg-amber-500/10 border-amber-500/30 text-amber-400",
+    className: 'bg-amber-500/10 border-amber-500/30 text-amber-400',
   },
   tip: {
     icon: Lightbulb,
-    className: "bg-emerald-500/10 border-emerald-500/30 text-emerald-400",
+    className: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
   },
 };
-
-
 
 // Stagger animation variants
 const containerVariants: Variants = {
@@ -88,7 +89,10 @@ export default function AnimatedPageContent({
         variants={itemVariants}
         className="flex items-center gap-2 text-sm text-muted-foreground"
       >
-        <Link href="/components" className="hover:text-foreground transition-colors">
+        <Link
+          href="/components"
+          className="hover:text-foreground transition-colors"
+        >
           Components
         </Link>
         <span>/</span>
@@ -105,9 +109,13 @@ export default function AnimatedPageContent({
       {/* Header */}
       <motion.div variants={itemVariants} className="space-y-4">
         <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-3xl font-bold text-foreground">{component.name}</h1>
+          <h1 className="text-3xl font-bold text-foreground">
+            {component.name}
+          </h1>
           <Badge variant="outline">{component.category}</Badge>
-          <Badge variant={component.sandbox === "iframe" ? "default" : "secondary"}>
+          <Badge
+            variant={component.sandbox === 'iframe' ? 'default' : 'secondary'}
+          >
             {component.sandbox} sandbox
           </Badge>
         </div>
@@ -152,7 +160,7 @@ export default function AnimatedPageContent({
               <div
                 key={index}
                 className={cn(
-                  "flex items-start gap-3 p-3 rounded-lg border",
+                  'flex items-start gap-3 p-3 rounded-lg border',
                   style.className
                 )}
               >
@@ -168,7 +176,9 @@ export default function AnimatedPageContent({
 
       {/* Installation */}
       <motion.section variants={sectionVariants}>
-        <h2 className="text-xl font-semibold text-foreground mb-4">Installation</h2>
+        <h2 className="text-xl font-semibold text-foreground mb-4">
+          Installation
+        </h2>
         <InstallationSection component={component} />
       </motion.section>
 

@@ -1,10 +1,14 @@
-"use client";
-import { useState } from "react";
-import { Check, Copy } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import CommandBlock from "./command-block";
-import { cn } from "@/lib/utils";
+'use client';
+import { useState } from 'react';
+import {
+  Tabs,
+  TabsContent,
+  TabsIndicator,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs';
+import CommandBlock from './command-block';
+import { cn } from '@/lib/utils';
 
 interface InstallCommandProps {
   packageName: string;
@@ -12,10 +16,10 @@ interface InstallCommandProps {
 }
 
 const packageManagers = [
-  { id: "npm", label: "npm", command: (pkg: string) => `npm install ${pkg}` },
-  { id: "pnpm", label: "pnpm", command: (pkg: string) => `pnpm add ${pkg}` },
-  { id: "yarn", label: "yarn", command: (pkg: string) => `yarn add ${pkg}` },
-  { id: "bun", label: "bun", command: (pkg: string) => `bun add ${pkg}` },
+  { id: 'npm', label: 'npm', command: (pkg: string) => `npm install ${pkg}` },
+  { id: 'pnpm', label: 'pnpm', command: (pkg: string) => `pnpm add ${pkg}` },
+  { id: 'yarn', label: 'yarn', command: (pkg: string) => `yarn add ${pkg}` },
+  { id: 'bun', label: 'bun', command: (pkg: string) => `bun add ${pkg}` },
 ];
 
 const InstallCommand = ({ packageName, className }: InstallCommandProps) => {
@@ -28,7 +32,12 @@ const InstallCommand = ({ packageName, className }: InstallCommandProps) => {
   };
 
   return (
-    <div className={cn("rounded-lg border border-border overflow-hidden", className)}>
+    <div
+      className={cn(
+        'rounded-lg border border-border overflow-hidden',
+        className
+      )}
+    >
       <Tabs defaultValue="npm" className="w-full">
         <div className="bg-muted/50 border-b border-border px-2">
           <TabsList className="h-10 bg-transparent">

@@ -1,4 +1,4 @@
-import { ComponentMeta, ComponentFileRef } from "@/config/types";
+import { ComponentMeta, ComponentFileRef } from '@/config/types';
 
 // Usage example shown in preview Code tab
 export const usageCode = `import ThemeToggle from "@/components/theme-toggle";
@@ -15,9 +15,9 @@ export default function Header() {
 // Component files to be loaded at build time
 export const componentFiles: ComponentFileRef[] = [
   {
-    filename: "theme-toggle.tsx",
-    targetPath: "ui/theme-toggle.tsx",
-    sourcePath: "./theme-toggle.tsx",
+    filename: 'theme-toggle.tsx',
+    targetPath: 'ui/theme-toggle.tsx',
+    sourcePath: './theme-toggle.tsx',
   },
 ];
 
@@ -105,67 +105,78 @@ export const cssCode = `/* Theme Toggle Component CSS - Self-contained styles */
 }`;
 
 const meta: ComponentMeta = {
-  slug: "theme-toggle",
-  name: "Theme Toggle",
-  category: "Navigation",
+  slug: 'theme-toggle',
+  name: 'Theme Toggle',
+  category: 'Navigation',
   description:
-    "A theme toggle button with a stunning clip-path view transition animation. The theme change expands from the button in a smooth circular reveal effect.",
-  seoTitle: "Theme Toggle - React Component | messy-ui",
+    'A theme toggle button with a stunning clip-path view transition animation. The theme change expands from the button in a smooth circular reveal effect.',
+  seoTitle: 'Theme Toggle - React Component | messy-ui',
   seoDescription:
-    "A beautiful animated theme toggle with clip-path view transition. Smooth circular reveal animation when switching between dark and light mode. Self-contained CSS. Works with next-themes.",
+    'A beautiful animated theme toggle with clip-path view transition. Smooth circular reveal animation when switching between dark and light mode. Self-contained CSS. Works with next-themes.',
   keywords: [
-    "theme toggle",
-    "dark mode toggle",
-    "view transition",
-    "clip-path animation",
-    "theme switcher",
-    "circular reveal",
-    "next-themes",
-    "react theme toggle",
-    "animated toggle",
+    'theme toggle',
+    'dark mode toggle',
+    'view transition',
+    'clip-path animation',
+    'theme switcher',
+    'circular reveal',
+    'next-themes',
+    'react theme toggle',
+    'animated toggle',
   ],
-  aliases: ["theme-switcher", "dark-mode-toggle", "mode-toggle"],
-  sandbox: "inline",
-  registryUrl: "https://messyui.dev/r/theme-toggle.json",
+  aliases: ['theme-switcher', 'dark-mode-toggle', 'mode-toggle'],
+  sandbox: 'inline',
+  registryUrl: 'https://messyui.dev/r/theme-toggle.json',
   dependencies: [],
   notes: [
-    { type: "info", message: "Requires next-themes to be configured in your app." },
-    { type: "tip", message: "The clip-path animation uses View Transitions API with graceful fallback for unsupported browsers." },
-    { type: "info", message: "The CSS is self-contained - won't conflict with your existing styles." },
+    {
+      type: 'info',
+      message: 'Requires next-themes to be configured in your app.',
+    },
+    {
+      type: 'tip',
+      message:
+        'The clip-path animation uses View Transitions API with graceful fallback for unsupported browsers.',
+    },
+    {
+      type: 'info',
+      message:
+        "The CSS is self-contained - won't conflict with your existing styles.",
+    },
   ],
   cliDependencies: [
     {
-      label: "Install next-themes",
+      label: 'Install next-themes',
       commands: {
-        npx: "npm install next-themes",
-        pnpm: "pnpm add next-themes",
-        bun: "bun add next-themes",
+        npx: 'npm install next-themes',
+        pnpm: 'pnpm add next-themes',
+        bun: 'bun add next-themes',
       },
     },
     {
-      label: "Install cn utility (if not already installed)",
+      label: 'Install cn utility (if not already installed)',
       commands: {
-        npx: "npx shadcn@latest add lib/utils",
-        pnpm: "pnpm dlx shadcn@latest add lib/utils",
-        bun: "bunx shadcn@latest add lib/utils",
+        npx: 'npx shadcn@latest add lib/utils',
+        pnpm: 'pnpm dlx shadcn@latest add lib/utils',
+        bun: 'bunx shadcn@latest add lib/utils',
       },
     },
   ],
   snippets: [
     {
-      label: "Add theme-toggle.css to your component folder",
-      language: "css",
-      targetPath: "components/theme-toggle/theme-toggle.css",
-      registryType: "registry:style",
+      label: 'Add theme-toggle.css to your component folder',
+      language: 'css',
+      targetPath: 'components/theme-toggle/theme-toggle.css',
+      registryType: 'registry:style',
       code: cssCode,
     },
   ],
   props: [
     {
-      name: "className",
-      type: "string",
-      default: "undefined",
-      description: "Additional CSS classes to apply to the toggle button",
+      name: 'className',
+      type: 'string',
+      default: 'undefined',
+      description: 'Additional CSS classes to apply to the toggle button',
     },
   ],
 };

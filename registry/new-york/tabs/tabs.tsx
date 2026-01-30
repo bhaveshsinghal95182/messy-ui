@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { Tabs as BaseUITabs } from "@base-ui/react/tabs";
+import * as React from 'react';
+import { Tabs as BaseUITabs } from '@base-ui/react/tabs';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 function Tabs({
   className,
@@ -12,7 +12,7 @@ function Tabs({
   return (
     <BaseUITabs.Root
       data-slot="tabs"
-      className={cn("flex flex-col", className)}
+      className={cn('flex flex-col', className)}
       {...props}
     />
   );
@@ -26,7 +26,7 @@ function TabsList({
     <BaseUITabs.List
       data-slot="tabs-list"
       className={cn(
-        "relative z-0 bg-muted text-muted-foreground inline-flex h-9 w-fit items-center justify-center rounded-lg p-[3px]",
+        'relative z-0 bg-muted text-muted-foreground inline-flex h-9 w-fit items-center justify-center rounded-lg p-[3px]',
         className
       )}
       {...props}
@@ -58,7 +58,7 @@ function TabsIndicator({
     <BaseUITabs.Indicator
       data-slot="tabs-indicator"
       className={cn(
-        "absolute left-0 z-0 h-[calc(100%-6px)] w-(--active-tab-width) translate-x-(--active-tab-left) rounded-md bg-background shadow-sm transition-all duration-200 ease-in-out dark:bg-input/30",
+        'absolute left-0 z-0 h-[calc(100%-6px)] w-(--active-tab-width) translate-x-(--active-tab-left) rounded-md bg-background shadow-sm transition-all duration-200 ease-in-out dark:bg-input/30',
         className
       )}
       {...props}
@@ -73,7 +73,7 @@ function TabsContent({
   return (
     <BaseUITabs.Panel
       data-slot="tabs-content"
-      className={cn("flex-1 outline-none", className)}
+      className={cn('flex-1 outline-none', className)}
       {...props}
     />
   );

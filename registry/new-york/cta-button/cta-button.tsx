@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { motion } from "motion/react";
-import { ArrowRight } from "lucide-react";
-import { type ReactNode } from "react";
-import { cn } from "@/lib/utils";
+import { motion } from 'motion/react';
+import { ArrowRight } from 'lucide-react';
+import { type ReactNode } from 'react';
+import { cn } from '@/lib/utils';
 
 interface CTAButtonProps {
   /** Text to render before the button */
@@ -39,23 +39,23 @@ interface CTAButtonProps {
 const CTAButton = ({
   children,
   icon,
-  label = "Browse",
-  highlightLabel = "Components",
-  bgColorHex = "#ff2056",
-  arrowBgColorBefore = "#efb100",
-  arrowTravelDistance = "calc(100% + 7.8rem)",
+  label = 'Browse',
+  highlightLabel = 'Components',
+  bgColorHex = '#ff2056',
+  arrowBgColorBefore = '#efb100',
+  arrowTravelDistance = 'calc(100% + 7.8rem)',
   textShift = -30,
   duration = 0.3,
-  className = "",
-  textColorAfter = "#fff",
-  iconColorBefore = "#000000",
-  iconColorAfter = "#fff",
+  className = '',
+  textColorAfter = '#fff',
+  iconColorBefore = '#000000',
+  iconColorAfter = '#fff',
   onClick,
 }: CTAButtonProps) => {
   return (
     <motion.button
       className={cn(
-        "relative font-semibold text-lg cursor-pointer tracking-tight flex items-center gap-2 overflow-hidden",
+        'relative font-semibold text-lg cursor-pointer tracking-tight flex items-center gap-2 overflow-hidden',
         className
       )}
       initial="idle"
@@ -70,7 +70,7 @@ const CTAButton = ({
           idle: { scaleX: 0 },
           hover: { scaleX: 1 },
         }}
-        transition={{ duration, ease: "easeOut" }}
+        transition={{ duration, ease: 'easeOut' }}
       />
 
       {/* Arrow container - travels from left to right */}
@@ -80,14 +80,14 @@ const CTAButton = ({
           idle: { x: 0, backgroundColor: arrowBgColorBefore },
           hover: { x: arrowTravelDistance, backgroundColor: bgColorHex },
         }}
-        transition={{ duration, ease: "easeOut" }}
+        transition={{ duration, ease: 'easeOut' }}
       >
         <motion.span
           variants={{
             idle: { color: iconColorBefore },
             hover: { color: iconColorAfter },
           }}
-          transition={{ duration, ease: "easeOut" }}
+          transition={{ duration, ease: 'easeOut' }}
         >
           {icon ?? <ArrowRight className="h-4 w-4" />}
         </motion.span>
@@ -97,17 +97,17 @@ const CTAButton = ({
       <motion.span
         className="relative z-10"
         variants={{
-          idle: { x: 0, mixBlendMode: "difference" as const },
-          hover: { x: textShift, mixBlendMode: "normal" as const },
+          idle: { x: 0, mixBlendMode: 'difference' as const },
+          hover: { x: textShift, mixBlendMode: 'normal' as const },
         }}
         style={{ color: textColorAfter }}
-        transition={{ duration, ease: "easeOut" }}
+        transition={{ duration, ease: 'easeOut' }}
       >
         {children ? (
           <>{children}</>
         ) : (
           <>
-            {label}{" "}
+            {label}{' '}
             {highlightLabel && (
               <span className="font-serif italic tracking-wide">
                 {highlightLabel}

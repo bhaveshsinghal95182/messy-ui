@@ -3,7 +3,8 @@ export const gruvboxDark = {
   'code[class*="language-"]': {
     color: '#ebdbb2',
     background: 'none',
-    fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace',
+    fontFamily:
+      'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace',
     fontSize: '14px',
     textAlign: 'left',
     whiteSpace: 'pre',
@@ -16,7 +17,8 @@ export const gruvboxDark = {
   'pre[class*="language-"]': {
     color: '#ebdbb2',
     background: '#1d2021',
-    fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace',
+    fontFamily:
+      'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace',
     fontSize: '14px',
     textAlign: 'left',
     whiteSpace: 'pre',
@@ -69,7 +71,8 @@ export const gruvboxLight = {
   'code[class*="language-"]': {
     color: '#3c3836',
     background: 'none',
-    fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace',
+    fontFamily:
+      'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace',
     fontSize: '14px',
     textAlign: 'left',
     whiteSpace: 'pre',
@@ -82,7 +85,8 @@ export const gruvboxLight = {
   'pre[class*="language-"]': {
     color: '#3c3836',
     background: '#fffef2',
-    fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace',
+    fontFamily:
+      'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace',
     fontSize: '14px',
     textAlign: 'left',
     whiteSpace: 'pre',

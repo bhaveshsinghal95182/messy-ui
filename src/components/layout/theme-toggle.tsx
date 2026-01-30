@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
-import { flushSync } from "react-dom";
+import * as React from 'react';
+import { Moon, Sun } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { flushSync } from 'react-dom';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 
 export function ThemeToggle() {
   const { setTheme, theme } = useTheme();
@@ -15,13 +15,13 @@ export function ThemeToggle() {
     if (!ref.current) return;
 
     if (!document.startViewTransition) {
-      setTheme(theme === "dark" ? "light" : "dark");
+      setTheme(theme === 'dark' ? 'light' : 'dark');
       return;
     }
 
     await document.startViewTransition(() => {
       flushSync(() => {
-        setTheme(theme === "dark" ? "light" : "dark");
+        setTheme(theme === 'dark' ? 'light' : 'dark');
       });
     }).ready;
 
@@ -41,8 +41,8 @@ export function ThemeToggle() {
       },
       {
         duration: 500,
-        easing: "ease-in-out",
-        pseudoElement: "::view-transition-new(root)",
+        easing: 'ease-in-out',
+        pseudoElement: '::view-transition-new(root)',
       }
     );
   }

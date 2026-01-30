@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { usePathname } from "next/navigation";
-import Header from "./header";
-import Sidebar from "./sidebar";
+import { useState } from 'react';
+import { usePathname } from 'next/navigation';
+import Header from './header';
+import Sidebar from './sidebar';
 
 interface DocsLayoutProps {
   children: React.ReactNode;
@@ -13,7 +13,7 @@ const DocsLayout = ({ children }: DocsLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
 
-  if (pathname?.startsWith("/preview")) {
+  if (pathname?.startsWith('/preview')) {
     return <>{children}</>;
   }
 

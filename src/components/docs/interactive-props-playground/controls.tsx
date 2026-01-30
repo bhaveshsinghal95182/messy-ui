@@ -1,13 +1,19 @@
-"use client";
+'use client';
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
-import { ControlProps } from "./types";
-import { parseEnumOptions } from "./utils";
-import { CustomSelectControl } from "./custom-select-control";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
+import { ControlProps } from './types';
+import { parseEnumOptions } from './utils';
+import { CustomSelectControl } from './custom-select-control';
 
 export function BooleanControl({ prop, value, onChange }: ControlProps) {
   return (
@@ -25,8 +31,9 @@ export function BooleanControl({ prop, value, onChange }: ControlProps) {
 }
 
 export function NumberControl({ prop, value, onChange }: ControlProps) {
-  const numValue = typeof value === "number" ? value : parseFloat(String(value)) || 0;
-  const useSlider = prop.control === "slider";
+  const numValue =
+    typeof value === 'number' ? value : parseFloat(String(value)) || 0;
+  const useSlider = prop.control === 'slider';
 
   return (
     <div className="space-y-2">
@@ -130,19 +137,21 @@ export function SelectControl({ prop, value, onChange }: ControlProps) {
 }
 
 export function PropControl({ prop, value, onChange }: ControlProps) {
-  if (prop.type === "boolean") {
+  if (prop.type === 'boolean') {
     return <BooleanControl prop={prop} value={value} onChange={onChange} />;
   }
-  if (prop.type === "number") {
+  if (prop.type === 'number') {
     return <NumberControl prop={prop} value={value} onChange={onChange} />;
   }
-  if (prop.control === "select") {
+  if (prop.control === 'select') {
     return <SelectControl prop={prop} value={value} onChange={onChange} />;
   }
-  if (prop.control === "select-custom") {
-    return <CustomSelectControl prop={prop} value={value} onChange={onChange} />;
+  if (prop.control === 'select-custom') {
+    return (
+      <CustomSelectControl prop={prop} value={value} onChange={onChange} />
+    );
   }
-  if (prop.type.includes("|") && prop.type.includes('"')) {
+  if (prop.type.includes('|') && prop.type.includes('"')) {
     return <EnumControl prop={prop} value={value} onChange={onChange} />;
   }
   return <StringControl prop={prop} value={value} onChange={onChange} />;

@@ -1,20 +1,20 @@
-import { PropDefinition } from "@/config/components";
+import { PropDefinition } from '@/config/components';
 
 /**
  * Parse a default value string into its actual typed value
  */
 export function parseDefaultValue(defaultStr: string, type: string): unknown {
-  if (type === "boolean") return defaultStr === "true";
-  if (type === "number") return parseFloat(defaultStr) || 0;
+  if (type === 'boolean') return defaultStr === 'true';
+  if (type === 'number') return parseFloat(defaultStr) || 0;
   // Remove surrounding quotes for strings
-  return defaultStr.replace(/^["']|["']$/g, "");
+  return defaultStr.replace(/^["']|["']$/g, '');
 }
 
 /**
  * Format a prop value for JSX output
  */
 export function formatPropValue(value: unknown, type: string): string {
-  if (type === "boolean" || type === "number") {
+  if (type === 'boolean' || type === 'number') {
     return `{${value}}`;
   }
   return `"${value}"`;
@@ -32,7 +32,7 @@ export function generateUsageCode(
   const propsToInclude = propDefinitions
     .filter((prop) => {
       // Skip callback/function props
-      if (prop.type.includes("=>")) return false;
+      if (prop.type.includes('=>')) return false;
       // Only include if different from default
       const currentValue = currentProps[prop.name];
       const defaultValue = parseDefaultValue(prop.default, prop.type);
@@ -49,7 +49,7 @@ export function generateUsageCode(
 
   const propsString = propsToInclude
     .map((p) => `  ${p.name}=${p.value}`)
-    .join("\n");
+    .join('\n');
 
   return `<${componentName}\n${propsString}\n/>`;
 }
@@ -60,7 +60,7 @@ export function generateUsageCode(
  */
 export function parseEnumOptions(typeStr: string): string[] {
   return typeStr
-    .split("|")
-    .map((s) => s.trim().replace(/^["']|["']$/g, ""))
+    .split('|')
+    .map((s) => s.trim().replace(/^["']|["']$/g, ''))
     .filter((s) => s.length > 0);
 }

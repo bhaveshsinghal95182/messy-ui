@@ -1,4 +1,4 @@
-import { PropDefinition } from "@/config/components";
+import { PropDefinition } from '@/config/components';
 
 export interface InteractivePropsPlaygroundProps {
   props: PropDefinition[];

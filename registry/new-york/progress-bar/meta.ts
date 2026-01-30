@@ -1,4 +1,4 @@
-import { ComponentMeta, ComponentFileRef } from "@/config/types";
+import { ComponentMeta, ComponentFileRef } from '@/config/types';
 
 export const usageCode = `import ProgressBar from "@/registry/new-york/progress-bar/progress-bar";
 
@@ -20,64 +20,64 @@ export default function Example() {
 
 export const componentFiles: ComponentFileRef[] = [
   {
-    filename: "progress-bar.tsx",
-    targetPath: "components/progress-bar.tsx",
-    sourcePath: "./progress-bar.tsx",
+    filename: 'progress-bar.tsx',
+    targetPath: 'components/progress-bar.tsx',
+    sourcePath: './progress-bar.tsx',
   },
 ];
 
 const meta: ComponentMeta = {
-  slug: "progress-bar",
-  name: "Progress Bar",
-  category: "Layout",
-  description: "A reading progress bar that visualizes scroll position.",
-  seoTitle: "Progress Bar - React Component | messy-ui",
+  slug: 'progress-bar',
+  name: 'Progress Bar',
+  category: 'Layout',
+  description: 'A reading progress bar that visualizes scroll position.',
+  seoTitle: 'Progress Bar - React Component | messy-ui',
   seoDescription:
-    "A customizable scroll progress bar component for React applications.",
+    'A customizable scroll progress bar component for React applications.',
   keywords: [
-    "progress bar",
-    "scroll progress",
-    "reading progress",
-    "framer motion",
+    'progress bar',
+    'scroll progress',
+    'reading progress',
+    'framer motion',
   ],
-  sandbox: "iframe",
+  sandbox: 'iframe',
   aliases: [],
-  registryUrl: "https://messyui.dev/r/progress-bar.json",
-  dependencies: ["motion"],
+  registryUrl: 'https://messyui.dev/r/progress-bar.json',
+  dependencies: ['motion'],
   props: [
     {
-      name: "position",
-      type: "string",
+      name: 'position',
+      type: 'string',
       default: '"top"',
-      description: "Position of the progress bar",
-      control: "select",
-      options: ["top", "bottom"],
+      description: 'Position of the progress bar',
+      control: 'select',
+      options: ['top', 'bottom'],
     },
     {
-      name: "color",
-      type: "string",
+      name: 'color',
+      type: 'string',
       default: '"#eec847"',
-      description: "Color of the progress bar",
-      control: "select-custom",
-      options: ["#eec847", "#3b82f6", "#ef4444", "#22c55e"],
+      description: 'Color of the progress bar',
+      control: 'select-custom',
+      options: ['#eec847', '#3b82f6', '#ef4444', '#22c55e'],
     },
     {
-      name: "height",
-      type: "number",
-      default: "2",
-      description: "Height of the progress bar (Tailwind scale)",
-      control: "slider",
+      name: 'height',
+      type: 'number',
+      default: '2',
+      description: 'Height of the progress bar (Tailwind scale)',
+      control: 'slider',
       min: 1,
       max: 8,
       step: 0.5,
     },
     {
-      name: "origin",
-      type: "string",
+      name: 'origin',
+      type: 'string',
       default: '"left"',
-      description: "Transform origin of the animation",
-      control: "select-custom",
-      options: ["left", "center", "right"],
+      description: 'Transform origin of the animation',
+      control: 'select-custom',
+      options: ['left', 'center', 'right'],
     },
   ],
 };

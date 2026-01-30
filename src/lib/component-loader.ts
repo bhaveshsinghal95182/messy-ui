@@ -1,6 +1,6 @@
-import fs from "fs";
-import path from "path";
-import { ComponentFile, ComponentFileRef } from "@/config/types";
+import fs from 'fs';
+import path from 'path';
+import { ComponentFile, ComponentFileRef } from '@/config/types';
 
 /**
  * Type guard to check if componentCode is ComponentFileRef[]
@@ -8,10 +8,10 @@ import { ComponentFile, ComponentFileRef } from "@/config/types";
 export function isComponentFileRefArray(
   code: string | ComponentFile[] | ComponentFileRef[]
 ): code is ComponentFileRef[] {
-  if (typeof code === "string") return false;
+  if (typeof code === 'string') return false;
   if (code.length === 0) return false;
   // ComponentFileRef has sourcePath, ComponentFile has code
-  return "sourcePath" in code[0] && !("code" in code[0]);
+  return 'sourcePath' in code[0] && !('code' in code[0]);
 }
 
 /**
@@ -29,7 +29,7 @@ export function loadComponentFiles(
   return files.map((file) => ({
     filename: file.filename,
     targetPath: file.targetPath,
-    code: fs.readFileSync(path.join(registryPath, file.sourcePath), "utf-8"),
+    code: fs.readFileSync(path.join(registryPath, file.sourcePath), 'utf-8'),
   }));
 }
 
@@ -37,7 +37,7 @@ export function loadComponentFiles(
  * Helper to get the registry path for a component
  */
 export function getRegistryPath(componentName: string): string {
-  return path.join(process.cwd(), "registry", "new-york", componentName);
+  return path.join(process.cwd(), 'registry', 'new-york', componentName);
 }
 
 /**
@@ -48,7 +48,7 @@ export function resolveComponentCode(
   componentSlug: string,
   code: string | ComponentFile[] | ComponentFileRef[]
 ): string | ComponentFile[] {
-  if (typeof code === "string") return code;
+  if (typeof code === 'string') return code;
   if (isComponentFileRefArray(code)) {
     return loadComponentFiles(getRegistryPath(componentSlug), code);
   }

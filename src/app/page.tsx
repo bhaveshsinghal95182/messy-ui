@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Sparkles } from "lucide-react";
 import { Logo3D } from "@/components/logo-3d";
 import CTAButton from "@/components/layout/cta-button";
 
@@ -59,9 +57,8 @@ export default function Page() {
             A collection of animated, accessible components built with React,
             GSAP, and Framer Motion. Copy the code and make it yours.
           </p>
-          <CTAButton bgColorClass="bg-rose-500" bgColorHex="#ff2056"/>
+          <CTAButton bgColorClass="bg-rose-500" bgColorHex="#ff2056" />
         </div>
-
         {/* Right side - 3D Logo */}
         <div className="animate-in fade-in slide-in-from-right-4 duration-700 delay-200">
           <Logo3D />
@@ -70,3 +67,4 @@ export default function Page() {
     </div>
   );
 }
+

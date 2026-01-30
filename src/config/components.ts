@@ -50,6 +50,18 @@ import {
   ProgressBarExample,
 } from "@/registry/new-york/progress-bar";
 
+import {
+  meta as liquidSliderMeta,
+  usageCode as liquidSliderUsage,
+  componentFiles as liquidSliderFiles,
+} from "@/registry/new-york/liquid-slider";
+
+const LiquidSlider = lazy(() =>
+  import("@/registry/new-york/liquid-slider").then((mod) => ({
+    default: mod.LiquidSlider,
+  })),
+);
+
 const AnimatedCounter = lazy(() =>
   import("@/registry/new-york/animated-counter").then((mod) => ({
     default: mod.AnimatedCounter,
@@ -143,6 +155,12 @@ export const components: ComponentConfig[] = [
     ProgressBarExample,
     progressBarUsage,
     progressBarFiles,
+  ),
+  buildComponentConfig(
+    liquidSliderMeta,
+    LiquidSlider,
+    liquidSliderUsage,
+    liquidSliderFiles,
   ),
 ];
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { useTheme } from "next-themes";
 import { gruvboxDark, gruvboxLight } from "@/lib/gruvbox-theme";
@@ -25,7 +25,13 @@ const CommandBlock = ({
   copied = false,
 }: CommandBlockProps) => {
   const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
   const theme = isDark ? gruvboxDark : gruvboxLight;
 
   return (

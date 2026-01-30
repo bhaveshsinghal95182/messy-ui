@@ -13,7 +13,6 @@ interface AnimatedCounterProps {
 }
 
 const OdometerDigit = ({
-  targetDigit,
   rotations,
   duration = 2,
 }: {

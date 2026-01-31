@@ -2,7 +2,7 @@
 
 import { useId, useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { LiquidFilter } from './filter';
 interface WidthHeight {
@@ -98,38 +98,24 @@ export const LiquidSlider: React.FC<LiquidSidebarProps> = ({
 
   const thumbWidthRest = thumbWidth * SCALE_REST;
 
+  const [left, setLeft] = useState(0);
+  const computeLeft = useCallback(() => {
+    console.warn('COMPUTE LEFT');
+    const clampedValue = Math.min(Math.max(value.get(), min), max);
+    const ratio = (clampedValue - min) / (max - min); // Convert value to 0-1 ratio
+    const trackWidth = sliderWidth - thumbWidth + thumbWidthRest / 3; // Usable track width
+    setLeft(ratio * trackWidth - thumbWidthRest / 3);
+  }, [value, thumbWidth, min, max, sliderWidth, forceActive]);
+
   const isDragging = useRef(false);
   const [controlledPosSet, isControlledPosSet] = useState(false);
 
-  // Compute left position based on current value
-  const computeLeftValue = useCallback(
-    (currentValue: number) => {
-      const clampedValue = Math.min(Math.max(currentValue, min), max);
-      const ratio = (clampedValue - min) / (max - min);
-      const trackWidth = sliderWidth - thumbWidth + thumbWidthRest / 3;
-      return ratio * trackWidth - thumbWidthRest / 3;
-    },
-    [min, max, sliderWidth, thumbWidth, thumbWidthRest]
-  );
-
-  // Initialize left position based on controlled or default value
-  const initialLeft = useMemo(
-    () => computeLeftValue(controlledValue ?? defaultValue),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [] // Only compute on mount
-  );
-  const [left, setLeft] = useState(initialLeft);
-
   useEffect(() => {
-    if (!isDragging.current && controlledValue !== undefined) {
-      // Use requestAnimationFrame to schedule state update outside render
-      const newLeft = computeLeftValue(controlledValue);
-      requestAnimationFrame(() => {
-        setLeft(newLeft);
-        isControlledPosSet(true);
-      });
+    if (!isDragging.current) {
+      computeLeft();
+      isControlledPosSet(true);
     }
-  }, [computeLeftValue, controlledValue]);
+  }, [computeLeft, controlledValue]);
 
   const pointerDown = useMotionValue(0);
   const isUp = useTransform((): number =>

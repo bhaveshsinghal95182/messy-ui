@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, MotionValue, useTransform } from 'motion/react';
-import { useSyncExternalStore } from 'react';
+import { useEffect, useState } from 'react';
 import {
   calculateRefractionSpecular,
   CONVEX,
@@ -113,13 +113,12 @@ export const LiquidFilter: React.FC<LiquidFilterProps> = ({
   bezelHeightFn = CONVEX.fn,
   dpr,
 }) => {
-  // Client-side detection using useSyncExternalStore to avoid setState in effect
-  const emptySubscribe = () => () => {};
-  const isMounted = useSyncExternalStore(
-    emptySubscribe,
-    () => true, // Client snapshot
-    () => false // Server snapshot
-  );
+  // Hydration fix: only render on client to avoid SSR/client mismatch with dynamic canvas data
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const displacementData = useTransform(() => {
     const canvasW = canvasWidth
@@ -174,27 +173,14 @@ export const LiquidFilter: React.FC<LiquidFilterProps> = ({
     () => displacementData.get().maximumDisplacement * (scaleRatio?.get() ?? 1)
   );
 
-  // Pre-compute all motion values outside JSX to avoid conditional hook calls
-  const blurMotion = useTransform(() => blur as number);
-  const feImageWidth = useTransform(() =>
-    canvasWidth ? getValueOrMotion(canvasWidth) : getValueOrMotion(width)
-  );
-  const feImageHeight = useTransform(() =>
-    canvasHeight ? getValueOrMotion(canvasHeight) : getValueOrMotion(height)
-  );
-  const specularSaturationMotion = useTransform(() =>
-    getValueOrMotion(specularSaturation).toString()
-  );
-  const specularOpacityMotion = useTransform(() =>
-    getValueOrMotion(specularOpacity)
-  );
-
   const content = (
     <filter id={id}>
       <motion.feGaussianBlur
         in={'SourceGraphic'}
         stdDeviation={
-          typeof blur === 'object' && 'get' in blur ? blur : blurMotion
+          typeof blur === 'object' && 'get' in blur
+            ? blur
+            : useTransform(() => blur as number)
         }
         result="blurred_source"
       />
@@ -203,8 +189,14 @@ export const LiquidFilter: React.FC<LiquidFilterProps> = ({
         href={displacementMapDataUrl}
         x={0}
         y={0}
-        width={feImageWidth}
-        height={feImageHeight}
+        width={useTransform(() =>
+          canvasWidth ? getValueOrMotion(canvasWidth) : getValueOrMotion(width)
+        )}
+        height={useTransform(() =>
+          canvasHeight
+            ? getValueOrMotion(canvasHeight)
+            : getValueOrMotion(height)
+        )}
         result="displacement_map"
       />
 
@@ -220,7 +212,11 @@ export const LiquidFilter: React.FC<LiquidFilterProps> = ({
       <motion.feColorMatrix
         in="displaced"
         type="saturate"
-        values={specularSaturationMotion}
+        values={
+          useTransform(() =>
+            getValueOrMotion(specularSaturation).toString()
+          ) as any
+        }
         result="displaced_saturated"
       />
 
@@ -228,8 +224,14 @@ export const LiquidFilter: React.FC<LiquidFilterProps> = ({
         href={specularLayerDataUrl}
         x={0}
         y={0}
-        width={feImageWidth}
-        height={feImageHeight}
+        width={useTransform(() =>
+          canvasWidth ? getValueOrMotion(canvasWidth) : getValueOrMotion(width)
+        )}
+        height={useTransform(() =>
+          canvasHeight
+            ? getValueOrMotion(canvasHeight)
+            : getValueOrMotion(height)
+        )}
         result="specular_layer"
       />
 
@@ -241,7 +243,10 @@ export const LiquidFilter: React.FC<LiquidFilterProps> = ({
       />
 
       <feComponentTransfer in="specular_layer" result="specular_faded">
-        <motion.feFuncA type="linear" slope={specularOpacityMotion} />
+        <motion.feFuncA
+          type="linear"
+          slope={useTransform(() => getValueOrMotion(specularOpacity))}
+        />
       </feComponentTransfer>
 
       <motion.feBlend

@@ -1,20 +1,29 @@
-# messy-ui
+# Messy-UI
 
-A collection of animated, accessible React components built with GSAP and Framer Motion. Copy the code and make it yours.
+A collection of animated React components built with GSAP and Framer Motion.
 
 ## Overview
 
-messy-ui is a component library featuring beautifully animated UI components designed for modern React applications. Each component is built with accessibility in mind and can be easily customized to fit your project's design system.
+Messy-UI is my take at making react components, since I was feeling a bit creative. I really wanted to try out creative programming and create a kind of a list of all the reusable cool looking components I make throughout my journey, also I needed a project for my CS classes therefore I finally decided to create this library.
 
-## Features
+## Why the name Messy-UI?
 
-- Animated components using GSAP and Framer Motion
-- Built with React 19 and Next.js 16
-- Styled with Tailwind CSS v4
-- Dark mode support via next-themes
-- shadcn/ui compatible registry
-- TypeScript support
-- Accessible by default
+Even though I have not really watched football a lot and keeping aside of the fact I only know Lionel Messi and Ronaldo as the only two names in football. This name might seem stupid to a lot of people to name the library Messy-UI from even SEO point of view. Messy here only really represents my messy thoughts and this name came as a result of names we were throwing in a group discussion while trying to decide what should this library be named.
+
+> This library has a lot of AI generated code and parts and I am actively trying to reclaim it all.
+
+## Why use AI in something that's supposed to be for learning?
+
+Since I am a CS student as of making this library, I think I am not worthy enough to comment on any of this whether AI is bad or not and whether we should use it or not. I do have my certain points here.
+
+If I had never used AI this repo would have never existed because I spent almost 1/2 year trying to find the best way to create a centralized component preview that can essentially hold 2 types of components:
+
+1. **Inline** - These are the one off components that are independent by nature from any other component on website. These can be called atomic components or dumb components depending on how old you are.
+2. **Sandboxed** - These are the components that thrive in a whole website like environment, they have very specific use cases and are generally dependent on the whole website and their respective position throughout the website.
+
+I think AI did a good job in making this code and it can most certainly support most of the creative ideas I get.
+
+So, I let you the reader be the judge, should I've used AI in this?
 
 ## Getting Started
 
@@ -56,16 +65,6 @@ npx shadcn@latest add https://messyui.dev/r/hold-button.json
 2. Copy the component code from the "Code" tab
 3. Install any required dependencies
 4. Add the component to your project
-
-## Available Components
-
-### Animations
-
-- **Animated Counter** - A number counter with odometer-style digit rotation animation using GSAP. Perfect for statistics, metrics, and dashboard displays.
-
-### Buttons
-
-- **Hold Button** - A confirmation button that fills up while being held, perfect for destructive or irreversible actions. Prevents accidental clicks by requiring a sustained press.
 
 ## Project Structure
 
@@ -110,21 +109,6 @@ This will:
 2. Generate individual JSON files in `public/r/`
 3. Update the `registry.json` index file
 
-## Tech Stack
-
-- [Next.js 16](https://nextjs.org/) - React framework
-- [React 19](https://react.dev/) - UI library
-- [Tailwind CSS v4](https://tailwindcss.com/) - Styling
-- [GSAP](https://greensock.com/gsap/) - Animation library
-- [Framer Motion](https://www.framer.com/motion/) - Animation library
-- [shadcn/ui](https://ui.shadcn.com/) - Component primitives
-- [Radix UI](https://www.radix-ui.com/) - Accessible primitives
-- [TypeScript](https://www.typescriptlang.org/) - Type safety
-
 ## Contributing
 
 Contributions are welcome. Please open an issue first to discuss what you would like to change.
-
-## License
-
-MIT

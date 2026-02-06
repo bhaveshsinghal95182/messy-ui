@@ -1,12 +1,12 @@
-"use client";
-import { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ChevronRight, Home } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
-import { cn } from "@/lib/utils";
-import { components, categories } from "@/config/components";
-import { ScrollArea } from "@/components/ui/scroll-area";
+'use client';
+import { useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { ChevronRight, Home } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { cn } from '@/lib/utils';
+import { components, categories } from '@/config/components';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -15,7 +15,8 @@ interface SidebarProps {
 
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const pathname = usePathname();
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(categories);
+  const [expandedCategories, setExpandedCategories] =
+    useState<string[]>(categories);
 
   const toggleCategory = (category: string) => {
     setExpandedCategories((prev) =>
@@ -26,7 +27,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   };
 
   const isActive = (slug: string) => pathname === `/components/${slug}`;
-  const isHomeActive = pathname === "/";
+  const isHomeActive = pathname === '/';
 
   return (
     <>
@@ -47,11 +48,11 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       <motion.aside
         initial={false}
         animate={{
-          x: isOpen ? 0 : "-100%",
+          x: isOpen ? 0 : '-100%',
         }}
-        transition={{ duration: 0.2, ease: "easeInOut" }}
+        transition={{ duration: 0.2, ease: 'easeInOut' }}
         className={cn(
-          "fixed left-0 top-14 z-40 h-[calc(100vh-3.5rem)] w-64 border-r border-border bg-background"
+          'fixed left-0 top-14 z-40 h-[calc(100vh-3.5rem)] w-64 border-r border-border bg-background'
         )}
       >
         <ScrollArea className="h-full py-4">
@@ -61,10 +62,10 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               href="/"
               onClick={onClose}
               className={cn(
-                "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                'flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
                 isHomeActive
-                  ? "bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-muted-foreground hover:bg-muted hover:text-foreground'
               )}
             >
               <Home className="h-4 w-4" />
@@ -88,17 +89,17 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                     <button
                       onClick={() => toggleCategory(category)}
                       className={cn(
-                        "flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                        'flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium transition-colors',
                         hasActiveChild
-                          ? "text-foreground"
-                          : "text-muted-foreground hover:text-foreground"
+                          ? 'text-foreground'
+                          : 'text-muted-foreground hover:text-foreground'
                       )}
                     >
                       <span>{category}</span>
                       <ChevronRight
                         className={cn(
-                          "h-4 w-4 transition-transform",
-                          isExpanded && "rotate-90"
+                          'h-4 w-4 transition-transform',
+                          isExpanded && 'rotate-90'
                         )}
                       />
                     </button>
@@ -108,7 +109,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                       {isExpanded && (
                         <motion.div
                           initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
+                          animate={{ height: 'auto', opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
                           transition={{ duration: 0.2 }}
                           className="overflow-hidden"
@@ -120,10 +121,10 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                                 href={`/components/${component.slug}`}
                                 onClick={onClose}
                                 className={cn(
-                                  "block rounded-lg px-3 py-1.5 text-sm transition-colors",
+                                  'block rounded-lg px-3 py-1.5 text-sm transition-colors',
                                   isActive(component.slug)
-                                    ? "bg-primary/10 text-primary font-medium"
-                                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                                    ? 'bg-primary/10 text-primary font-medium'
+                                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                                 )}
                               >
                                 {component.name}

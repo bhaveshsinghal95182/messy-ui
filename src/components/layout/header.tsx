@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Search, Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/layout/theme-toggle";
-import GithubIcon from "@/components/ui/github-icon";
-import { AnimatedIconHandle } from "@/components/ui/types";
+import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Search, Menu, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/layout/theme-toggle';
+import GithubIcon from '@/components/ui/github-icon';
+import { AnimatedIconHandle } from '@/components/ui/types';
 import {
   CommandDialog,
   CommandEmpty,
@@ -13,8 +13,8 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
-import { components, categories } from "@/config/components";
+} from '@/components/ui/command';
+import { components, categories } from '@/config/components';
 
 interface HeaderProps {
   onMenuToggle?: () => void;
@@ -28,13 +28,13 @@ const Header = ({ onMenuToggle, isSidebarOpen }: HeaderProps) => {
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setSearchOpen((open) => !open);
       }
     };
-    document.addEventListener("keydown", down);
-    return () => document.removeEventListener("keydown", down);
+    document.addEventListener('keydown', down);
+    return () => document.removeEventListener('keydown', down);
   }, []);
 
   const handleSelect = (slug: string) => {

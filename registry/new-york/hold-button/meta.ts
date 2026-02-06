@@ -1,4 +1,4 @@
-import { ComponentMeta, ComponentFileRef } from "@/config/types";
+import { ComponentMeta, ComponentFileRef } from '@/config/types';
 
 // Usage example shown in preview Code tab
 export const usageCode = `import HoldButton from "@/components/hold-button";
@@ -32,59 +32,67 @@ export default function DangerZone() {
 // Component files to be loaded at build time
 export const componentFiles: ComponentFileRef[] = [
   {
-    filename: "hold-button.tsx",
-    targetPath: "ui/hold-button.tsx",
-    sourcePath: "./hold-button.tsx",
+    filename: 'hold-button.tsx',
+    targetPath: 'ui/hold-button.tsx',
+    sourcePath: './hold-button.tsx',
   },
 ];
 
 const meta: ComponentMeta = {
-  slug: "hold-button",
-  name: "Hold Button",
-  category: "Buttons",
+  slug: 'hold-button',
+  name: 'Hold Button',
+  category: 'Buttons',
   description:
-    "A confirmation button that fills up while being held, perfect for destructive or irreversible actions. Prevents accidental clicks by requiring a sustained press.",
-  seoTitle: "Hold Button - React Component | messy-ui",
+    'A confirmation button that fills up while being held, perfect for destructive or irreversible actions. Prevents accidental clicks by requiring a sustained press.',
+  seoTitle: 'Hold Button - React Component | messy-ui',
   seoDescription:
-    "A hold-to-confirm button component with smooth fill animation for destructive actions. Prevents accidental clicks by requiring users to hold the button. Includes multiple variants, sizes, and visual feedback. Copy the code and use in your React project.",
+    'A hold-to-confirm button component with smooth fill animation for destructive actions. Prevents accidental clicks by requiring users to hold the button. Includes multiple variants, sizes, and visual feedback. Copy the code and use in your React project.',
   keywords: [
-    "hold button",
-    "hold to confirm",
-    "confirmation button",
-    "destructive button",
-    "delete button",
-    "press and hold",
-    "react button component",
-    "animated button",
-    "safe delete",
-    "progress button",
-    "hold to delete",
-    "long press button",
+    'hold button',
+    'hold to confirm',
+    'confirmation button',
+    'destructive button',
+    'delete button',
+    'press and hold',
+    'react button component',
+    'animated button',
+    'safe delete',
+    'progress button',
+    'hold to delete',
+    'long press button',
   ],
-  aliases: ["hold-to-confirm", "press-hold-button", "destructive-button"],
-  sandbox: "inline",
-  registryUrl: "https://messyui.dev/r/hold-button.json",
+  aliases: ['hold-to-confirm', 'press-hold-button', 'destructive-button'],
+  sandbox: 'inline',
+  registryUrl: 'https://messyui.dev/r/hold-button.json',
   dependencies: [],
   notes: [
-    { type: "tip", message: "Add the shimmer keyframe animation to your globals.css for the shimmer effect during hold." },
-    { type: "info", message: "Uses cn() utility from shadcn/ui. Make sure you have it installed." },
+    {
+      type: 'tip',
+      message:
+        'Add the shimmer keyframe animation to your globals.css for the shimmer effect during hold.',
+    },
+    {
+      type: 'info',
+      message:
+        'Uses cn() utility from shadcn/ui. Make sure you have it installed.',
+    },
   ],
   cliDependencies: [
     {
-      label: "Install cn utility (if not already installed)",
+      label: 'Install cn utility (if not already installed)',
       commands: {
-        npx: "npx shadcn@latest add lib/utils",
-        pnpm: "pnpm dlx shadcn@latest add lib/utils",
-        bun: "bunx shadcn@latest add lib/utils",
+        npx: 'npx shadcn@latest add lib/utils',
+        pnpm: 'pnpm dlx shadcn@latest add lib/utils',
+        bun: 'bunx shadcn@latest add lib/utils',
       },
     },
   ],
   snippets: [
     {
-      label: "Add shimmer animation to globals.css",
-      language: "css",
-      targetPath: "styles/hold-button-shimmer.css",
-      registryType: "registry:style",
+      label: 'Add shimmer animation to globals.css',
+      language: 'css',
+      targetPath: 'styles/hold-button-shimmer.css',
+      registryType: 'registry:style',
       code: `/* Shimmer animation for HoldButton */
 @keyframes shimmer {
   0% {
@@ -103,53 +111,53 @@ const meta: ComponentMeta = {
   ],
   props: [
     {
-      name: "label",
-      type: "string",
+      name: 'label',
+      type: 'string',
       default: '"Hold to Delete"',
-      description: "Text shown initially on the button",
+      description: 'Text shown initially on the button',
     },
     {
-      name: "holdingLabel",
-      type: "string",
+      name: 'holdingLabel',
+      type: 'string',
       default: '"Keep holding..."',
-      description: "Text shown while the button is being held",
+      description: 'Text shown while the button is being held',
     },
     {
-      name: "completedLabel",
-      type: "string",
+      name: 'completedLabel',
+      type: 'string',
       default: '"Deleted!"',
-      description: "Text shown after the action completes",
+      description: 'Text shown after the action completes',
     },
     {
-      name: "holdDuration",
-      type: "number",
-      default: "1500",
-      description: "Duration in milliseconds to hold before action triggers",
-      control: "slider",
+      name: 'holdDuration',
+      type: 'number',
+      default: '1500',
+      description: 'Duration in milliseconds to hold before action triggers',
+      control: 'slider',
       min: 500,
       max: 5000,
       step: 100,
     },
     {
-      name: "variant",
+      name: 'variant',
       type: '"destructive" | "warning" | "default"',
       default: '"destructive"',
-      description: "Visual style variant of the button",
-      control: "select",
+      description: 'Visual style variant of the button',
+      control: 'select',
     },
     {
-      name: "size",
+      name: 'size',
       type: '"sm" | "md" | "lg"',
       default: '"md"',
-      description: "Size of the button",
-      control: "select",
+      description: 'Size of the button',
+      control: 'select',
     },
     {
-      name: "disabled",
-      type: "boolean",
-      default: "false",
-      description: "Whether the button is disabled",
-      control: "switch",
+      name: 'disabled',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the button is disabled',
+      control: 'switch',
     },
   ],
 };

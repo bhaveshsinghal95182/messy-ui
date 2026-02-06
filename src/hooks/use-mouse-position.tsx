@@ -1,10 +1,7 @@
 import React from 'react';
 
 const useMousePosition = () => {
-  const [
-    mousePosition,
-    setMousePosition
-  ] = React.useState<{
+  const [mousePosition, setMousePosition] = React.useState<{
     x: number | null;
     y: number | null;
   }>({ x: 0, y: 0 });

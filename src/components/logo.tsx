@@ -1,11 +1,11 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import { motion, type HTMLMotionProps } from "motion/react"
+import * as React from 'react';
+import { motion, type HTMLMotionProps } from 'motion/react';
 
-interface MergedShapeProps extends HTMLMotionProps<"div"> {
-  fill?: string
-  children?: React.ReactNode
+interface MergedShapeProps extends HTMLMotionProps<'div'> {
+  fill?: string;
+  children?: React.ReactNode;
 }
 
 const containerVariants = {
@@ -17,7 +17,7 @@ const containerVariants = {
       delayChildren: 0.1,
     },
   },
-}
+};
 
 const shapeVariants = {
   hidden: { opacity: 0, scale: 0.8 },
@@ -25,12 +25,12 @@ const shapeVariants = {
     opacity: 1,
     scale: 1,
     transition: {
-      type: "spring" as const,
+      type: 'spring' as const,
       stiffness: 260,
       damping: 20,
     },
   },
-}
+};
 
 const bridgeVariants = {
   hidden: { opacity: 0, scale: 0 },
@@ -38,15 +38,15 @@ const bridgeVariants = {
     opacity: 1,
     scale: 1,
     transition: {
-      type: "spring" as const,
+      type: 'spring' as const,
       stiffness: 300,
       damping: 25,
     },
   },
-}
+};
 
 const MergedShape = ({
-  fill = "#ffffff",
+  fill = '#ffffff',
   children,
   style: containerStyle,
   className,
@@ -54,7 +54,7 @@ const MergedShape = ({
 }: MergedShapeProps) => (
   <motion.div
     style={{
-      position: "relative",
+      position: 'relative',
       width: 440,
       height: 460,
       ...containerStyle,
@@ -69,71 +69,71 @@ const MergedShape = ({
     <motion.div
       variants={shapeVariants}
       style={{
-        position: "absolute",
+        position: 'absolute',
         left: 0,
         top: 0,
         width: 120,
         height: 460,
         backgroundColor: fill,
-        borderRadius: "32px 32px 32px 32px",
+        borderRadius: '32px 32px 32px 32px',
       }}
     />
     {/* Shape 2 */}
     <motion.div
       variants={shapeVariants}
       style={{
-        position: "absolute",
+        position: 'absolute',
         left: 320,
         top: 0,
         width: 120,
         height: 460,
         backgroundColor: fill,
-        borderRadius: "32px 32px 32px 32px",
+        borderRadius: '32px 32px 32px 32px',
       }}
     />
     {/* Shape 3 */}
     <motion.div
       variants={shapeVariants}
       style={{
-        position: "absolute",
+        position: 'absolute',
         left: 190,
         top: 60,
         width: 60,
         height: 70,
         backgroundColor: fill,
-        borderRadius: "0px 0px 32px 32px",
+        borderRadius: '0px 0px 32px 32px',
       }}
     />
     {/* Shape 4 */}
     <motion.div
       variants={shapeVariants}
       style={{
-        position: "absolute",
+        position: 'absolute',
         left: 70,
         top: 0,
         width: 120,
         height: 80,
         backgroundColor: fill,
-        borderRadius: "32px 32px 0px 32px",
+        borderRadius: '32px 32px 0px 32px',
       }}
     />
     {/* Shape 5 */}
     <motion.div
       variants={shapeVariants}
       style={{
-        position: "absolute",
+        position: 'absolute',
         left: 250,
         top: 0,
         width: 120,
         height: 80,
         backgroundColor: fill,
-        borderRadius: "32px 32px 32px 0px",
+        borderRadius: '32px 32px 32px 0px',
       }}
     />
     <motion.div
       variants={shapeVariants}
       style={{
-        position: "absolute",
+        position: 'absolute',
         left: 120,
         top: 80,
         width: 70,
@@ -143,7 +143,7 @@ const MergedShape = ({
     <motion.div
       variants={shapeVariants}
       style={{
-        position: "absolute",
+        position: 'absolute',
         left: 250,
         top: 80,
         width: 70,
@@ -153,7 +153,7 @@ const MergedShape = ({
     <motion.div
       variants={shapeVariants}
       style={{
-        position: "absolute",
+        position: 'absolute',
         left: 190,
         top: 0,
         width: 60,
@@ -164,12 +164,12 @@ const MergedShape = ({
     <motion.svg
       variants={bridgeVariants}
       style={{
-        position: "absolute",
+        position: 'absolute',
         left: 158,
         top: 80,
         width: 32,
         height: 32,
-        pointerEvents: "none",
+        pointerEvents: 'none',
       }}
       viewBox="-32 -32 32 32"
     >
@@ -179,12 +179,12 @@ const MergedShape = ({
     <motion.svg
       variants={bridgeVariants}
       style={{
-        position: "absolute",
+        position: 'absolute',
         left: 250,
         top: 80,
         width: 32,
         height: 32,
-        pointerEvents: "none",
+        pointerEvents: 'none',
       }}
       viewBox="0 -32 32 32"
     >
@@ -194,12 +194,12 @@ const MergedShape = ({
     <motion.svg
       variants={bridgeVariants}
       style={{
-        position: "absolute",
+        position: 'absolute',
         left: 190,
         top: 28,
         width: 32,
         height: 32,
-        pointerEvents: "none",
+        pointerEvents: 'none',
       }}
       viewBox="0 0 32 32"
     >
@@ -209,12 +209,12 @@ const MergedShape = ({
     <motion.svg
       variants={bridgeVariants}
       style={{
-        position: "absolute",
+        position: 'absolute',
         left: 218,
         top: 28,
         width: 32,
         height: 32,
-        pointerEvents: "none",
+        pointerEvents: 'none',
       }}
       viewBox="-32 0 32 32"
     >
@@ -222,6 +222,6 @@ const MergedShape = ({
     </motion.svg>
     {children}
   </motion.div>
-)
+);
 
-export default MergedShape
+export default MergedShape;

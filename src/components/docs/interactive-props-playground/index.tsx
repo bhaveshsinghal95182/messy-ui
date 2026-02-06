@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useState, useCallback } from "react";
-import { Copy, Check } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { InteractivePropsPlaygroundProps } from "./types";
-import { parseDefaultValue, generateUsageCode } from "./utils";
-import { PropControl } from "./controls";
+import { useState, useCallback } from 'react';
+import { Copy, Check } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { InteractivePropsPlaygroundProps } from './types';
+import { parseDefaultValue, generateUsageCode } from './utils';
+import { PropControl } from './controls';
 
 export default function InteractivePropsPlayground({
   props,
@@ -29,12 +29,12 @@ export default function InteractivePropsPlayground({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error("Failed to copy code:", err);
+      console.error('Failed to copy code:', err);
     }
   }, [componentName, currentProps, props]);
 
   // Filter out callback props
-  const configurableProps = props.filter((p) => !p.type.includes("=>"));
+  const configurableProps = props.filter((p) => !p.type.includes('=>'));
 
   if (configurableProps.length === 0) {
     return (
@@ -47,7 +47,9 @@ export default function InteractivePropsPlayground({
   return (
     <div className="space-y-4 p-4 border-t border-border bg-muted/30">
       <div className="flex items-center justify-between">
-        <h4 className="text-sm font-semibold text-foreground">Props Playground</h4>
+        <h4 className="text-sm font-semibold text-foreground">
+          Props Playground
+        </h4>
         <Button
           variant="outline"
           size="sm"
@@ -69,11 +71,15 @@ export default function InteractivePropsPlayground({
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         {configurableProps.map((prop) => {
-          const value = currentProps[prop.name] ?? parseDefaultValue(prop.default, prop.type);
+          const value =
+            currentProps[prop.name] ??
+            parseDefaultValue(prop.default, prop.type);
           return (
             <div key={prop.name} className="space-y-1">
               <PropControl prop={prop} value={value} onChange={handleChange} />
-              <p className="text-xs text-muted-foreground">{prop.description}</p>
+              <p className="text-xs text-muted-foreground">
+                {prop.description}
+              </p>
             </div>
           );
         })}
@@ -82,6 +88,6 @@ export default function InteractivePropsPlayground({
   );
 }
 
-export * from "./types";
-export * from "./utils";
-export * from "./controls";
+export * from './types';
+export * from './utils';
+export * from './controls';

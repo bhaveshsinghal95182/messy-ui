@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Suspense, useState, useCallback, useMemo } from "react";
-import { motion } from "motion/react";
+import { Suspense, useState, useCallback, useMemo } from 'react';
+import { motion } from 'motion/react';
 import {
   Monitor,
   Tablet,
@@ -9,22 +9,24 @@ import {
   RotateCcw,
   Maximize2,
   SlidersHorizontal,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Skeleton } from "@/components/ui/skeleton";
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import DeviceFrame from "./device-frame";
-import CodeBlock from "./code-blocks";
-import InteractivePropsPlayground from "./interactive-props-playground";
-import { ComponentConfig } from "@/config/components";
-import { cn } from "@/lib/utils";
+  Tabs,
+  TabsContent,
+  TabsIndicator,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
+import DeviceFrame from './device-frame';
+import CodeBlock from './code-blocks';
+import InteractivePropsPlayground from './interactive-props-playground';
+import { ComponentConfig } from '@/config/components';
+import { cn } from '@/lib/utils';
 
-type DeviceType = "desktop" | "tablet" | "mobile";
+type DeviceType = 'desktop' | 'tablet' | 'mobile';
 
 interface ComponentPreviewProps {
   component: ComponentConfig;
@@ -38,7 +40,7 @@ const deviceIcons = {
 };
 
 const ComponentPreview = ({ component, className }: ComponentPreviewProps) => {
-  const [device, setDevice] = useState<DeviceType>("desktop");
+  const [device, setDevice] = useState<DeviceType>('desktop');
   const [previewKey, setPreviewKey] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showPlayground, setShowPlayground] = useState(false);
@@ -54,12 +56,12 @@ const ComponentPreview = ({ component, className }: ComponentPreviewProps) => {
   const defaultProps = useMemo(() => {
     const defaults: Record<string, unknown> = {};
     component.props.forEach((prop) => {
-      if (prop.type === "boolean") {
-        defaults[prop.name] = prop.default === "true";
-      } else if (prop.type === "number") {
+      if (prop.type === 'boolean') {
+        defaults[prop.name] = prop.default === 'true';
+      } else if (prop.type === 'number') {
         defaults[prop.name] = parseFloat(prop.default) || 0;
-      } else if (!prop.type.includes("=>")) {
-        defaults[prop.name] = prop.default.replace(/^["']|["']$/g, "");
+      } else if (!prop.type.includes('=>')) {
+        defaults[prop.name] = prop.default.replace(/^["']|["']$/g, '');
       }
     });
     return defaults;
@@ -68,7 +70,7 @@ const ComponentPreview = ({ component, className }: ComponentPreviewProps) => {
   const mergedProps = { ...defaultProps, ...customProps };
 
   const hasConfigurableProps =
-    component.props.filter((p) => !p.type.includes("=>")).length > 0;
+    component.props.filter((p) => !p.type.includes('=>')).length > 0;
 
   const PreviewContent = (
     <Suspense
@@ -85,7 +87,7 @@ const ComponentPreview = ({ component, className }: ComponentPreviewProps) => {
   return (
     <div
       className={cn(
-        "rounded-xl border border-border overflow-hidden bg-card",
+        'rounded-xl border border-border overflow-hidden bg-card',
         className
       )}
     >
@@ -119,7 +121,7 @@ const ComponentPreview = ({ component, className }: ComponentPreviewProps) => {
                     variant="ghost"
                     size="sm"
                     onClick={() => setDevice(d)}
-                    className={cn("h-7 w-7 p-0", device === d && "bg-muted")}
+                    className={cn('h-7 w-7 p-0', device === d && 'bg-muted')}
                   >
                     <Icon className="w-4 h-4" />
                   </Button>
@@ -141,7 +143,7 @@ const ComponentPreview = ({ component, className }: ComponentPreviewProps) => {
             {/* Props Playground Toggle */}
             {hasConfigurableProps && (
               <Button
-                variant={showPlayground ? "secondary" : "ghost"}
+                variant={showPlayground ? 'secondary' : 'ghost'}
                 size="sm"
                 onClick={() => setShowPlayground(!showPlayground)}
                 className="h-8 w-8 p-0"
@@ -168,8 +170,8 @@ const ComponentPreview = ({ component, className }: ComponentPreviewProps) => {
         <TabsContent value="preview" className="m-0">
           <motion.div
             className={cn(
-              "p-4 bg-[radial-gradient(circle_at_center,hsl(var(--muted))_1px,transparent_1px)] bg-size-[24px_24px]",
-              isFullscreen && "fixed inset-0 z-50 bg-background"
+              'p-4 bg-[radial-gradient(circle_at_center,hsl(var(--muted))_1px,transparent_1px)] bg-size-[24px_24px]',
+              isFullscreen && 'fixed inset-0 z-50 bg-background'
             )}
             layout
           >
@@ -183,14 +185,17 @@ const ComponentPreview = ({ component, className }: ComponentPreviewProps) => {
                 Exit Fullscreen
               </Button>
             )}
-            {component.sandbox === "iframe" ? (
+            {component.sandbox === 'iframe' ? (
               <DeviceFrame device={device}>
                 <iframe
                   src={`/preview/${component.slug}?${new URLSearchParams(
-                    Object.entries(mergedProps).reduce((acc, [key, value]) => {
-                      if (value !== undefined) acc[key] = String(value);
-                      return acc;
-                    }, {} as Record<string, string>)
+                    Object.entries(mergedProps).reduce(
+                      (acc, [key, value]) => {
+                        if (value !== undefined) acc[key] = String(value);
+                        return acc;
+                      },
+                      {} as Record<string, string>
+                    )
                   ).toString()}`}
                   className="w-full h-[600px] border-none bg-background"
                   title={`${component.name} preview`}
@@ -198,7 +203,9 @@ const ComponentPreview = ({ component, className }: ComponentPreviewProps) => {
               </DeviceFrame>
             ) : (
               <DeviceFrame device={device}>
-                <div className="min-h-[200px] flex items-center justify-center">{PreviewContent}</div>
+                <div className="min-h-[200px] flex items-center justify-center">
+                  {PreviewContent}
+                </div>
               </DeviceFrame>
             )}
           </motion.div>
@@ -211,7 +218,7 @@ const ComponentPreview = ({ component, className }: ComponentPreviewProps) => {
                   props={component.props}
                   currentProps={mergedProps}
                   onPropsChange={setCustomProps}
-                  componentName={component.name.replace(/\s+/g, "")}
+                  componentName={component.name.replace(/\s+/g, '')}
                 />
               </CollapsibleContent>
             </Collapsible>

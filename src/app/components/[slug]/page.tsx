@@ -1,15 +1,15 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import { ArrowLeft } from 'lucide-react';
 import {
   getComponentBySlugOrAlias,
   getAllSlugsAndAliases,
   components,
-} from "@/config/components";
-import { resolveComponentCode } from "@/lib/component-loader";
-import { Button } from "@/components/ui/button";
-import AnimatedPageContent from "./animated-content";
+} from '@/config/components';
+import { resolveComponentCode } from '@/lib/component-loader';
+import { Button } from '@/components/ui/button';
+import AnimatedPageContent from './animated-content';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -22,13 +22,15 @@ export async function generateStaticParams() {
 }
 
 // Generate dynamic SEO metadata for each component page
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const component = getComponentBySlugOrAlias(slug);
 
   if (!component) {
     return {
-      title: "Component Not Found",
+      title: 'Component Not Found',
     };
   }
 
@@ -46,10 +48,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     openGraph: {
       title: component.seoTitle,
       description: component.seoDescription,
-      type: "article",
+      type: 'article',
     },
     twitter: {
-      card: "summary_large_image",
+      card: 'summary_large_image',
       title: component.seoTitle,
       description: component.seoDescription,
     },
@@ -86,14 +88,19 @@ export default async function ComponentPage({ params }: PageProps) {
 
   // Get related components from same category
   const relatedComponents = components
-    .filter((c) => c.category === component.category && c.slug !== component.slug)
+    .filter(
+      (c) => c.category === component.category && c.slug !== component.slug
+    )
     .slice(0, 3);
 
   // Resolve component code files (server-side only)
   // This loads ComponentFileRef[] into ComponentFile[] before passing to client
   const resolvedComponent = {
     ...component,
-    componentCode: resolveComponentCode(component.slug, component.componentCode),
+    componentCode: resolveComponentCode(
+      component.slug,
+      component.componentCode
+    ),
   };
 
   return (

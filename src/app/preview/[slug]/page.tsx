@@ -1,7 +1,7 @@
-import React, { Suspense } from "react";
-import { notFound } from "next/navigation";
-import { getComponentBySlugOrAlias } from "@/config/components";
-import { Loader2 } from "lucide-react";
+import React, { Suspense } from 'react';
+import { notFound } from 'next/navigation';
+import { getComponentBySlugOrAlias } from '@/config/components';
+import { Loader2 } from 'lucide-react';
 
 interface PreviewPageProps {
   params: Promise<{ slug: string }>;
@@ -22,17 +22,17 @@ export default async function PreviewPage({
 
   const Component = component.component;
 
-  const props: Record<string, any> = {};
-  
+  const props: Record<string, unknown> = {};
+
   for (const [key, value] of Object.entries(resolvedSearchParams)) {
     if (value === undefined) continue;
     const stringValue = Array.isArray(value) ? value[0] : value;
-    
-    if (stringValue === "true") props[key] = true;
-    else if (stringValue === "false") props[key] = false;
+
+    if (stringValue === 'true') props[key] = true;
+    else if (stringValue === 'false') props[key] = false;
     else {
       const num = parseFloat(stringValue);
-      if (!isNaN(num) && stringValue.trim() !== "") {
+      if (!isNaN(num) && stringValue.trim() !== '') {
         props[key] = num;
       } else {
         props[key] = stringValue;

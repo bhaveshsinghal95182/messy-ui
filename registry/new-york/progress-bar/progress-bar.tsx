@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { motion, useScroll } from "motion/react";
+import * as React from 'react';
+import { motion, useScroll } from 'motion/react';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 /**
  * Props for the ProgressBar component.
@@ -22,7 +22,7 @@ interface ProgressBarProps extends React.ComponentProps<typeof motion.div> {
    * The position of the progress bar on the viewport.
    * @default "top"
    */
-  position?: "top" | "bottom";
+  position?: 'top' | 'bottom';
   /**
    * The height of the progress bar. Corresponds to Tailwind's height scale (e.g. 1, 4, 7.5).
    * @default 2
@@ -32,7 +32,7 @@ interface ProgressBarProps extends React.ComponentProps<typeof motion.div> {
    * The transform origin of the progress bar animation.
    * Can be "left", "right", "center", or a percentage value (number).
    */
-  origin: number | "left" | "right" | "center";
+  origin: number | 'left' | 'right' | 'center';
 }
 
 /**
@@ -43,32 +43,32 @@ const ProgressBar = ({
   origin,
   className,
   color,
-  position = "top",
+  position = 'top',
   height,
   ...props
 }: ProgressBarProps) => {
   const { scrollYProgress } = useScroll();
 
   const heightValue =
-    typeof height === "number" ? `${height * 0.25}rem` : height;
-  
+    typeof height === 'number' ? `${height * 0.25}rem` : height;
+
   const originValue =
-    origin === "left"
-      ? "0%"
-      : origin === "right"
-      ? "100%"
-      : origin === "center"
-      ? "50%"
-      : typeof origin === "number"
-      ? `${origin}%`
-      : origin;
+    origin === 'left'
+      ? '0%'
+      : origin === 'right'
+        ? '100%'
+        : origin === 'center'
+          ? '50%'
+          : typeof origin === 'number'
+            ? `${origin}%`
+            : origin;
 
   return (
     <motion.div
       className={cn(
-        "fixed left-0 right-0 z-100 bg-[#eec847] h-2",
+        'fixed left-0 right-0 z-100 bg-[#eec847] h-2',
         className,
-        position === "top" ? "top-0" : "bottom-0",
+        position === 'top' ? 'top-0' : 'bottom-0'
       )}
       style={{
         scaleX: scrollYProgress,

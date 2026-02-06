@@ -1,12 +1,17 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { useTheme } from "next-themes";
-import { gruvboxDark, gruvboxLight } from "@/lib/gruvbox-theme";
-import { Check, Copy } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { useSyncExternalStore } from 'react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { useTheme } from 'next-themes';
+import { gruvboxDark, gruvboxLight } from '@/lib/gruvbox-theme';
+import { Check, Copy } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+
+// Client-side only check using useSyncExternalStore
+const emptySubscribe = () => () => {};
+const getClientSnapshot = () => true;
+const getServerSnapshot = () => false;
 
 interface CommandBlockProps {
   command: string;
@@ -25,31 +30,34 @@ const CommandBlock = ({
   copied = false,
 }: CommandBlockProps) => {
   const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  // Use useSyncExternalStore to safely detect client-side without useEffect
+  const isClient = useSyncExternalStore(
+    emptySubscribe,
+    getClientSnapshot,
+    getServerSnapshot
+  );
 
-  const isDark = mounted && resolvedTheme === "dark";
+  const isDark = isClient && resolvedTheme === 'dark';
   const theme = isDark ? gruvboxDark : gruvboxLight;
 
   return (
-    <div className={cn("flex items-center justify-between", className)}>
+    <div className={cn('flex items-center justify-between', className)}>
       <div className="flex-1 overflow-x-auto">
         <SyntaxHighlighter
           language="bash"
-          style={theme as any}
+          style={theme as Record<string, React.CSSProperties>}
           customStyle={{
             margin: 0,
             padding: 0,
-            background: "transparent",
-            fontSize: "13px",
+            background: 'transparent',
+            fontSize: '13px',
           }}
           codeTagProps={{
             style: {
-              fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace',
-            }
+              fontFamily:
+                'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace',
+            },
           }}
         >
           {command}

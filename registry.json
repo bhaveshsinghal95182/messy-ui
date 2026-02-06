@@ -112,19 +112,6 @@
           "type": "registry:component"
         }
       ]
-    },
-    {
-      "name": "progress-bar",
-      "type": "registry:component",
-      "title": "Progress Bar",
-      "description": "A progress bar visualization for scrolling.",
-      "dependencies": ["motion"],
-      "files": [
-        {
-          "path": "registry/new-york/progress-bar/progress-bar.tsx",
-          "type": "registry:component"
-        }
-      ]
     }
   ]
 }

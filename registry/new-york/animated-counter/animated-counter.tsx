@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
+import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
 
 const MAX_ROTATIONS = 20;
 
@@ -29,7 +29,7 @@ const OdometerDigit = ({
     gsap.fromTo(
       digitRef.current,
       { y: 0 },
-      { y: -rotations * digitHeight, duration, ease: "power2.out" }
+      { y: -rotations * digitHeight, duration, ease: 'power2.out' }
     );
   }, [rotations, duration]);
 
@@ -52,8 +52,8 @@ const OdometerDigit = ({
 const AnimatedCounter = ({
   target = 1234,
   duration = 2,
-  prefix = "",
-  suffix = "+",
+  prefix = '',
+  suffix = '+',
 }: AnimatedCounterProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const hasAnimated = useRef(false);
@@ -83,7 +83,7 @@ const AnimatedCounter = ({
     gsap.fromTo(
       containerRef.current,
       { scale: 0.9, opacity: 0 },
-      { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" }
+      { scale: 1, opacity: 1, duration: 0.4, ease: 'back.out(1.7)' }
     );
   }, []);
 

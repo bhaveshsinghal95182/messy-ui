@@ -1,18 +1,18 @@
-"use client";
-import { useRef, Suspense, useMemo } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+'use client';
+import { useRef, Suspense, useMemo } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
 import {
   useGLTF,
   Float,
   ContactShadows,
   OrbitControls,
   Html,
-} from "@react-three/drei";
-import type { Group } from "three";
+} from '@react-three/drei';
+import type { Group, DirectionalLight } from 'three';
 
 function LogoModel() {
   const groupRef = useRef<Group>(null);
-  const gltf = useGLTF("/logo.glb");
+  const gltf = useGLTF('/logo.glb');
   const scene = useMemo(() => gltf.scene.clone(true), [gltf.scene]);
 
   useFrame((state) => {
@@ -73,7 +73,7 @@ function LoadingFallback() {
 }
 
 function AnimatedLight() {
-  const lightRef = useRef<any>(null);
+  const lightRef = useRef<DirectionalLight>(null);
 
   useFrame((state) => {
     if (lightRef.current) {
@@ -92,7 +92,7 @@ export function Logo3D() {
     <div className="w-full h-[400px] relative">
       <Canvas
         camera={{ position: [10, 0, 10], fov: 45 }}
-        style={{ background: "transparent" }}
+        style={{ background: 'transparent' }}
       >
         <ambientLight intensity={0.5} />
         <AnimatedLight />
@@ -125,4 +125,4 @@ export function Logo3D() {
   );
 }
 
-useGLTF.preload("/logo.glb");
+useGLTF.preload('/logo.glb');

@@ -1,4 +1,4 @@
-import { ComponentType } from "react";
+import { ComponentType } from 'react';
 
 export interface PropDefinition {
   name: string;
@@ -6,7 +6,7 @@ export interface PropDefinition {
   default: string;
   description: string;
   /** Explicitly specify the control type to avoid dynamic switching */
-  control?: "input" | "slider" | "switch" | "select" | "select-custom";
+  control?: 'input' | 'slider' | 'switch' | 'select' | 'select-custom';
   /** Options for select/select-custom controls */
   options?: string[] | number[];
   /** Min value for slider controls */
@@ -67,7 +67,7 @@ export interface ComponentFileRef {
  */
 export interface InstallationNote {
   /** Type of note - affects styling (info=blue, warning=yellow, tip=green) */
-  type: "info" | "warning" | "tip";
+  type: 'info' | 'warning' | 'tip';
   /** The message to display */
   message: string;
 }
@@ -82,7 +82,7 @@ export interface CodeSnippet {
   /** The code to display */
   code: string;
   /** Language for syntax highlighting */
-  language: "tsx" | "jsx" | "js" | "ts" | "html" | "css" | "json" | "bash";
+  language: 'tsx' | 'jsx' | 'js' | 'ts' | 'html' | 'css' | 'json' | 'bash';
   /**
    * Target file path for shadcn registry (e.g., "styles/shimmer.css")
    * If provided, this file will be included in the shadcn registry JSON
@@ -92,10 +92,10 @@ export interface CodeSnippet {
    * Registry type for shadcn (defaults to "registry:file")
    */
   registryType?:
-    | "registry:style"
-    | "registry:file"
-    | "registry:hook"
-    | "registry:lib";
+    | 'registry:style'
+    | 'registry:file'
+    | 'registry:hook'
+    | 'registry:lib';
 }
 
 /**
@@ -115,7 +115,7 @@ export interface ComponentMeta {
   keywords: string[];
   /** Alternative slugs that redirect to this component */
   aliases: string[];
-  sandbox: "inline" | "iframe";
+  sandbox: 'inline' | 'iframe';
   /** Shadcn CLI registry URL for this component */
   registryUrl: string;
   /**
@@ -158,7 +158,7 @@ export interface ComponentMeta {
  */
 export interface ComponentConfig extends ComponentMeta {
   /** React component for preview rendering */
-  component: ComponentType | React.LazyExoticComponent<any>;
+  component: ComponentType | React.LazyExoticComponent<ComponentType>;
   /** Short usage example code shown in the preview Code tab */
   usageCode: string;
   /**

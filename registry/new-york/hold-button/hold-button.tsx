@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useRef, useState, useCallback, useEffect } from "react";
-import { cn } from "@/lib/utils";
+import { useRef, useState, useCallback, useEffect } from 'react';
+import { cn } from '@/lib/utils';
 
 interface HoldButtonProps {
   /** Text shown initially */
@@ -15,9 +15,9 @@ interface HoldButtonProps {
   /** Callback when hold completes */
   onConfirm?: () => void;
   /** Visual variant */
-  variant?: "destructive" | "warning" | "default";
+  variant?: 'destructive' | 'warning' | 'default';
   /** Button size */
-  size?: "sm" | "md" | "lg";
+  size?: 'sm' | 'md' | 'lg';
   /** Whether the button is disabled */
   disabled?: boolean;
   /** Additional class names */
@@ -25,13 +25,13 @@ interface HoldButtonProps {
 }
 
 const HoldButton = ({
-  label = "Hold to Delete",
-  holdingLabel = "Keep holding...",
-  completedLabel = "Deleted!",
+  label = 'Hold to Delete',
+  holdingLabel = 'Keep holding...',
+  completedLabel = 'Deleted!',
   holdDuration = 1500,
   onConfirm,
-  variant = "destructive",
-  size = "md",
+  variant = 'destructive',
+  size = 'md',
   disabled = false,
   className,
 }: HoldButtonProps) => {
@@ -44,29 +44,31 @@ const HoldButton = ({
 
   const variantStyles = {
     destructive: {
-      base: "bg-gradient-to-r from-red-500/10 to-red-600/10 border-red-500/30 text-red-500 hover:border-red-500/50",
-      fill: "bg-gradient-to-r from-red-500 to-red-600",
-      completed: "bg-gradient-to-r from-red-600 to-red-700 border-red-600 text-white",
-      glow: "shadow-red-500/25",
+      base: 'bg-gradient-to-r from-red-500/10 to-red-600/10 border-red-500/30 text-red-500 hover:border-red-500/50',
+      fill: 'bg-gradient-to-r from-red-500 to-red-600',
+      completed:
+        'bg-gradient-to-r from-red-600 to-red-700 border-red-600 text-white',
+      glow: 'shadow-red-500/25',
     },
     warning: {
-      base: "bg-gradient-to-r from-amber-500/10 to-orange-500/10 border-amber-500/30 text-amber-500 hover:border-amber-500/50",
-      fill: "bg-gradient-to-r from-amber-500 to-orange-500",
-      completed: "bg-gradient-to-r from-amber-600 to-orange-600 border-amber-600 text-white",
-      glow: "shadow-amber-500/25",
+      base: 'bg-gradient-to-r from-amber-500/10 to-orange-500/10 border-amber-500/30 text-amber-500 hover:border-amber-500/50',
+      fill: 'bg-gradient-to-r from-amber-500 to-orange-500',
+      completed:
+        'bg-gradient-to-r from-amber-600 to-orange-600 border-amber-600 text-white',
+      glow: 'shadow-amber-500/25',
     },
     default: {
-      base: "bg-gradient-to-r from-primary/10 to-primary/10 border-primary/30 text-primary hover:border-primary/50",
-      fill: "bg-gradient-to-r from-primary to-primary",
-      completed: "bg-primary border-primary text-primary-foreground",
-      glow: "shadow-primary/25",
+      base: 'bg-gradient-to-r from-primary/10 to-primary/10 border-primary/30 text-primary hover:border-primary/50',
+      fill: 'bg-gradient-to-r from-primary to-primary',
+      completed: 'bg-primary border-primary text-primary-foreground',
+      glow: 'shadow-primary/25',
     },
   };
 
   const sizeStyles = {
-    sm: "h-9 px-4 text-sm min-w-[120px]",
-    md: "h-11 px-6 text-base min-w-[160px]",
-    lg: "h-14 px-8 text-lg min-w-[200px]",
+    sm: 'h-9 px-4 text-sm min-w-[120px]',
+    md: 'h-11 px-6 text-base min-w-[160px]',
+    lg: 'h-14 px-8 text-lg min-w-[200px]',
   };
 
   const updateProgress = useCallback(() => {
@@ -145,8 +147,8 @@ const HoldButton = ({
   const currentLabel = isCompleted
     ? completedLabel
     : isHolding
-    ? holdingLabel
-    : label;
+      ? holdingLabel
+      : label;
 
   const styles = variantStyles[variant];
 
@@ -155,20 +157,18 @@ const HoldButton = ({
       ref={buttonRef}
       className={cn(
         // Base styles
-        "relative overflow-hidden rounded-lg border-2 font-semibold",
-        "transition-all duration-300 ease-out",
-        "select-none cursor-pointer",
-        "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+        'relative overflow-hidden rounded-lg border-2 font-semibold',
+        'transition-all duration-300 ease-out',
+        'select-none cursor-pointer',
+        'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
         // Size
         sizeStyles[size],
         // State-based styles
-        isCompleted
-          ? styles.completed
-          : styles.base,
+        isCompleted ? styles.completed : styles.base,
         // Holding state - add glow
         isHolding && `shadow-lg ${styles.glow}`,
         // Disabled state
-        disabled && "opacity-50 cursor-not-allowed",
+        disabled && 'opacity-50 cursor-not-allowed',
         className
       )}
       onMouseDown={startHold}
@@ -182,7 +182,7 @@ const HoldButton = ({
       {/* Progress fill layer */}
       <div
         className={cn(
-          "absolute inset-0 origin-left transition-transform duration-75",
+          'absolute inset-0 origin-left transition-transform duration-75',
           styles.fill
         )}
         style={{
@@ -195,8 +195,8 @@ const HoldButton = ({
         <div
           className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent animate-shimmer"
           style={{
-            backgroundSize: "200% 100%",
-            animation: "shimmer 1s infinite linear",
+            backgroundSize: '200% 100%',
+            animation: 'shimmer 1s infinite linear',
           }}
         />
       )}
@@ -204,10 +204,10 @@ const HoldButton = ({
       {/* Label */}
       <span
         className={cn(
-          "relative z-10 flex items-center justify-center gap-2",
-          "transition-all duration-200",
+          'relative z-10 flex items-center justify-center gap-2',
+          'transition-all duration-200',
           // Make text white when more than 50% filled
-          progress > 50 && !isCompleted && "text-white"
+          progress > 50 && !isCompleted && 'text-white'
         )}
       >
         {/* Icon based on state */}

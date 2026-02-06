@@ -1,14 +1,19 @@
-"use client";
+'use client';
 
-import { components, categories } from "@/config/components";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { motion } from "motion/react";
-import { ArrowRight, ArrowLeft, Sparkles, Image as ImageIcon } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Suspense } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { components, categories } from '@/config/components';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { motion } from 'motion/react';
+import {
+  ArrowRight,
+  ArrowLeft,
+  Sparkles,
+  Image as ImageIcon,
+} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Suspense } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 // Animation variants
 const containerVariants = {
@@ -27,7 +32,7 @@ const cardVariants = {
     opacity: 1,
     y: 0,
     transition: {
-      type: "spring" as const,
+      type: 'spring' as const,
       stiffness: 260,
       damping: 20,
     },
@@ -36,8 +41,8 @@ const cardVariants = {
 
 function ComponentsContent() {
   const searchParams = useSearchParams();
-  const selectedCategory = searchParams.get("category");
-  
+  const selectedCategory = searchParams.get('category');
+
   // Filter components by category if selected
   const filteredComponents = selectedCategory
     ? components.filter((c) => c.category === selectedCategory)
@@ -69,7 +74,8 @@ function ComponentsContent() {
                 {selectedCategory}
               </h1>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                {filteredComponents.length} component{filteredComponents.length !== 1 ? 's' : ''} in this category
+                {filteredComponents.length} component
+                {filteredComponents.length !== 1 ? 's' : ''} in this category
               </p>
             </>
           ) : (
@@ -82,9 +88,9 @@ function ComponentsContent() {
                 Component Gallery
               </h1>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Beautifully crafted, animated React components ready to enhance your
-                next project. Built with GSAP, Framer Motion, and modern best
-                practices.
+                Beautifully crafted, animated React components ready to enhance
+                your next project. Built with GSAP, Framer Motion, and modern
+                best practices.
               </p>
             </>
           )}
@@ -102,8 +108,8 @@ function ComponentsContent() {
           >
             {categories.map((category) => (
               <Link key={category} href={`/components?category=${category}`}>
-                <Badge 
-                  variant="outline" 
+                <Badge
+                  variant="outline"
                   className="px-4 py-2 text-sm cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
                 >
                   {category}
@@ -167,7 +173,7 @@ interface ComponentCardProps {
 
 function ComponentCard({ component }: ComponentCardProps) {
   const Component = component.component;
-  const showLivePreview = component.sandbox === "inline";
+  const showLivePreview = component.sandbox === 'inline';
 
   return (
     <motion.div variants={cardVariants}>
@@ -180,8 +186,8 @@ function ComponentCard({ component }: ComponentCardProps) {
               className="absolute inset-0 opacity-30"
               style={{
                 backgroundImage:
-                  "radial-gradient(circle at center, hsl(var(--muted-foreground) / 0.3) 1px, transparent 1px)",
-                backgroundSize: "20px 20px",
+                  'radial-gradient(circle at center, hsl(var(--muted-foreground) / 0.3) 1px, transparent 1px)',
+                backgroundSize: '20px 20px',
               }}
             />
 
@@ -199,7 +205,7 @@ function ComponentCard({ component }: ComponentCardProps) {
                   </Suspense>
                 </div>
               ) : component.thumbnailUrl ? (
-                typeof component.thumbnailUrl === "string" ? (
+                typeof component.thumbnailUrl === 'string' ? (
                   // Single image for both themes
                   // eslint-disable-next-line @next/next/no-img-element
                   <img

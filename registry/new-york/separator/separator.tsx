@@ -1,6 +1,6 @@
-"use client";
-import { useRef, useEffect, useCallback } from "react";
-import gsap from "gsap";
+'use client';
+import { useRef, useEffect, useCallback } from 'react';
+import gsap from 'gsap';
 
 // Fixed internal coordinate system for SVG
 const VIEWBOX_WIDTH = 1000;
@@ -33,7 +33,7 @@ export function Separator({
   damping = 0.15,
   frequency = 8,
   duration = 1.5,
-  className = "",
+  className = '',
 }: SeparatorProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const pathRef = useRef<SVGPathElement | null>(null);
@@ -56,7 +56,7 @@ export function Separator({
     const { displacement, controlX } = stateRef.current;
     const controlY = baseY + displacement;
     pathRef.current.setAttribute(
-      "d",
+      'd',
       `M 0 ${baseY} Q ${controlX} ${controlY} ${VIEWBOX_WIDTH} ${baseY}`
     );
   }, [baseY]);
@@ -69,7 +69,7 @@ export function Separator({
     }
 
     const initialDisplacement = stateRef.current.displacement;
-    
+
     // Don't oscillate if barely displaced
     if (Math.abs(initialDisplacement) < 1) {
       stateRef.current.displacement = 0;
@@ -86,7 +86,7 @@ export function Separator({
     wobbleTweenRef.current = gsap.to(wobbleData, {
       progress: 1,
       duration: duration,
-      ease: "none",
+      ease: 'none',
       onUpdate: () => {
         // t represents actual elapsed time (0 to duration)
         const t = wobbleData.progress * duration;
@@ -114,10 +114,10 @@ export function Separator({
       const relativeY = e.clientY - rect.top;
 
       // Check if mouse is inside the viewbox
-      const isInside = 
-        relativeX >= 0 && 
-        relativeX <= rect.width && 
-        relativeY >= 0 && 
+      const isInside =
+        relativeX >= 0 &&
+        relativeX <= rect.width &&
+        relativeY >= 0 &&
         relativeY <= rect.height;
 
       if (isInside) {
@@ -133,18 +133,20 @@ export function Separator({
         // Calculate displacement based on mouse Y position relative to line
         const lineY = (baseY / 100) * rect.height;
         const distanceFromLine = relativeY - lineY;
-        
+
         // Clamp displacement to maxDisplacement
         const displacement = Math.max(
           -maxDisplacement,
-          Math.min(maxDisplacement, distanceFromLine * (maxDisplacement / (rect.height / 2)))
+          Math.min(
+            maxDisplacement,
+            distanceFromLine * (maxDisplacement / (rect.height / 2))
+          )
         );
 
         // Update control point X based on mouse X position (mapped to viewbox coords)
         stateRef.current.controlX = (relativeX / rect.width) * VIEWBOX_WIDTH;
         stateRef.current.displacement = displacement;
         updatePath();
-
       } else if (stateRef.current.isInsideViewbox) {
         // Mouse just left the viewbox - start oscillation from current displacement
         stateRef.current.isInsideViewbox = false;
@@ -160,12 +162,12 @@ export function Separator({
       }
     };
 
-    container.addEventListener("mousemove", handleMouseMove);
-    container.addEventListener("mouseleave", handleMouseLeave);
+    container.addEventListener('mousemove', handleMouseMove);
+    container.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
-      container.removeEventListener("mousemove", handleMouseMove);
-      container.removeEventListener("mouseleave", handleMouseLeave);
+      container.removeEventListener('mousemove', handleMouseMove);
+      container.removeEventListener('mouseleave', handleMouseLeave);
       if (wobbleTweenRef.current) {
         wobbleTweenRef.current.kill();
       }
@@ -179,27 +181,26 @@ export function Separator({
 
   return (
     <div className={`${className}`}>
-    <div
-      ref={containerRef}
-      className={`text-foreground w-full cursor-pointer `}
-      style={{ height: `${hoverZoneHeight}px` }}
-    >
-      <svg
-        height="100%"
-        width="100%"
-        viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}
-        preserveAspectRatio="none"
+      <div
+        ref={containerRef}
+        className={`text-foreground w-full cursor-pointer `}
+        style={{ height: `${hoverZoneHeight}px` }}
       >
-        <path
-          ref={pathRef}
-          d={`M 0 ${baseY} Q ${VIEWBOX_WIDTH / 2} ${baseY} ${VIEWBOX_WIDTH} ${baseY}`}
-          stroke="currentColor"
-          strokeWidth={strokeWidth}
-          fill="none"
-        />
-      </svg>
-    </div>
+        <svg
+          height="100%"
+          width="100%"
+          viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}
+          preserveAspectRatio="none"
+        >
+          <path
+            ref={pathRef}
+            d={`M 0 ${baseY} Q ${VIEWBOX_WIDTH / 2} ${baseY} ${VIEWBOX_WIDTH} ${baseY}`}
+            stroke="currentColor"
+            strokeWidth={strokeWidth}
+            fill="none"
+          />
+        </svg>
+      </div>
     </div>
   );
 }
-

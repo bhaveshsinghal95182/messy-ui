@@ -5,8 +5,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { PropDefinition } from "@/config/components";
+} from '@/components/ui/table';
+import { PropDefinition } from '@/config/components';
 
 interface PropsTableProps {
   props: PropDefinition[];

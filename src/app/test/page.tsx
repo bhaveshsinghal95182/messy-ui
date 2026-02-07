@@ -1,3 +1,4 @@
+import BloomColorPicker from '@/registry/new-york/bloom-color-picker/bloom-color-picker';
 import ProgressBar from '@/registry/new-york/progress-bar/progress-bar';
 
 export default function TestPage() {
@@ -7,6 +8,7 @@ export default function TestPage() {
       <div className="h-full bg-background w-[calc(100%-80px)] flex items-center justify-center border-x-2 border-b-2">
         Test Page
       </div>
+      <BloomColorPicker />
       <div className="h-full bg-background w-[calc(100%-80px)] flex items-center justify-center border-x-2">
         some more content
       </div>

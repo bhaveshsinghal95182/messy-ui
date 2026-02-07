@@ -50,6 +50,12 @@ import {
   ProgressBarExample,
 } from '@/registry/new-york/progress-bar';
 
+import {
+  meta as bloomColorPickerMeta,
+  usageCode as bloomColorPickerUsage,
+  componentFiles as bloomColorPickerFiles,
+} from '@/registry/new-york/bloom-color-picker';
+
 const AnimatedCounter = lazy(() =>
   import('@/registry/new-york/animated-counter').then((mod) => ({
     default: mod.AnimatedCounter,
@@ -83,6 +89,12 @@ const Separator = lazy(() =>
 const Tabs = lazy(() =>
   import('@/registry/new-york/tabs').then((mod) => ({
     default: mod.TabsCode,
+  }))
+);
+
+const BloomColorPicker = lazy(() =>
+  import('@/registry/new-york/bloom-color-picker').then((mod) => ({
+    default: mod.BloomColorPicker,
   }))
 );
 
@@ -145,6 +157,12 @@ export const components: ComponentConfig[] = [
     ProgressBarExample,
     progressBarUsage,
     progressBarFiles
+  ),
+  buildComponentConfig(
+    bloomColorPickerMeta,
+    BloomColorPicker,
+    bloomColorPickerUsage,
+    bloomColorPickerFiles
   ),
 ];
 

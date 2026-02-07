@@ -112,6 +112,19 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "bloom-color-picker",
+      "type": "registry:component",
+      "title": "Bloom Color Picker",
+      "description": "A beautiful flower-petal color picker with radial hue selection, saturation and brightness arcs.",
+      "dependencies": ["motion"],
+      "files": [
+        {
+          "path": "registry/new-york/bloom-color-picker/bloom-color-picker.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }

@@ -62,7 +62,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               href="/"
               onClick={onClose}
               className={cn(
-                'flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors',
+                'flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
                 isHomeActive
                   ? 'bg-primary/10 text-primary'
                   : 'text-muted-foreground hover:bg-muted hover:text-foreground'
@@ -89,7 +89,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                     <button
                       onClick={() => toggleCategory(category)}
                       className={cn(
-                        'flex w-full items-center justify-between px-3 py-2 text-sm font-medium transition-colors',
+                        'flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium transition-colors',
                         hasActiveChild
                           ? 'text-foreground'
                           : 'text-muted-foreground hover:text-foreground'
@@ -121,7 +121,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                                 href={`/components/${component.slug}`}
                                 onClick={onClose}
                                 className={cn(
-                                  'block px-3 py-1.5 text-sm transition-colors',
+                                  'block rounded-lg px-3 py-1.5 text-sm transition-colors',
                                   isActive(component.slug)
                                     ? 'bg-primary/10 text-primary font-medium'
                                     : 'text-muted-foreground hover:bg-muted hover:text-foreground'

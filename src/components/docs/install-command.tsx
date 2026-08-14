@@ -32,9 +32,9 @@ const InstallCommand = ({ packageName, className }: InstallCommandProps) => {
   };
 
   return (
-    <div className={cn('border border-border overflow-hidden', className)}>
+    <div className={cn('rounded-xl overflow-hidden', className)}>
       <Tabs defaultValue="npm" className="w-full">
-        <div className="bg-muted/50 border-b border-border px-2">
+        <div className="bg-muted/50 px-2">
           <TabsList className="h-10 bg-transparent">
             {packageManagers.map((pm) => (
               <TabsTrigger

@@ -1,5 +1,11 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono, Instrument_Serif } from 'next/font/google';
+import {
+  Geist,
+  Geist_Mono,
+  Playfair_Display,
+  Jost,
+  Poppins,
+} from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/layout/theme-provider';
 import DocsLayout from '@/components/layout/docs-layout';
@@ -12,6 +18,22 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
+  subsets: ['latin'],
+});
+
+const playfairDisplay = Playfair_Display({
+  variable: '--font-playfair-display',
+  subsets: ['latin'],
+});
+
+const jost = Jost({
+  variable: '--font-jost',
+  subsets: ['latin'],
+});
+
+const poppins = Poppins({
+  weight: '400',
+  variable: '--font-poppins',
   subsets: ['latin'],
 });
 
@@ -90,12 +112,6 @@ export const metadata: Metadata = {
   },
 };
 
-export const instrumentSerif = Instrument_Serif({
-  variable: '--font-instrument-serif',
-  weight: ['400'],
-  subsets: ['latin'],
-});
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -104,7 +120,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${playfairDisplay.variable} ${jost.variable} ${poppins.variable} antialiased`}
       >
         <ThemeProvider
           attribute="class"

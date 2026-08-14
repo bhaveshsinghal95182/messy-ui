@@ -31,6 +31,14 @@ export const cssCode = `/* Theme Toggle Component CSS - Self-contained styles */
   mix-blend-mode: normal;
 }
 
+/* The group's default animation interpolates the snapshot layer's size and
+   transform from the old geometry to the new. Anything that changes that
+   geometry — a scrollbar appearing or disappearing, a reflow — slides the whole
+   layer underneath the clip circle, so the reveal opens away from the pointer. */
+::view-transition-group(root) {
+  animation: none;
+}
+
 .theme-toggle {
   --toggle-size: 2.25rem;
   --toggle-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);

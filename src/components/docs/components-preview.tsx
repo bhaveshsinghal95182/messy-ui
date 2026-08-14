@@ -82,10 +82,10 @@ const ComponentPreview = ({ component, className }: ComponentPreviewProps) => {
   );
 
   return (
-    <div className={cn('border border-border bg-card', className)}>
+    <div className={cn('rounded-xl bg-card overflow-hidden', className)}>
       <Tabs defaultValue="preview" className="w-full">
         {/* Toolbar */}
-        <div className="flex items-center justify-between px-4 py-2 border-b border-border bg-muted/30">
+        <div className="flex items-center justify-between px-4 py-2 bg-muted/30">
           <TabsList className="h-9 bg-transparent p-0">
             <TabsTrigger
               value="preview"
@@ -104,7 +104,7 @@ const ComponentPreview = ({ component, className }: ComponentPreviewProps) => {
 
           <div className="flex items-center gap-1">
             {/* Device Switcher */}
-            <div className="flex items-center border border-border p-0.5 bg-background mr-2">
+            <div className="flex items-center rounded-lg p-0.5 bg-background mr-2">
               {(Object.keys(deviceIcons) as DeviceType[]).map((d) => {
                 const Icon = deviceIcons[d];
                 return (
@@ -162,7 +162,7 @@ const ComponentPreview = ({ component, className }: ComponentPreviewProps) => {
         <TabsContent value="preview" className="m-0">
           <motion.div
             className={cn(
-              'p-4 bg-[radial-gradient(circle_at_center,hsl(var(--muted))_1px,transparent_1px)] bg-size-[24px_24px]',
+              'p-4',
               isFullscreen && 'fixed inset-0 z-50 bg-background'
             )}
             layout

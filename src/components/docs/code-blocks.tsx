@@ -52,11 +52,9 @@ const CodeBlock = ({
   const theme = isDark ? gruvboxDark : gruvboxLight;
 
   return (
-    <div
-      className={cn('relative overflow-hidden border border-border', className)}
-    >
+    <div className={cn('relative overflow-hidden rounded-xl', className)}>
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-2 bg-muted/50 border-b border-border">
+      <div className="flex items-center justify-between px-4 py-2 bg-muted/50">
         <div className="flex items-center gap-2">
           <Code className="w-4 h-4 text-muted-foreground" />
           <span className="text-sm font-medium text-muted-foreground uppercase">
@@ -103,13 +101,13 @@ const CodeBlock = ({
           showLineNumbers={showLineNumbers}
           customStyle={{
             margin: 0,
-            background: isDark ? '#1d2021' : '#fffef2',
+            background: 'var(--code-background)',
             fontSize: '13px',
           }}
           lineNumberStyle={{
             minWidth: '3em',
             paddingRight: '1em',
-            color: isDark ? '#665c54' : '#928374',
+            color: 'var(--code-line-number)',
             userSelect: 'none',
           }}
         >

@@ -53,7 +53,7 @@ export default function Page() {
             A collection of animated, accessible components built with React,
             GSAP, and Framer Motion. Copy the code and make it yours.
           </p>
-          <CTAButton bgColorClass="bg-rose-500" bgColorHex="#ff2056" />
+          <CTAButton />
         </div>
         {/* Right side - 3D Logo */}
         <div className="animate-in fade-in slide-in-from-right-4 duration-700 delay-200">

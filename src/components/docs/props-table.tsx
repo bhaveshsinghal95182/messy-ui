@@ -23,7 +23,7 @@ const PropsTable = ({ props }: PropsTableProps) => {
   }
 
   return (
-    <div className="border border-border overflow-hidden">
+    <div className="rounded-xl overflow-hidden">
       <Table>
         <TableHeader>
           <TableRow className="bg-muted/50">
@@ -43,7 +43,7 @@ const PropsTable = ({ props }: PropsTableProps) => {
                 {prop.type}
               </TableCell>
               <TableCell className="font-mono text-sm">
-                <code className="px-1.5 py-0.5 bg-muted text-xs">
+                <code className="px-1.5 py-0.5 rounded bg-muted text-xs">
                   {prop.default}
                 </code>
               </TableCell>

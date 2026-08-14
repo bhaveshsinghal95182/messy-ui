@@ -7,36 +7,72 @@ import { flushSync } from 'react-dom';
 
 import { Button } from '@/components/ui/button';
 
+/**
+ * Where the circular reveal should start, in viewport coordinates.
+ *
+ * A pointer-driven click carries the cursor position; a keyboard-driven one
+ * (Enter/Space) reports `detail === 0` and clientX/clientY of 0, which would
+ * otherwise open the circle from the top-left corner of the page.
+ */
+function getOrigin(
+  event: React.MouseEvent<HTMLElement>,
+  fallback: HTMLElement | null
+): { x: number; y: number } | null {
+  if (event.detail > 0) {
+    return { x: event.clientX, y: event.clientY };
+  }
+
+  if (!fallback) return null;
+
+  const { top, left, width, height } = fallback.getBoundingClientRect();
+  return { x: left + width / 2, y: top + height / 2 };
+}
+
 export function ThemeToggle() {
   const { setTheme, theme } = useTheme();
   const ref = React.useRef<HTMLButtonElement>(null);
 
-  async function themeToggle() {
-    if (!ref.current) return;
+  async function themeToggle(event: React.MouseEvent<HTMLButtonElement>) {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
 
     if (!document.startViewTransition) {
-      setTheme(theme === 'dark' ? 'light' : 'dark');
+      setTheme(nextTheme);
       return;
     }
 
+    /* Open from the pointer, not from the button's box. The two usually
+       coincide, but the pointer is the position the user is actually looking
+       at, and it can't drift the way a measured rect can. Keyboard activation
+       falls back to the button centre. Both are read synchronously, before any
+       await: sampling after `.ready` reads the layout a frame later, once the
+       theme swap has been flushed, and any scroll or reflow in between moves
+       the origin. */
+    const origin = getOrigin(event, ref.current);
+    if (!origin) return;
+    const { x, y } = origin;
+
+    /* innerWidth/innerHeight, not documentElement.clientWidth/clientHeight.
+       The clip-path is resolved against ::view-transition-new(root), whose box
+       is the snapshot containing block — the whole window, scrollbar area
+       included. clientWidth excludes the scrollbar, so measuring against it
+       leaves the circle short of the corner by the scrollbar's width.
+       Measuring from the centre (not the top-left) is what makes it reach. */
+    const maxRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
     await document.startViewTransition(() => {
       flushSync(() => {
-        setTheme(theme === 'dark' ? 'light' : 'dark');
+        setTheme(nextTheme);
       });
     }).ready;
-
-    const { top, left, width, height } = ref.current.getBoundingClientRect();
-    const right = window.innerWidth - left;
-    const bottom = window.innerHeight - top;
-    const maxRadius = Math.hypot(Math.max(right, left), Math.max(bottom, top));
 
     document.documentElement.animate(
       {
         clipPath: [
-          `circle(0px at ${left + width / 2}px ${top + height / 2}px)`,
-          `circle(${maxRadius}px at ${left + width / 2}px ${
-            top + height / 2
-          }px)`,
+          `circle(0px at ${x}px ${y}px)`,
+          `circle(${maxRadius}px at ${x}px ${y}px)`,
         ],
       },
       {

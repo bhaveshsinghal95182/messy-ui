@@ -109,9 +109,9 @@ const InstallationSection = ({
           <p className="text-sm text-muted-foreground">
             Use the shadcn CLI to install this component:
           </p>
-          <div className="border border-border overflow-hidden">
+          <div className="rounded-xl overflow-hidden">
             <Tabs defaultValue="npx" className="w-full">
-              <div className="bg-muted/50 border-b border-border ">
+              <div className="bg-muted/50">
                 <TabsList className="h-10 bg-transparent">
                   {cliRunners.map((runner) => (
                     <TabsTrigger
@@ -169,9 +169,9 @@ const InstallationSection = ({
                     <p className="text-sm text-muted-foreground pl-8">
                       {dep.label}
                     </p>
-                    <div className="border border-border overflow-hidden">
+                    <div className="rounded-xl overflow-hidden">
                       <Tabs defaultValue="npx" className="w-full">
-                        <div className="bg-muted/50 border-b border-border px-2">
+                        <div className="bg-muted/50 px-2">
                           <TabsList className="h-10 bg-transparent">
                             {cliRunners.map((runner) => (
                               <TabsTrigger
@@ -231,9 +231,9 @@ const InstallationSection = ({
                   Install dependencies
                 </h4>
               </div>
-              <div className="border border-border overflow-hidden">
+              <div className="rounded-xl overflow-hidden">
                 <Tabs defaultValue="npm" className="w-full">
-                  <div className="bg-muted/50 border-b border-border px-2">
+                  <div className="bg-muted/50 px-2">
                     <TabsList className="h-10 bg-transparent">
                       {packageManagers.map((pm) => (
                         <TabsTrigger
@@ -278,7 +278,7 @@ const InstallationSection = ({
               </div>
 
               {hasJsVersion && (
-                <div className="flex items-center border border-border overflow-hidden">
+                <div className="flex items-center rounded-lg overflow-hidden">
                   <button
                     onClick={() => setLanguage('ts')}
                     className={cn(
@@ -327,8 +327,8 @@ const InstallationSection = ({
               </div>
             ) : (
               <Tabs defaultValue={files[0].filename} className="w-full">
-                <div className="border border-border overflow-hidden">
-                  <div className="bg-muted/50 border-b border-border px-2">
+                <div className="rounded-xl overflow-hidden">
+                  <div className="bg-muted/50 px-2">
                     <TabsList className="h-10 bg-transparent">
                       {files.map((file) => (
                         <TabsTrigger
@@ -376,7 +376,7 @@ const InstallationSection = ({
             component.snippets!.map((snippet, index) => (
               <div key={index} className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <span className="flex items-center justify-center w-6 h-6 bg-primary text-primary-foreground text-xs font-medium">
+                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-medium">
                     {++stepNumber}
                   </span>
                   <h4 className="font-medium text-foreground">

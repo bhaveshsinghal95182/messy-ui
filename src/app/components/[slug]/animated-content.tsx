@@ -3,39 +3,20 @@
 import Link from 'next/link';
 import { motion, type Variants } from 'motion/react';
 import { ExternalLink } from 'lucide-react';
-import { ComponentConfig, InstallationNote } from '@/config/types';
+import { ComponentConfig } from '@/config/types';
 import ComponentPreview from '@/components/docs/components-preview';
 import PropsTable from '@/components/docs/props-table';
 import InstallationSection from '@/components/docs/installation-section';
 import RichTextLinks from '@/components/docs/rich-text-links';
+import NoteStack from '@/components/docs/note-stack';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Info, AlertTriangle, Lightbulb } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import ProgressBar from '@/registry/new-york/progress-bar/progress-bar';
 
 interface AnimatedPageContentProps {
   component: ComponentConfig;
   relatedComponents: ComponentConfig[];
 }
-
-const noteStyles: Record<
-  InstallationNote['type'],
-  { icon: typeof Info; className: string }
-> = {
-  info: {
-    icon: Info,
-    className: 'bg-blue-500/10 border-blue-500/30 text-blue-400',
-  },
-  warning: {
-    icon: AlertTriangle,
-    className: 'bg-amber-500/10 border-amber-500/30 text-amber-400',
-  },
-  tip: {
-    icon: Lightbulb,
-    className: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
-  },
-};
 
 // Stagger animation variants
 const containerVariants: Variants = {
@@ -78,30 +59,9 @@ export default function AnimatedPageContent({
   relatedComponents,
 }: AnimatedPageContentProps) {
   return (
-    <div
-      className="border bg-background"
-      style={{
-        backgroundImage: `
-    linear-gradient(
-      45deg,
-      transparent 49%,
-      var(--border) 49%,
-      var(--border) 51%,
-      transparent 51%
-    ),
-    linear-gradient(
-      -45deg,
-      transparent 49%,
-      var(--border) 49%,
-      var(--border) 51%,
-      transparent 51%
-    )
-  `,
-        backgroundSize: '40px 40px',
-      }}
-    >
+    <div className="bg-background">
       <motion.div
-        className="space-y-8 border px-4 py-6 lg:px-8 m-4 bg-background"
+        className="space-y-8 px-4 py-6 lg:px-8 bg-background"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -177,24 +137,7 @@ export default function AnimatedPageContent({
 
         {/* Installation Notes - shown above tabs */}
         {component.notes && component.notes.length > 0 && (
-          <div className="space-y-2">
-            {component.notes.map((note, index) => {
-              const style = noteStyles[note.type];
-              const Icon = style.icon;
-              return (
-                <div
-                  key={index}
-                  className={cn(
-                    'flex items-start gap-3 p-3 border',
-                    style.className
-                  )}
-                >
-                  <Icon className="w-4 h-4 mt-0.5 shrink-0" />
-                  <p className="text-sm">{note.message}</p>
-                </div>
-              );
-            })}
-          </div>
+          <NoteStack notes={component.notes} />
         )}
 
         <Separator />
@@ -235,7 +178,7 @@ export default function AnimatedPageContent({
                   >
                     <Link
                       href={`/components/${related.slug}`}
-                      className="flex items-center justify-between p-4 border border-border hover:border-primary/50 hover:bg-muted/50 transition-all group"
+                      className="flex items-center justify-between p-4 rounded-xl bg-card hover:bg-accent transition-all group"
                     >
                       <span className="font-medium text-foreground group-hover:text-primary transition-colors">
                         {related.name}

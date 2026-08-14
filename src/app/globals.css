@@ -1,52 +1,196 @@
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+/* Dark mode is driven by next-themes with attribute="class". */
 @custom-variant dark (&:is(.dark *));
 
-@theme {
+/* ---------------------------------------------------------------------------
+   Palette — shared with the portfolio design system.
+   Warm paper background, near-black ink, coral accent.
+   The portfolio's own token names (--title, --body, --surface, --overlay,
+   --muted-black) are kept alongside the shadcn ones so components can port
+   across either project unchanged.
+--------------------------------------------------------------------------- */
+
+:root {
+  color-scheme: light;
+
+  --radius: 0.625rem;
+
+  /* Portfolio tokens */
+  --surface: #dcddd0;
+  --overlay: #222222;
+  --muted-black: #353535;
+  --title: #141414;
+  --body: #353535;
+
+  /* shadcn tokens */
+  --background: #e3e4d8;
+  --foreground: #141414;
+
+  --card: #dcddd0;
+  --card-foreground: #141414;
+  --popover: #dcddd0;
+  --popover-foreground: #141414;
+
+  /* Slate blue is the brand accent — use text-primary / border-primary / ring-primary */
+  --primary: #4f6d7a;
+  --primary-foreground: #f5f5ed;
+
+  --secondary: #d5d6c8;
+  --secondary-foreground: #141414;
+
+  --muted: #d5d6c8;
+  --muted-foreground: #353535;
+
+  /* Hover/active surfaces: the accent at 15% over the background, matching the
+     portfolio's `bg-accent/15` convention. */
+  --accent: #cdd2ca;
+  --accent-foreground: #141414;
+
+  --destructive: #c8553d;
+
+  --border: #c0c1b7;
+  --input: #c0c1b7;
+  --ring: #4f6d7a;
+
+  --chart-1: #4f6d7a;
+  --chart-2: #5f7a61;
+  --chart-3: #6f5c96;
+  --chart-4: #c8553d;
+  --chart-5: #e65959;
+
+  --chart-grid: #c9cabd;
+  --chart-axis: #7d7e73;
+  --chart-tooltip: #2f2f2f;
+
+  --sidebar: #dcddd0;
+  --sidebar-foreground: #141414;
+  --sidebar-primary: #4f6d7a;
+  --sidebar-primary-foreground: #f5f5ed;
+  --sidebar-accent: #cdd2ca;
+  --sidebar-accent-foreground: #141414;
+  --sidebar-border: #c0c1b7;
+  --sidebar-ring: #4f6d7a;
+
+  /* Syntax highlighting surface */
+  --code-background: #dcddd0;
+  --code-line-number: #7d7e73;
+}
+
+.dark {
+  color-scheme: dark;
+
+  /* Portfolio tokens */
+  --surface: #1c1d17;
+  --overlay: #0c0d09;
+  --muted-black: #a4a598;
+  --title: #edeee2;
+  --body: #a4a598;
+
+  /* shadcn tokens */
+  --background: #131410;
+  --foreground: #e6e7db;
+
+  --card: #1c1d17;
+  --card-foreground: #edeee2;
+  --popover: #1c1d17;
+  --popover-foreground: #edeee2;
+
+  --primary: #82a6b5;
+  --primary-foreground: #131410;
+
+  --secondary: #22231c;
+  --secondary-foreground: #e6e7db;
+
+  --muted: #22231c;
+  --muted-foreground: #a4a598;
+
+  --accent: #242a29;
+  --accent-foreground: #edeee2;
+
+  --destructive: #ec8f79;
+
+  --border: #34352d;
+  --input: #34352d;
+  --ring: #82a6b5;
+
+  --chart-1: #82a6b5;
+  --chart-2: #90b492;
+  --chart-3: #ac97d6;
+  --chart-4: #ec8f79;
+  --chart-5: #f07a7a;
+
+  --chart-grid: #2b2c25;
+  --chart-axis: #7d7e73;
+  --chart-tooltip: #e6e7db;
+
+  --sidebar: #1c1d17;
+  --sidebar-foreground: #e6e7db;
+  --sidebar-primary: #82a6b5;
+  --sidebar-primary-foreground: #131410;
+  --sidebar-accent: #242a29;
+  --sidebar-accent-foreground: #edeee2;
+  --sidebar-border: #34352d;
+  --sidebar-ring: #82a6b5;
+
+  --code-background: #1c1d17;
+  --code-line-number: #7d7e73;
+}
+
+@theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
+  --color-surface: var(--surface);
+  --color-overlay: var(--overlay);
+  --color-muted-black: var(--muted-black);
+  --color-title: var(--title);
+  --color-body: var(--body);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-grid: var(--chart-grid);
+  --color-chart-axis: var(--chart-axis);
+  --color-chart-tooltip: var(--chart-tooltip);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-serif: 'Instrument Serif', serif;
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
+  --font-serif: var(--font-playfair-display);
+  --font-playfair: var(--font-playfair-display);
+  --font-jost: var(--font-jost);
+  --font-poppins: var(--font-poppins);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -86,75 +230,6 @@
   }
 }
 
-:root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
-
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
-}
-
 @utility container {
   margin-inline: auto;
   padding-inline: 2rem;
@@ -167,62 +242,24 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    border-radius: 0;
   }
+
+  html {
+    background-color: var(--background);
+  }
+
   body {
     @apply bg-background text-foreground;
-    background-image: repeating-linear-gradient(
-      315deg,
-      var(--border) _0,
-      var(--border) _1px,
-      transparent_1px,
-      transparent_50%
-    );
-    background-size: 8px 8px;
   }
-}
 
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+  a {
+    text-decoration: none;
   }
-  to {
-    transform: rotate(360deg);
+
+  ::selection {
+    background-color: var(--primary);
+    color: var(--background);
   }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }
 
 ::view-transition-old(root),
@@ -234,28 +271,56 @@
   mix-blend-mode: normal;
 }
 
-.diagonal-bg {
-  @apply bg-[repeating-linear-gradient(315deg,var(--border)_0,var(--border)_1px,transparent_1px,transparent_50%)] bg-size-[8px_8px];
+/* The group's default animation interpolates the snapshot layer's size and
+   transform from the old geometry to the new. For a theme swap the geometry is
+   normally identical, but anything that changes it — a scrollbar appearing or
+   disappearing, a reflow — slides the whole layer underneath the clip circle,
+   so the reveal opens away from where it was anchored. */
+::view-transition-group(root) {
+  animation: none;
 }
 
-@layer utilities {
-  .scrollbar::-webkit-scrollbar {
-    width: 20px;
-    height: 20px;
-  }
+/* ---------------------------------------------------------------------------
+   Callouts — the tip/note/warning boxes under a component preview.
+   One hue per variant drives the tint, the rule and the icon chip, so a variant
+   is a single custom property. The hues are palette tokens, so these follow the
+   theme automatically instead of pinning Tailwind's blue-500/amber-500/etc.
+--------------------------------------------------------------------------- */
+.callout {
+  --callout-tint: var(--muted-foreground);
 
-  .scrollbar::-webkit-scrollbar-track {
-    border-radius: 100vh;
-    background: #f7f4ed;
-  }
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: color-mix(in srgb, var(--callout-tint) 8%, var(--card));
+}
 
-  .scrollbar::-webkit-scrollbar-thumb {
-    background: #e0cbcb;
-    border-radius: 100vh;
-    border: 3px solid #f6f7ed;
-  }
+/* The accent rule. A pseudo-element rather than border-inline-start so it can
+   sit flush inside the rounded corners without flattening them. */
+.callout::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 3px;
+  background-color: var(--callout-tint);
+}
 
-  .scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #c0a0b9;
-  }
+.callout-icon {
+  color: var(--callout-tint);
+  background-color: color-mix(in srgb, var(--callout-tint) 16%, transparent);
+}
+
+.callout-label {
+  color: var(--callout-tint);
+}
+
+.callout-info {
+  --callout-tint: var(--chart-1);
+}
+.callout-tip {
+  --callout-tint: var(--chart-2);
+}
+.callout-warning {
+  --callout-tint: var(--destructive);
 }

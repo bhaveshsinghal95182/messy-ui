@@ -46,7 +46,7 @@ export default function InteractivePropsPlayground({
   }
 
   return (
-    <div className="space-y-4 p-4 border-t border-border bg-muted/30">
+    <div className="space-y-4 p-4 bg-muted/30">
       <div className="flex items-center justify-between">
         <h4 className="text-sm font-semibold text-foreground">
           Props Playground

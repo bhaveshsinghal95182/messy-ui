@@ -172,7 +172,7 @@ export function ObjectArrayControl({ prop, value, onChange }: ControlProps) {
       </div>
       <div className="flex flex-col w-full h-full ">
         {items.map((item, index) => (
-          <div key={index} className="space-y-2 border p-3">
+          <div key={index} className="space-y-2 rounded-md border p-3">
             <div className="flex items-center justify-between gap-2">
               <span className="text-xs font-medium text-muted-foreground">
                 Item {index + 1}
@@ -206,7 +206,7 @@ export function ObjectArrayControl({ prop, value, onChange }: ControlProps) {
           </div>
         ))}
         {items.length === 0 && (
-          <div className="border border-dashed p-3 text-xs text-muted-foreground">
+          <div className="rounded-md border border-dashed p-3 text-xs text-muted-foreground">
             No items yet. Add one to configure the menu.
           </div>
         )}

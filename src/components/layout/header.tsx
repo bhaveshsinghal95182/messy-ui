@@ -109,7 +109,7 @@ const Header = ({ onMenuToggle, isSidebarOpen }: HeaderProps) => {
             <span className="hidden sm:inline-flex text-muted-foreground text-sm">
               Search components...
             </span>
-            <kbd className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 hidden h-5 select-none items-center gap-1 border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
+            <kbd className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 hidden h-5 select-none items-center gap-1 rounded-md border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
               <span className="text-xs">⌘</span>K
             </kbd>
           </Button>
@@ -119,7 +119,7 @@ const Header = ({ onMenuToggle, isSidebarOpen }: HeaderProps) => {
             href="https://github.com/bhaveshsinghal95182/messy-ui"
             target="_blank"
             rel="noreferrer"
-            className="flex items-center justify-center p-2 hover:bg-accent hover:text-accent-foreground"
+            className="flex items-center justify-center p-2 rounded-md hover:bg-accent hover:text-accent-foreground"
             onMouseEnter={() => githubRef.current?.startAnimation()}
             onMouseLeave={() => githubRef.current?.stopAnimation()}
           >

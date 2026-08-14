@@ -106,7 +106,7 @@ function ComponentsContent() {
               <Link key={category} href={`/components?category=${category}`}>
                 <Badge
                   variant="outline"
-                  className="px-4 py-2 text-[1rem] cursor-pointer bg-card/80 hover:bg-primary hover:text-primary-foreground transition-colors"
+                  className="px-4 py-2 rounded-full text-[1rem] cursor-pointer bg-card/80 hover:bg-accent hover:text-accent-foreground transition-colors"
                 >
                   {category}
                 </Badge>
@@ -174,19 +174,9 @@ function ComponentCard({ component }: ComponentCardProps) {
   return (
     <motion.div variants={cardVariants}>
       <Link href={`/components/${component.slug}`} className="block group">
-        <div className="relative border border-border bg-card overflow-hidden transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5">
+        <div className="relative rounded-2xl bg-card overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-foreground/5">
           {/* Preview Area */}
-          <div className="relative h-48 bg-linear-to-br from-muted/30 via-background to-muted/50 p-6 flex items-center justify-center overflow-hidden">
-            {/* Dot pattern background */}
-            <div
-              className="absolute inset-0 opacity-30"
-              style={{
-                backgroundImage:
-                  'radial-gradient(circle at center, hsl(var(--muted-foreground) / 0.3) 1px, transparent 1px)',
-                backgroundSize: '20px 20px',
-              }}
-            />
-
+          <div className="relative h-48 bg-muted/30 p-6 flex items-center justify-center overflow-hidden">
             {/* Hover glow effect */}
             <div className="absolute inset-0 bg-linear-to-t from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
@@ -242,7 +232,7 @@ function ComponentCard({ component }: ComponentCardProps) {
           </div>
 
           {/* Content Area */}
-          <div className="p-4 border-t border-border bg-card/50 backdrop-blur-sm">
+          <div className="p-4 bg-card/50 backdrop-blur-sm">
             <div className="flex items-start justify-between gap-2">
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors truncate">

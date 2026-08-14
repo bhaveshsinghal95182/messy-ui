@@ -95,9 +95,7 @@ const DeviceFrame = ({
   if (device === 'desktop') {
     return (
       <div className={cn('w-full', className)}>
-        <div className="border border-border bg-card overflow-hidden">
-          {children}
-        </div>
+        <div className="rounded-lg bg-card overflow-hidden">{children}</div>
       </div>
     );
   }
@@ -112,12 +110,12 @@ const DeviceFrame = ({
         transition={{ duration: 0.3, ease: 'easeInOut' }}
       >
         {/* Device Frame */}
-        <div className="border-2 border-border bg-card shadow-lg overflow-hidden">
+        <div className="rounded-2xl border-2 border-border bg-card shadow-lg overflow-hidden">
           {/* Device chrome */}
-          <div className="h-6 bg-muted flex items-center justify-center gap-1.5 border-b border-border">
-            <div className="w-2 h-2 bg-red-400" />
-            <div className="w-2 h-2 bg-yellow-400" />
-            <div className="w-2 h-2 bg-green-400" />
+          <div className="h-6 bg-muted flex items-center justify-center gap-1.5">
+            <div className="w-2 h-2 rounded-full bg-muted-foreground/25" />
+            <div className="w-2 h-2 rounded-full bg-muted-foreground/25" />
+            <div className="w-2 h-2 rounded-full bg-muted-foreground/25" />
             {currentWidth && (
               <span className="absolute right-3 text-[10px] text-muted-foreground font-mono">
                 {Math.round(currentWidth)}px

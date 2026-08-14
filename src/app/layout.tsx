@@ -9,6 +9,8 @@ import {
 import './globals.css';
 import { ThemeProvider } from '@/components/layout/theme-provider';
 import DocsLayout from '@/components/layout/docs-layout';
+import JsonLd from '@/components/seo/json-ld';
+import { siteConfig, websiteSchema, personSchema } from '@/lib/seo';
 import { Analytics } from '@vercel/analytics/next';
 
 const geistSans = Geist({
@@ -38,11 +40,12 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://messyui.dev'),
-  title:
-    'messy-ui - Beautiful React Components powered by Framer Motion and GSAP',
-  description:
-    'A collection of animated, accessible React components built with GSAP and Framer Motion for teams that value performance and accessibility.',
+  metadataBase: new URL(siteConfig.url),
+  title: siteConfig.title,
+  description: siteConfig.description,
+  keywords: [...siteConfig.keywords],
+  applicationName: siteConfig.name,
+  category: 'technology',
   icons: {
     icon: [
       { url: '/favicon_io/favicon.ico', sizes: 'any' },
@@ -66,36 +69,35 @@ export const metadata: Metadata = {
     ],
   },
   manifest: '/favicon_io/site.webmanifest',
-  authors: [
-    {
-      name: 'Bhavesh Singhal',
-      url: 'https://github.com/bhaveshsinghal95182',
-    },
-  ],
-  creator: 'Bhavesh Singhal',
-  publisher: 'Bhavesh Singhal',
+  authors: [siteConfig.author],
+  creator: siteConfig.author.name,
+  publisher: siteConfig.author.name,
   alternates: {
     canonical: '/',
-    languages: {
-      'en-US': '/en-US',
-    },
   },
   openGraph: {
-    title:
-      'messy-ui - Beautiful React Components powered by Framer Motion and GSAP',
-    description:
-      'A collection of animated, accessible React components built with GSAP and Framer Motion for teams that value performance and accessibility.',
+    title: siteConfig.title,
+    description: siteConfig.description,
     type: 'website',
-    url: 'https://messyui.dev',
-    siteName: 'messy-ui',
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    locale: 'en_US',
     images: [
       {
-        url: '/og-image.png',
+        url: siteConfig.ogImage,
         width: 1200,
         height: 630,
-        alt: 'messy-ui - Beautiful React Components powered by Framer Motion and GSAP',
+        alt: siteConfig.title,
       },
     ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: siteConfig.title,
+    description: siteConfig.description,
+    site: siteConfig.twitter,
+    creator: siteConfig.twitter,
+    images: [siteConfig.ogImage],
   },
   robots: {
     follow: true,
@@ -122,6 +124,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${playfairDisplay.variable} ${jost.variable} ${poppins.variable} antialiased`}
       >
+        <JsonLd schema={[websiteSchema(), personSchema()]} />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

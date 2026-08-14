@@ -9,6 +9,14 @@ import {
 } from '@/config/components';
 import { resolveComponentCode } from '@/lib/component-loader';
 import { Button } from '@/components/ui/button';
+import JsonLd from '@/components/seo/json-ld';
+import {
+  absoluteUrl,
+  breadcrumbSchema,
+  categoryPath,
+  componentSchema,
+  siteConfig,
+} from '@/lib/seo';
 import AnimatedPageContent from './animated-content';
 
 interface PageProps {
@@ -49,11 +57,17 @@ export async function generateMetadata({
       title: component.seoTitle,
       description: component.seoDescription,
       type: 'article',
+      url: absoluteUrl(`/components/${component.slug}`),
+      siteName: siteConfig.name,
+      // Images come from the colocated opengraph-image.tsx, which renders a
+      // unique card per component.
     },
     twitter: {
       card: 'summary_large_image',
       title: component.seoTitle,
       description: component.seoDescription,
+      site: siteConfig.twitter,
+      creator: siteConfig.twitter,
     },
   };
 }
@@ -104,9 +118,25 @@ export default async function ComponentPage({ params }: PageProps) {
   };
 
   return (
-    <AnimatedPageContent
-      component={resolvedComponent}
-      relatedComponents={relatedComponents}
-    />
+    <>
+      <JsonLd
+        schema={[
+          componentSchema(component),
+          breadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: 'Components', path: '/components' },
+            {
+              name: component.category,
+              path: categoryPath(component.category),
+            },
+            { name: component.name, path: `/components/${component.slug}` },
+          ]),
+        ]}
+      />
+      <AnimatedPageContent
+        component={resolvedComponent}
+        relatedComponents={relatedComponents}
+      />
+    </>
   );
 }

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { motion, type Variants } from 'motion/react';
 import { ExternalLink } from 'lucide-react';
 import { ComponentConfig } from '@/config/types';
+import { categoryPath } from '@/lib/category';
 import ComponentPreview from '@/components/docs/components-preview';
 import PropsTable from '@/components/docs/props-table';
 import InstallationSection from '@/components/docs/installation-section';
@@ -80,7 +81,7 @@ export default function AnimatedPageContent({
           </Link>
           <span>/</span>
           <Link
-            href={`/components?category=${component.category}`}
+            href={categoryPath(component.category)}
             className="hover:text-foreground transition-colors"
           >
             {component.category}

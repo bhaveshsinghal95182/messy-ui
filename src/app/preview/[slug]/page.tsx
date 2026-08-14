@@ -1,7 +1,14 @@
+import type { Metadata } from 'next';
 import React, { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { getComponentBySlugOrAlias } from '@/config/components';
 import { Loader2 } from 'lucide-react';
+
+// Bare component renderer for the docs iframe - it duplicates the content of
+// the real component page, so it must never be indexed on its own.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 interface PreviewPageProps {
   params: Promise<{ slug: string }>;

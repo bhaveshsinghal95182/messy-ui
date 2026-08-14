@@ -6,6 +6,22 @@ const nextConfig: NextConfig = {
   // Redirects for component aliases - SEO friendly permanent redirects
   async redirects() {
     return [
+      // Legacy query-string category filter -> real category landing page.
+      // The category page normalises the value and redirects to its canonical
+      // slug, so both "?category=Animations" and "?category=animations" land
+      // on /components/category/animations.
+      {
+        source: '/components',
+        has: [
+          {
+            type: 'query',
+            key: 'category',
+            value: '(?<category>.*)',
+          },
+        ],
+        destination: '/components/category/:category',
+        permanent: true,
+      },
       // Animated Counter aliases
       {
         source: '/components/odometer-counter',

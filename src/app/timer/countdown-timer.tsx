@@ -280,9 +280,14 @@ const CountdownTimer = ({
   return (
     <div
       ref={shellRef}
-      className="flex min-h-screen w-full flex-col items-center justify-center gap-10 bg-background px-6 py-10 text-foreground"
+      className={cn(
+        'flex min-h-svh w-full flex-col items-center justify-center bg-background text-foreground',
+        'gap-6 px-4 py-6 sm:gap-8 sm:px-6 sm:py-10 lg:gap-10',
+        // Landscape on a phone is mostly height-starved, not width-starved.
+        '[@media(max-height:600px)]:gap-3 [@media(max-height:600px)]:py-4'
+      )}
     >
-      <div className="flex flex-col items-center gap-6">
+      <div className="flex flex-col items-center gap-4 sm:gap-6 [@media(max-height:600px)]:gap-2">
         <h1 className="text-center font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
           {heading}
         </h1>
@@ -290,7 +295,10 @@ const CountdownTimer = ({
         <div
           className={cn(
             'font-mono font-medium tabular-nums leading-none tracking-tight transition-opacity duration-100',
-            'text-[clamp(4.5rem,20vw,16rem)]',
+            // Below lg the digits also have to respect the viewport height, or a
+            // phone in landscape pushes the controls off screen. From lg up this
+            // is exactly the desktop sizing it has always been.
+            'text-[clamp(2.5rem,min(19vw,30vh),16rem)] lg:text-[clamp(4.5rem,20vw,16rem)]',
             (isLow || isFinished) && 'text-destructive',
             blinkOff && 'opacity-15'
           )}
@@ -390,7 +398,9 @@ const CountdownTimer = ({
         </form>
       </div>
 
-      <p className="font-mono text-xs text-muted-foreground">
+      {/* Shortcuts are useless without a keyboard, and the room they take is
+          exactly what a short landscape viewport does not have. */}
+      <p className="font-mono text-xs text-muted-foreground [@media(max-height:600px)]:hidden">
         space start/pause · r reset · f fullscreen
       </p>
     </div>

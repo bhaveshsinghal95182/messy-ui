@@ -13,7 +13,8 @@ const DocsLayout = ({ children }: DocsLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
 
-  if (pathname?.startsWith('/preview')) {
+  // /timer is a standalone fullscreen utility, so it opts out of the docs chrome.
+  if (pathname?.startsWith('/preview') || pathname?.startsWith('/timer')) {
     return <>{children}</>;
   }
 

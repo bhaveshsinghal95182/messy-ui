@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { components, categories } from '@/config/components';
+import { curatedTimers } from '@/config/timers';
 import { absoluteUrl, categoryPath, siteConfig } from '@/lib/seo';
 
 /**
@@ -17,7 +18,8 @@ import { absoluteUrl, categoryPath, siteConfig } from '@/lib/seo';
  * - 1.0: Homepage
  * - 0.9: Components gallery
  * - 0.8: Individual component pages
- * - 0.7: Category landing pages
+ * - 0.7: Category landing pages, standalone tools
+ * - 0.6: Individual timer presets
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const currentDate = new Date();
@@ -36,6 +38,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.9,
     },
+    {
+      url: absoluteUrl('/timer'),
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
   ];
 
   const componentPages: MetadataRoute.Sitemap = components.map((component) => ({
@@ -52,5 +60,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...componentPages, ...categoryPages];
+  // Only curated timer presets are listed. Slugs that merely resolve to a
+  // working countdown (/timer/17-minute-timer) are noindex, so they stay out.
+  const timerPages: MetadataRoute.Sitemap = curatedTimers.map((timer) => ({
+    url: absoluteUrl(`/timer/${timer.slug}`),
+    lastModified: currentDate,
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
+  }));
+
+  return [...staticPages, ...componentPages, ...categoryPages, ...timerPages];
 }

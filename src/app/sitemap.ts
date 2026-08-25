@@ -44,6 +44,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.7,
     },
+    {
+      url: absoluteUrl('/pdf'),
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
   ];
 
   const componentPages: MetadataRoute.Sitemap = components.map((component) => ({

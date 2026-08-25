@@ -11,12 +11,18 @@ importers:
       '@base-ui/react':
         specifier: ^1.1.0
         version: 1.1.0(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@cantoo/pdf-lib':
+        specifier: ^2.9.1
+        version: 2.9.1(html-entities@2.6.0)
       '@gsap/react':
         specifier: ^2.1.2
         version: 2.1.2(gsap@3.14.2)(react@19.2.3)
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.71.1(react@19.2.3))
+      '@pdf-lib/fontkit':
+        specifier: ^1.1.1
+        version: 1.1.1
       '@radix-ui/react-accordion':
         specifier: ^1.2.12
         version: 1.2.12(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -140,6 +146,9 @@ importers:
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      pdfjs-dist:
+        specifier: 6.2.108
+        version: 6.2.108
       qss:
         specifier: ^3.0.0
         version: 3.0.0
@@ -383,6 +392,11 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
+
+  '@cantoo/pdf-lib@2.9.1':
+    resolution: {integrity: sha512-wAKXXDjp5lO0wS6d+k0FRpmWsULb95WhHKYx2fonTbv4zIfuIdCBz2nyTVVDGJpNDLl6o4w9aSTxQisBvvd60A==}
+    peerDependencies:
+      html-entities: ^2.3.2
 
   '@commitlint/cli@20.4.0':
     resolution: {integrity: sha512-2lqrFrYNxjKxgMqeYiO3zNM14XN9v72/5xIJyvdLw7sHEGlfg6sweW01PGNWiqZa6/AuZwsb0uzkgWJy6F4N2w==}
@@ -780,6 +794,81 @@ packages:
     resolution: {integrity: sha512-EFd6cVbHsgLa6wa4RljGj6Wk75qoHxUSyc5asLyyPSyuhIcdS2Q3Phw6ImS1q+CkALthJRShiYfKANcQMuMqsQ==}
     engines: {node: '>=18'}
 
+  '@napi-rs/canvas-android-arm64@1.0.8':
+    resolution: {integrity: sha512-5+nkh8i3gt6lqS/d2jTZ1xAn6tdgtB4Lf1mW6T0Qm5/rXNwBuV1sAEyLEWan5o9gJPU/GuvHR3rvSeZ+FaGrbw==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [android]
+
+  '@napi-rs/canvas-darwin-arm64@1.0.8':
+    resolution: {integrity: sha512-7jQ47gi+fZ7KJmfc/5rNyy1CYw/cu4kZ0KPIYbo9UUgSdW0bKQJpt+WihEor6s4Lyp7+xc3a+3HeyXmAEbbnPg==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@napi-rs/canvas-darwin-x64@1.0.8':
+    resolution: {integrity: sha512-rRjDMZs9pIRKGxgijwezplKc1RnJsqUokrA9h88bbTkqQ+7ePj0ZN4ZnZDy8Vu0tXs7KRlI2tQLaK4mx9QlxHg==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@napi-rs/canvas-linux-arm-gnueabihf@1.0.8':
+    resolution: {integrity: sha512-jGcCd+8ra6Q61xKqZeiItujTpp9a9eRLcQ0jW6qYNku+WpupqOPFPY0SrsuSnXFviJwkpKYT9p7QrB4lsf3LNQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm]
+    os: [linux]
+
+  '@napi-rs/canvas-linux-arm64-gnu@1.0.8':
+    resolution: {integrity: sha512-od6I2Y7kU7i1SwZYG2EKW8rWz6JiedtPpko4WEe1DDsiikrfaotVBCRaUTM5/yeZKaZ92EatoAS+5xG+6uJlYA==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@napi-rs/canvas-linux-arm64-musl@1.0.8':
+    resolution: {integrity: sha512-yYkPbJDJiWj6N0gASA3CAvRypZmVpJnxU0DQg3aBhneLDQde9TPLKADsQkobNoJUtTT/lj46aWpzT48PDb3Qcg==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@napi-rs/canvas-linux-riscv64-gnu@1.0.8':
+    resolution: {integrity: sha512-PB00MSKAp4VwK/xwe6duKxRKmH8UH4GIl1pqHSbxng0jnU9Dr7FwaDypDiqwNFZ774N+8G7mJLGuLtg9NTcQsg==}
+    engines: {node: '>= 10'}
+    cpu: [riscv64]
+    os: [linux]
+    libc: [glibc]
+
+  '@napi-rs/canvas-linux-x64-gnu@1.0.8':
+    resolution: {integrity: sha512-TWM2XWJoitLiIPCvgJh7SriC+L/T9qkYCVzC66AidsZy0QP1hkKzBzVwshCdcA3q6fIn3yE0ISbq4lMJSy8jFw==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@napi-rs/canvas-linux-x64-musl@1.0.8':
+    resolution: {integrity: sha512-hb20MxKXXb5IB7AAwN8UHz9WRsa2HmdZfjsDCzjElwJoeV1aotVEwFU4FrFQcYQVzsJQLeaCc/2Qdt/0Q72mMg==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@napi-rs/canvas-win32-arm64-msvc@1.0.8':
+    resolution: {integrity: sha512-WwPN08IXE4SkL+FhJyPz/iFnycMAUkbphFIT4cmKLlvbSU0Zfn1R7BGJ3Hqky1S89QUYc0Q4IOScXb/42Re9wQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@napi-rs/canvas-win32-x64-msvc@1.0.8':
+    resolution: {integrity: sha512-XkrVqKb+pxyba7kjy2LJvABFVBTE0DNpEl7MrG4OYUmaWarrXH+t54z/Czj2YxCKtizYTV4mg6phNm3x24qjhQ==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [win32]
+
+  '@napi-rs/canvas@1.0.8':
+    resolution: {integrity: sha512-/SaLcvlqGWdm0HSCWMgHu7cjJiQXfP8/mOY+6dUyV9flQz7sPBBZ+ed2zYtoukojPmxOaL7bm+d/G4GeWWoN7g==}
+    engines: {node: '>= 10'}
+
   '@napi-rs/wasm-runtime@0.2.12':
     resolution: {integrity: sha512-ZVWUcfwY4E/yPitQJl481FjFo3K22D6qF0DuFH6Y/nbnE11GY5uguDxZMGXPQ8WQ0128MXQD7TnfHyK4oWoIJQ==}
 
@@ -865,6 +954,15 @@ packages:
 
   '@open-draft/until@2.1.0':
     resolution: {integrity: sha512-U69T3ItWHvLwGg5eJ0n3I62nWuE6ilHlmz7zM0npLBRvPRd7e6NYmg54vvRtP5mZG7kZqZCFVdsTWo7BPtBujg==}
+
+  '@pdf-lib/fontkit@1.1.1':
+    resolution: {integrity: sha512-KjMd7grNapIWS/Dm0gvfHEilSyAmeLvrEGVcqLGi0VYebuqqzTbgF29efCx7tvx+IEbG3zQciRSWl3GkUSvjZg==}
+
+  '@pdf-lib/standard-fonts@1.0.0':
+    resolution: {integrity: sha512-hU30BK9IUN/su0Mn9VdlVKsWBS6GyhVfqjwl1FjZN4TxP6cCw0jP2w7V3Hf5uX7M0AZJ16vey9yE0ny7Sa59ZA==}
+
+  '@pdf-lib/upng@1.0.1':
+    resolution: {integrity: sha512-dQK2FUMQtowVP00mtIksrlZhdFXQZPC+taih1q4CvPZ5vqdxR/LKBaFg0oAfzd1GlHZXXSPdQfzQnt+ViGvEIQ==}
 
   '@pkgr/core@0.2.9':
     resolution: {integrity: sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==}
@@ -2205,6 +2303,13 @@ packages:
   color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
 
+  color-string@1.9.1:
+    resolution: {integrity: sha512-shrVawQFojnZv6xM40anx4CkoDP+fZsw/ZerEMsW/pyzsRbElpsL/DBVW7q3ExxwusdNXI3lXpuhEZkzs8p5Eg==}
+
+  color@4.2.3:
+    resolution: {integrity: sha512-1rXeuUUiGGrykh+CeBdu5Ie7OJwinCgQY0bc7GCRxy5xVHy+moaqkpL/jqQq0MtQOeYcrqEz4abc5f0KtU7W4A==}
+    engines: {node: '>=12.5.0'}
+
   colorette@2.0.20:
     resolution: {integrity: sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w==}
 
@@ -2984,6 +3089,9 @@ packages:
     resolution: {integrity: sha512-U7tt8JsyrxSRKspfhtLET79pU8K+tInj5QZXs1jSugO1Vq5dFj3kmZsRldo29mTBfcjDRVRXrEZ6LS63Cog9ZA==}
     engines: {node: '>=16.9.0'}
 
+  html-entities@2.6.0:
+    resolution: {integrity: sha512-kig+rMn/QOVRvr7c86gQ8lWXq+Hkv6CbAH1hLu+RG338StTpE8Z0b44SDVaqVu7HGKf27frdmUYEs9hTUX/cLQ==}
+
   http-errors@2.0.1:
     resolution: {integrity: sha512-4FbRdAX+bSdmo4AUFuS0WNiPz8NgFt+r8ThgNWmlrjQjt1Q7ZR9+zTlce2859x4KSXrwIsaeTqDoKQmtP8pLmQ==}
     engines: {node: '>= 0.8'}
@@ -3067,6 +3175,9 @@ packages:
 
   is-arrayish@0.2.1:
     resolution: {integrity: sha512-zz06S8t0ozoDXMG+ube26zeCTNXcKIPJZJi8hBrF4idCLms4CG9QtK7qBl1boi5ODzFpjswb5JPmHCbMpjaYzg==}
+
+  is-arrayish@0.3.4:
+    resolution: {integrity: sha512-m6UrgzFVUYawGBh1dUsWR5M2Clqic9RVXC/9f8ceNlv2IcO9j9J/z8UoCLPqtsPBFNzEpfR3xftohbfqDx8EQA==}
 
   is-async-function@2.1.1:
     resolution: {integrity: sha512-9dgM/cZBnNvjzaMYHVoxxfPj2QXt22Ev7SuuPrs+xav0ukGB0S6d4ydZdEiM48kLx5kDV+QBPrpVnFyefL8kkQ==}
@@ -3617,6 +3728,9 @@ packages:
     resolution: {integrity: sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
+  node-html-better-parser@1.5.9:
+    resolution: {integrity: sha512-z1I5UINMezJXYL9cH3h0a9KBth2G978gSLlfkpQ+CQzzVHVQy9gpARgm9eDsz1O4gn1HtgUqjdAIYxKFZm6uHQ==}
+
   node-releases@2.0.27:
     resolution: {integrity: sha512-nmh3lCkYZ3grZvqcCH+fjmQ7X+H0OeZgP40OierEaAptX4XofMh5kwNbWh7lBduUzCcV/8kZ+NDLCwm2iorIlA==}
 
@@ -3698,6 +3812,12 @@ packages:
     resolution: {integrity: sha512-LaNjtRWUBY++zB5nE/NwcaoMylSPk+S+ZHNB1TzdbMJMny6dynpAGt7X/tl/QYq3TIeE6nxHppbo2LGymrG5Pw==}
     engines: {node: '>=10'}
 
+  pako@1.0.11:
+    resolution: {integrity: sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==}
+
+  pako@2.2.0:
+    resolution: {integrity: sha512-zJq6RP/5q+TO2OpFV3FHzlPnFjmkb7Nc99a5SNjJE+uu/PkpChs+NIZSSzbBoD+6kjiISXjfYdwj1ZRQ81dz/w==}
+
   parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
     engines: {node: '>=6'}
@@ -3740,6 +3860,10 @@ packages:
   path-type@4.0.0:
     resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==}
     engines: {node: '>=8'}
+
+  pdfjs-dist@6.2.108:
+    resolution: {integrity: sha512-YxFb+SQcodN2rnX9Tn3dHYlqfb7NjlzzfONPpJd+AKoKtUjEdevTfbC07d5TcczzOK6261auRkP/M8OBHs9vFQ==}
+    engines: {node: '>=22.13.0 || >=24'}
 
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
@@ -4100,6 +4224,9 @@ packages:
   signal-exit@4.1.0:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
+
+  simple-swizzle@0.2.4:
+    resolution: {integrity: sha512-nAu1WFPQSMNr2Zn9PGSZK9AGn4t/y97lEm+MXTtUDwfP0ksAIX4nO+6ruD9Jwut4C49SB1Ws+fbXsm/yScWOHw==}
 
   sisteransi@1.0.5:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
@@ -4791,6 +4918,16 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.9
 
+  '@cantoo/pdf-lib@2.9.1(html-entities@2.6.0)':
+    dependencies:
+      '@pdf-lib/standard-fonts': 1.0.0
+      '@pdf-lib/upng': 1.0.1
+      color: 4.2.3
+      html-entities: 2.6.0
+      node-html-better-parser: 1.5.9
+      pako: 2.2.0
+      tslib: 2.8.1
+
   '@commitlint/cli@20.4.0(@types/node@20.19.30)(typescript@5.9.3)':
     dependencies:
       '@commitlint/format': 20.4.0
@@ -5186,6 +5323,54 @@ snapshots:
       outvariant: 1.4.3
       strict-event-emitter: 0.5.1
 
+  '@napi-rs/canvas-android-arm64@1.0.8':
+    optional: true
+
+  '@napi-rs/canvas-darwin-arm64@1.0.8':
+    optional: true
+
+  '@napi-rs/canvas-darwin-x64@1.0.8':
+    optional: true
+
+  '@napi-rs/canvas-linux-arm-gnueabihf@1.0.8':
+    optional: true
+
+  '@napi-rs/canvas-linux-arm64-gnu@1.0.8':
+    optional: true
+
+  '@napi-rs/canvas-linux-arm64-musl@1.0.8':
+    optional: true
+
+  '@napi-rs/canvas-linux-riscv64-gnu@1.0.8':
+    optional: true
+
+  '@napi-rs/canvas-linux-x64-gnu@1.0.8':
+    optional: true
+
+  '@napi-rs/canvas-linux-x64-musl@1.0.8':
+    optional: true
+
+  '@napi-rs/canvas-win32-arm64-msvc@1.0.8':
+    optional: true
+
+  '@napi-rs/canvas-win32-x64-msvc@1.0.8':
+    optional: true
+
+  '@napi-rs/canvas@1.0.8':
+    optionalDependencies:
+      '@napi-rs/canvas-android-arm64': 1.0.8
+      '@napi-rs/canvas-darwin-arm64': 1.0.8
+      '@napi-rs/canvas-darwin-x64': 1.0.8
+      '@napi-rs/canvas-linux-arm-gnueabihf': 1.0.8
+      '@napi-rs/canvas-linux-arm64-gnu': 1.0.8
+      '@napi-rs/canvas-linux-arm64-musl': 1.0.8
+      '@napi-rs/canvas-linux-riscv64-gnu': 1.0.8
+      '@napi-rs/canvas-linux-x64-gnu': 1.0.8
+      '@napi-rs/canvas-linux-x64-musl': 1.0.8
+      '@napi-rs/canvas-win32-arm64-msvc': 1.0.8
+      '@napi-rs/canvas-win32-x64-msvc': 1.0.8
+    optional: true
+
   '@napi-rs/wasm-runtime@0.2.12':
     dependencies:
       '@emnapi/core': 1.8.1
@@ -5245,6 +5430,18 @@ snapshots:
       outvariant: 1.4.3
 
   '@open-draft/until@2.1.0': {}
+
+  '@pdf-lib/fontkit@1.1.1':
+    dependencies:
+      pako: 1.0.11
+
+  '@pdf-lib/standard-fonts@1.0.0':
+    dependencies:
+      pako: 1.0.11
+
+  '@pdf-lib/upng@1.0.1':
+    dependencies:
+      pako: 1.0.11
 
   '@pkgr/core@0.2.9': {}
 
@@ -6602,6 +6799,16 @@ snapshots:
 
   color-name@1.1.4: {}
 
+  color-string@1.9.1:
+    dependencies:
+      color-name: 1.1.4
+      simple-swizzle: 0.2.4
+
+  color@4.2.3:
+    dependencies:
+      color-convert: 2.0.1
+      color-string: 1.9.1
+
   colorette@2.0.20: {}
 
   comma-separated-tokens@2.0.3: {}
@@ -6965,7 +7172,7 @@ snapshots:
       '@next/eslint-plugin-next': 16.1.1
       eslint: 9.39.2(jiti@2.6.1)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.53.1(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.39.2(jiti@2.6.1))
       eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.53.1(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@2.6.1))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.39.2(jiti@2.6.1))
       eslint-plugin-react: 7.37.5(eslint@9.39.2(jiti@2.6.1))
@@ -6992,7 +7199,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.53.1(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1)):
+  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@9.39.2(jiti@2.6.1)):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
       debug: 4.4.3
@@ -7007,14 +7214,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.53.1(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.53.1(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1)):
+  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.53.1(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@2.6.1)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 8.53.1(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
       eslint: 9.39.2(jiti@2.6.1)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.53.1(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.39.2(jiti@2.6.1))
     transitivePeerDependencies:
       - supports-color
 
@@ -7029,7 +7236,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.39.2(jiti@2.6.1)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.53.1(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.53.1(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1))
+      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.53.1(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@2.6.1))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -7490,6 +7697,8 @@ snapshots:
 
   hono@4.11.4: {}
 
+  html-entities@2.6.0: {}
+
   http-errors@2.0.1:
     dependencies:
       depd: 2.0.0
@@ -7563,6 +7772,8 @@ snapshots:
       get-intrinsic: 1.3.0
 
   is-arrayish@0.2.1: {}
+
+  is-arrayish@0.3.4: {}
 
   is-async-function@2.1.1:
     dependencies:
@@ -8051,6 +8262,10 @@ snapshots:
       fetch-blob: 3.2.0
       formdata-polyfill: 4.0.10
 
+  node-html-better-parser@1.5.9:
+    dependencies:
+      html-entities: 2.6.0
+
   node-releases@2.0.27: {}
 
   npm-run-path@5.3.0:
@@ -8156,6 +8371,10 @@ snapshots:
     dependencies:
       p-limit: 3.1.0
 
+  pako@1.0.11: {}
+
+  pako@2.2.0: {}
+
   parent-module@1.0.1:
     dependencies:
       callsites: 3.1.0
@@ -8194,6 +8413,10 @@ snapshots:
   path-to-regexp@8.3.0: {}
 
   path-type@4.0.0: {}
+
+  pdfjs-dist@6.2.108:
+    optionalDependencies:
+      '@napi-rs/canvas': 1.0.8
 
   picocolors@1.1.1: {}
 
@@ -8653,6 +8876,10 @@ snapshots:
   signal-exit@3.0.7: {}
 
   signal-exit@4.1.0: {}
+
+  simple-swizzle@0.2.4:
+    dependencies:
+      is-arrayish: 0.3.4
 
   sisteransi@1.0.5: {}
 

@@ -18,6 +18,7 @@ import SplitDialog from './dialogs/split-dialog';
 import SignatureDialog, {
   type SignaturePayload,
 } from './signature/signature-dialog';
+import SecurityDialog from './dialogs/security-dialog';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { useFileDrop } from '@/hooks/use-file-drop';
@@ -40,11 +41,13 @@ export interface PdfWorkspaceProps {
 }
 
 /** Sub-routes that should open a dialog as soon as a document is loaded. */
-const MODE_DIALOG: Record<string, 'split' | 'sign'> = {
+const MODE_DIALOG: Record<string, 'split' | 'sign' | 'security'> = {
   split: 'split',
   'extract-pages': 'split',
   sign: 'sign',
   esign: 'sign',
+  protect: 'security',
+  unlock: 'security',
 };
 
 const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
@@ -61,6 +64,9 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
    */
   const [splitOverride, setSplitOverride] = useState<boolean | null>(null);
   const [signatureOverride, setSignatureOverride] = useState<boolean | null>(
+    null
+  );
+  const [securityOverride, setSecurityOverride] = useState<boolean | null>(
     null
   );
 
@@ -305,6 +311,7 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
           onAddImage={addImage}
           onSign={() => setSignatureOverride(true)}
           onAddDate={placeDate}
+          onSecurity={() => setSecurityOverride(true)}
           busy={isExporting}
         />
 
@@ -342,6 +349,14 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
           busy={isOpening}
           onSubmit={submitPassword}
           onCancel={cancelPassword}
+        />
+
+        <SecurityDialog
+          open={
+            securityOverride ??
+            (hasDocument && MODE_DIALOG[mode] === 'security')
+          }
+          onOpenChange={setSecurityOverride}
         />
 
         <SignatureDialog

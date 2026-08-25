@@ -4,6 +4,7 @@ import {
   CalendarDays,
   Download,
   FolderOpen,
+  Lock,
   PanelLeft,
   Printer,
   Redo2,
@@ -32,6 +33,7 @@ interface ToolbarProps {
   onAddImage: () => void;
   onSign: () => void;
   onAddDate: () => void;
+  onSecurity: () => void;
   busy: boolean;
 }
 
@@ -50,6 +52,7 @@ const Toolbar = ({
   onAddImage,
   onSign,
   onAddDate,
+  onSecurity,
   busy,
 }: ToolbarProps) => {
   const dispatch = usePdfDispatch();
@@ -191,6 +194,21 @@ const Toolbar = ({
           </Button>
         </TooltipTrigger>
         <TooltipContent>Split or extract pages</TooltipContent>
+      </Tooltip>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Password and permissions"
+            disabled={!hasDocument}
+            onClick={onSecurity}
+          >
+            <Lock className="size-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Password and permissions</TooltipContent>
       </Tooltip>
 
       <div className="flex-1" />

@@ -23,7 +23,9 @@ import type {
  * actually exports, so it is loaded on demand rather than imported at module
  * scope. Memoised because export is usually repeated.
  */
-let pdfLibPromise: Promise<typeof import('@cantoo/pdf-lib')> | null = null;
+type PdfLibModule = typeof import('@cantoo/pdf-lib');
+
+let pdfLibPromise: Promise<PdfLibModule> | null = null;
 export const loadPdfLib = () => {
   pdfLibPromise ??= import('@cantoo/pdf-lib');
   return pdfLibPromise;
@@ -175,6 +177,10 @@ export async function exportPdf(
 
   applyMetadata(doc, state, settings);
 
+  if (settings.stripMetadata) {
+    sanitizeCatalog(doc, await loadPdfLib());
+  }
+
   if (settings.encryption) {
     const { userPassword, ownerPassword, permissions } = settings.encryption;
     doc.encrypt({
@@ -189,6 +195,30 @@ export async function exportPdf(
     // about to be signed — see sign/sign.ts.
     useObjectStreams: settings.optimize !== 'none',
   });
+}
+
+/**
+ * Strips document-level JavaScript, launch actions and embedded attachments.
+ *
+ * These live in the catalog's /Names tree and /OpenAction, and none of them are
+ * things a user re-sharing a document expects to be passing along — an embedded
+ * script runs on open in readers that support it, and an attachment can be an
+ * entire second file riding along invisibly.
+ */
+function sanitizeCatalog(doc: PDFDocument, lib: PdfLibModule) {
+  const { PDFName, PDFDict } = lib;
+  const catalog = doc.catalog;
+
+  // An action that fires the moment the document opens.
+  catalog.delete(PDFName.of('OpenAction'));
+  catalog.delete(PDFName.of('AA'));
+
+  const names = catalog.lookup(PDFName.of('Names'), PDFDict);
+  if (names) {
+    // Document-level JavaScript, and the embedded-file tree.
+    names.delete(PDFName.of('JavaScript'));
+    names.delete(PDFName.of('EmbeddedFiles'));
+  }
 }
 
 function applyMetadata(

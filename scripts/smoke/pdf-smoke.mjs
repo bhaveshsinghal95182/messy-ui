@@ -125,6 +125,42 @@ const inspectFirstPage = async (file) => {
   return { hasImageDraw: imageOps.length > 0, imageOps, text };
 };
 
+/**
+ * Reports whether a saved PDF is actually encrypted, and whether the expected
+ * password opens it.
+ *
+ * Checking that a password *works* is not enough on its own — an unencrypted
+ * file "opens" too. The meaningful assertion is that the document reports
+ * itself encrypted and refuses to load without the password.
+ */
+const isEncrypted = async (file, password = 'smoke-secret') => {
+  const require = createRequire(import.meta.url);
+  const { PDFDocument } = require('@cantoo/pdf-lib');
+  const bytes = await readFile(file);
+
+  const probe = await PDFDocument.load(bytes, { ignoreEncryption: true });
+  const encrypted = probe.isEncrypted;
+
+  let opensWithPassword = false;
+  try {
+    await PDFDocument.load(bytes, { password });
+    opensWithPassword = true;
+  } catch (error) {
+    opensWithPassword = false;
+    return {
+      encrypted,
+      opensWithPassword,
+      detail: `password rejected: ${error.message}`,
+    };
+  }
+
+  return {
+    encrypted,
+    opensWithPassword,
+    detail: `isEncrypted=${encrypted}, password accepted`,
+  };
+};
+
 await mkdir(shots, { recursive: true });
 
 const browser = await chromium.launch();
@@ -326,7 +362,7 @@ try {
   await page.waitForTimeout(400);
   await page.screenshot({ path: path.join(shots, '06-signature-pad.png') });
 
-  await page.click('text=Place signature');
+  await page.click('button:has-text("Place signature")');
   await page.waitForTimeout(900);
 
   const signatureCount = await page.evaluate(
@@ -355,7 +391,7 @@ try {
 
   /* 6c. Export round-trip: the saved file must reopen with the same pages. */
   const downloadPromise = page.waitForEvent('download', { timeout: 30_000 });
-  await page.click('text=Download');
+  await page.click('button:has-text("Download")');
   const download = await downloadPromise;
   const exported = path.join(samples, 'exported.pdf');
   await download.saveAs(exported);
@@ -406,6 +442,38 @@ try {
 
   const llms = await (await fetch(`${BASE}/llms.txt`)).text();
   check('llms.txt lists the PDF editor', llms.includes('PDF Editor'));
+
+  /* 6e. Security round-trip: set a password on export, then prove the saved
+     file genuinely requires it. Asserting the *absence* of access is the only
+     way to show encryption did something. */
+  await page.click('[aria-label="Password and permissions"]');
+  await page.waitForSelector('text=Password and permissions', {
+    timeout: 10_000,
+  });
+  await page.click('#encrypt-enabled');
+  await page.waitForTimeout(300);
+  await page.fill('#user-password', 'smoke-secret');
+  // Scope to the button: a bare `text=Apply` substring-matches the dialog's
+  // own description ("Applied when you download"), which clicks nothing and
+  // leaves the overlay blocking everything behind it.
+  await page.click('button:has-text("Apply")');
+  await page.waitForSelector('[data-slot="dialog-overlay"]', {
+    state: 'detached',
+    timeout: 10_000,
+  });
+
+  const protectedDownload = page.waitForEvent('download', { timeout: 30_000 });
+  await page.click('button:has-text("Download")');
+  const protectedFile = path.join(samples, 'exported-protected.pdf');
+  await (await protectedDownload).saveAs(protectedFile);
+
+  const locked = await isEncrypted(protectedFile);
+  check('exported file is encrypted', locked.encrypted, locked.detail);
+  check(
+    'the chosen password opens it',
+    locked.opensWithPassword,
+    locked.detail
+  );
 
   /* 7. Encrypted files prompt rather than failing silently. */
   await page.goto(`${BASE}/pdf`, { waitUntil: 'networkidle' });

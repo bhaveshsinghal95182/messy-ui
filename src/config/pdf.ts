@@ -226,6 +226,86 @@ export const pdfTools: PdfTool[] = [
     curated: true,
   },
   {
+    slug: 'protect',
+    mode: 'protect',
+    heading: 'Password-protect a PDF',
+    title: 'Protect PDF with a Password Free - Encrypt in Your Browser',
+    description:
+      'Add a password and set permissions on a PDF. AES-256 encryption applied in your browser — the document and the password never leave your device.',
+    intro:
+      'Set a password that must be entered to open the document, and choose what readers are allowed to do with it. The encryption happens on your machine, which matters rather a lot here: uploading a file to a website in order to protect it rather defeats the point.',
+    steps: [
+      'Open the PDF.',
+      'Choose a password to open the document.',
+      'Optionally set permissions such as printing or copying.',
+      'Download the protected file.',
+    ],
+    keywords: [
+      'password protect pdf',
+      'encrypt pdf',
+      'add password to pdf',
+      'lock pdf',
+      'protect pdf free',
+      'pdf encryption aes',
+    ],
+    faq: [
+      PRIVACY_FAQ,
+      {
+        question: 'How strong is the encryption?',
+        answer:
+          'AES-256, the algorithm specified in ISO 32000-2 revision 6. Weak legacy RC4 encryption is refused outright, so a file protected here cannot accidentally end up protected by broken crypto.',
+      },
+      {
+        question: 'What is the difference between the two passwords?',
+        answer:
+          'The open password is real encryption — without it the file cannot be read at all. The owner password only guards the permission flags, and those flags are a convention that well-behaved readers honour rather than something enforced cryptographically. Treat permissions as a request, not a guarantee.',
+      },
+      {
+        question: 'Can I remove a password instead?',
+        answer:
+          'Yes. Open the file with its password, turn protection off, and download — the saved copy is unencrypted.',
+      },
+    ],
+    related: ['unlock', 'sign', 'merge'],
+    curated: true,
+  },
+  {
+    slug: 'unlock',
+    mode: 'unlock',
+    heading: 'Remove a PDF password',
+    title: 'Remove PDF Password Free - Unlock a PDF in Your Browser',
+    description:
+      'Remove the password from a PDF you can already open, in your browser. Nothing is uploaded.',
+    intro:
+      'If you have the password but would rather not type it every time, open the document once and save an unprotected copy. This decrypts a file you can already open — it does not break or guess passwords.',
+    steps: [
+      'Open the PDF and enter its password when prompted.',
+      'Open the password panel and turn protection off.',
+      'Download the unprotected copy.',
+    ],
+    keywords: [
+      'remove pdf password',
+      'unlock pdf',
+      'decrypt pdf',
+      'remove password from pdf free',
+    ],
+    faq: [
+      PRIVACY_FAQ,
+      {
+        question: 'Can this open a PDF whose password I do not know?',
+        answer:
+          'No. It decrypts a document using the password you supply. There is no password recovery, cracking or bypass here, and there will not be.',
+      },
+      {
+        question: 'Does removing the password change anything else?',
+        answer:
+          'No. The pages, text, annotations and form fields are untouched; only the encryption is dropped.',
+      },
+    ],
+    related: ['protect', 'merge', 'split'],
+    curated: true,
+  },
+  {
     slug: 'rotate',
     mode: 'rotate',
     heading: 'Rotate PDF pages',

@@ -21,6 +21,7 @@ import SignatureDialog, {
 } from './signature/signature-dialog';
 import SecurityDialog from './dialogs/security-dialog';
 import StampDialog from './dialogs/stamp-dialog';
+import ConvertDialog from './dialogs/convert-dialog';
 import MetadataDialog from './dialogs/metadata-dialog';
 import CertificateDialog from './signature/certificate-dialog';
 import { Toaster } from '@/components/ui/sonner';
@@ -45,7 +46,10 @@ export interface PdfWorkspaceProps {
 }
 
 /** Sub-routes that should open a dialog as soon as a document is loaded. */
-const MODE_DIALOG: Record<string, 'split' | 'sign' | 'security' | 'stamp'> = {
+const MODE_DIALOG: Record<
+  string,
+  'split' | 'sign' | 'security' | 'stamp' | 'convert'
+> = {
   split: 'split',
   'extract-pages': 'split',
   sign: 'sign',
@@ -54,6 +58,9 @@ const MODE_DIALOG: Record<string, 'split' | 'sign' | 'security' | 'stamp'> = {
   unlock: 'security',
   watermark: 'stamp',
   'page-numbers': 'stamp',
+  compress: 'convert',
+  'pdf-to-image': 'convert',
+  'extract-text': 'convert',
 };
 
 const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
@@ -78,6 +85,7 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
   const [certificateOpen, setCertificateOpen] = useState(false);
   const [stampOverride, setStampOverride] = useState<boolean | null>(null);
   const [metadataOpen, setMetadataOpen] = useState(false);
+  const [convertOverride, setConvertOverride] = useState<boolean | null>(null);
 
   const {
     openFiles,
@@ -325,6 +333,7 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
           onCertificateSign={() => setCertificateOpen(true)}
           onStamp={() => setStampOverride(true)}
           onMetadata={() => setMetadataOpen(true)}
+          onConvert={() => setConvertOverride(true)}
           busy={isExporting}
         />
 
@@ -371,6 +380,13 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
           busy={isOpening}
           onSubmit={submitPassword}
           onCancel={cancelPassword}
+        />
+
+        <ConvertDialog
+          open={
+            convertOverride ?? (hasDocument && MODE_DIALOG[mode] === 'convert')
+          }
+          onOpenChange={setConvertOverride}
         />
 
         <StampDialog

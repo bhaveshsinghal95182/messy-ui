@@ -350,6 +350,16 @@ const pageText = async (file, pageIndex = 0) => {
   return `${hexText} ${literalText}`;
 };
 
+/** Page count of a saved PDF, for round-trip checks. */
+const pageCountOf = async (file) => {
+  const require = createRequire(import.meta.url);
+  const { PDFDocument } = require('@cantoo/pdf-lib');
+  const doc = await PDFDocument.load(await readFile(file), {
+    ignoreEncryption: true,
+  });
+  return doc.getPageCount();
+};
+
 await mkdir(shots, { recursive: true });
 
 const browser = await chromium.launch();
@@ -791,6 +801,51 @@ try {
     'form values are written to the file',
     filled.fullName === 'Ada Lovelace' && filled.subscribe === true,
     JSON.stringify(filled)
+  );
+
+  /* 6i. Text extraction, checked against the known marker string. */
+  await page.goto(`${BASE}/pdf`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('text=Drop a PDF here');
+  await openFile(page, path.join(samples, 'text-3page.pdf'));
+
+  await page.click('[aria-label="Compress and convert"]');
+  await page.waitForSelector('text=Compress and convert', { timeout: 10_000 });
+  await page.click('button:has-text("Text")');
+  await page.waitForTimeout(300);
+
+  const textDownload = page.waitForEvent('download', { timeout: 30_000 });
+  await page.click('button:has-text("Extract plain text")');
+  const textFile = path.join(samples, 'extracted.txt');
+  await (await textDownload).saveAs(textFile);
+
+  const extracted = await readFile(textFile, 'utf8');
+  check(
+    'text extraction finds the document text',
+    extracted.includes('MESSYUI-SMOKE-MARKER') && extracted.includes('Page 3'),
+    `${extracted.length} chars`
+  );
+
+  /* 6j. Compression reports honestly rather than claiming a fixed saving. */
+  await page.click('button:has-text("Compress")');
+  await page.waitForTimeout(300);
+
+  const compressDownload = page.waitForEvent('download', { timeout: 60_000 });
+  await page.click('button:has-text("Compress and download")');
+  const compressedFile = path.join(samples, 'exported-compressed.pdf');
+  await (await compressDownload).saveAs(compressedFile);
+
+  const compressed = await stat(compressedFile);
+  check(
+    'compression produces a valid PDF',
+    compressed.size > 400,
+    `${compressed.size} bytes`
+  );
+
+  const compressedPages = await pageCountOf(compressedFile);
+  check(
+    'compression preserves every page',
+    compressedPages === 3,
+    `${compressedPages} pages`
   );
 
   /* 7. Encrypted files prompt rather than failing silently. */

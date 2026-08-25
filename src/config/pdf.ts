@@ -451,6 +451,118 @@ export const pdfTools: PdfTool[] = [
     curated: true,
   },
   {
+    slug: 'compress',
+    mode: 'compress',
+    heading: 'Compress a PDF',
+    title: 'Compress PDF Free - Reduce File Size in Your Browser',
+    description:
+      'Make a PDF smaller in your browser, with an honest account of what each option costs. Nothing is uploaded.',
+    intro:
+      'Two options, and the dialog is candid about both. Tidying up rebuilds the file with compressed object streams and drops orphaned data, changing nothing visible. Flattening to images shrinks scans dramatically but makes text unselectable, so it is the wrong choice for a text document.',
+    steps: [
+      'Open the PDF.',
+      'Open the compress panel and pick an option.',
+      'Download, and check the before-and-after size it reports.',
+    ],
+    keywords: [
+      'compress pdf',
+      'reduce pdf file size',
+      'shrink pdf',
+      'compress pdf free',
+      'make pdf smaller',
+    ],
+    faq: [
+      PRIVACY_FAQ,
+      {
+        question: 'Why did my file barely get smaller?',
+        answer:
+          'Because it was already compressed. PDF content streams and embedded fonts are Flate-compressed as a matter of course, so a document exported from a word processor has very little slack. Scans are mostly image data and are where real savings live. A tool advertising a fixed percentage regardless of what is in your file is guessing.',
+      },
+      {
+        question: 'Will compressing lose quality?',
+        answer:
+          'Tidying up is lossless and changes nothing you can see. Flattening to images is lossy by definition — that is the trade it makes, and it is labelled as such.',
+      },
+    ],
+    related: ['pdf-to-image', 'merge', 'split'],
+    curated: true,
+  },
+  {
+    slug: 'pdf-to-image',
+    mode: 'pdf-to-image',
+    heading: 'Convert a PDF to images',
+    title: 'PDF to PNG or JPG Free - Convert in Your Browser',
+    description:
+      'Save each page of a PDF as a PNG or JPEG at a resolution you choose. Runs entirely in your browser.',
+    intro:
+      'Every page becomes its own image file. Pick the resolution — 150 DPI is fine on screen, 300 for print — and whether you want lossless PNG or smaller JPEG.',
+    steps: [
+      'Open the PDF.',
+      'Open the compress and convert panel, then the Images tab.',
+      'Choose a resolution and format.',
+      'Save; one file per page.',
+    ],
+    keywords: [
+      'pdf to png',
+      'pdf to jpg',
+      'convert pdf to image',
+      'pdf to image free',
+      'export pdf pages as images',
+    ],
+    faq: [
+      PRIVACY_FAQ,
+      {
+        question: 'What resolution should I choose?',
+        answer:
+          '150 DPI is comfortable for viewing on a screen. 300 DPI is the usual floor for printing. Higher costs memory and time for detail most uses never show.',
+      },
+      {
+        question: 'PNG or JPEG?',
+        answer:
+          'PNG for text and line art, where it stays crisp and lossless. JPEG for photographic pages, where it is far smaller with little visible difference.',
+      },
+    ],
+    related: ['compress', 'extract-text', 'split'],
+    curated: true,
+  },
+  {
+    slug: 'extract-text',
+    mode: 'extract-text',
+    heading: 'Extract text from a PDF',
+    title: 'Extract Text from a PDF Free - In Your Browser',
+    description:
+      'Pull the text out of a PDF as plain text or Markdown, without uploading it anywhere.',
+    intro:
+      'Save the document text as a .txt file, or as Markdown with headings and lists inferred from type size and spacing. A PDF stores glyphs at coordinates rather than structure, so the Markdown conversion is a well-behaved guess rather than a faithful translation.',
+    steps: [
+      'Open the PDF.',
+      'Open the compress and convert panel, then the Text tab.',
+      'Choose plain text or Markdown.',
+    ],
+    keywords: [
+      'extract text from pdf',
+      'pdf to text',
+      'pdf to markdown',
+      'copy text from pdf',
+      'pdf text extraction free',
+    ],
+    faq: [
+      PRIVACY_FAQ,
+      {
+        question: 'Nothing came out — why?',
+        answer:
+          'The document is almost certainly a scan: a picture of a page, with no text objects in it at all. Extraction can only return text that is actually there; reading a scan needs OCR.',
+      },
+      {
+        question: 'How good is the Markdown?',
+        answer:
+          'Good on conventionally laid-out documents, weaker on anything unusual. Headings come from lines noticeably larger than the body text, lists from bullet glyphs, and code from monospaced fonts. A PDF records none of that explicitly, so it is inference.',
+      },
+    ],
+    related: ['pdf-to-image', 'compress', 'fill-form'],
+    curated: true,
+  },
+  {
     slug: 'rotate',
     mode: 'rotate',
     heading: 'Rotate PDF pages',

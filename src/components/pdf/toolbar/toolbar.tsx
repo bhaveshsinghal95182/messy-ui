@@ -4,6 +4,7 @@ import {
   CalendarDays,
   ClipboardList,
   Download,
+  FileArchive,
   FileText,
   FolderOpen,
   Lock,
@@ -41,6 +42,7 @@ interface ToolbarProps {
   onCertificateSign: () => void;
   onStamp: () => void;
   onMetadata: () => void;
+  onConvert: () => void;
   busy: boolean;
 }
 
@@ -63,6 +65,7 @@ const Toolbar = ({
   onCertificateSign,
   onStamp,
   onMetadata,
+  onConvert,
   busy,
 }: ToolbarProps) => {
   const dispatch = usePdfDispatch();
@@ -308,6 +311,21 @@ const Toolbar = ({
           </Button>
         </TooltipTrigger>
         <TooltipContent>Print</TooltipContent>
+      </Tooltip>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Compress and convert"
+            disabled={!hasDocument || busy}
+            onClick={onConvert}
+          >
+            <FileArchive className="size-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Compress, export images, extract text</TooltipContent>
       </Tooltip>
 
       <Button size="sm" onClick={onDownload} disabled={!hasDocument || busy}>

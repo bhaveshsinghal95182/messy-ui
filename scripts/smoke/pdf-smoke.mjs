@@ -83,6 +83,48 @@ const canvasHasInk = (page) =>
     };
   });
 
+/**
+ * Decompresses page 1 of a saved PDF and reports what was actually drawn.
+ *
+ * pdf-lib is already a project dependency, so this reads the output with the
+ * same library that wrote it — a round trip through a real parser rather than
+ * a substring search over compressed bytes.
+ */
+const inspectFirstPage = async (file) => {
+  const require = createRequire(import.meta.url);
+  const { PDFDocument, PDFArray } = require('@cantoo/pdf-lib');
+  const zlib = require('node:zlib');
+
+  const doc = await PDFDocument.load(await readFile(file));
+  const contents = doc.getPage(0).node.Contents();
+  const streams =
+    contents instanceof PDFArray
+      ? contents.asArray().map((ref) => doc.context.lookup(ref))
+      : [contents];
+
+  let body = '';
+  for (const stream of streams) {
+    const bytes = stream.getContents ? stream.getContents() : stream.contents;
+    try {
+      body += zlib.inflateSync(Buffer.from(bytes)).toString('latin1');
+    } catch {
+      body += Buffer.from(bytes).toString('latin1');
+    }
+  }
+
+  // XObject names contain hyphens, so the name class has to allow them.
+  const imageOps = (body.match(/\/[\w-]+ Do/g) ?? []).join(', ');
+
+  // pdf-lib writes strings hex-encoded, e.g. <3235204175677573742e> Tj.
+  const text = (body.match(/<([0-9A-Fa-f]+)> Tj/g) ?? [])
+    .map((match) =>
+      Buffer.from(match.slice(1, match.indexOf('>')), 'hex').toString('latin1')
+    )
+    .join(' ');
+
+  return { hasImageDraw: imageOps.length > 0, imageOps, text };
+};
+
 await mkdir(shots, { recursive: true });
 
 const browser = await chromium.launch();
@@ -259,6 +301,58 @@ try {
     `${handles} handles`
   );
 
+  /* 6b-3. Signing: draw on the pad, place it, and stamp a date. This is the
+     flagship flow, so it is checked end to end rather than by unit. */
+  await page.click('[aria-label="Add signature"]');
+  await page.waitForSelector('text=Add a signature', { timeout: 10_000 });
+
+  const pad = await page.evaluate(() => {
+    const rect = document
+      .querySelector('[aria-label="Signature drawing area"]')
+      .getBoundingClientRect();
+    return { x: rect.x, y: rect.y, width: rect.width, height: rect.height };
+  });
+
+  // A short scribble, so the trimmed PNG has real ink in it.
+  await page.mouse.move(pad.x + 40, pad.y + pad.height * 0.6);
+  await page.mouse.down();
+  for (let step = 1; step <= 12; step += 1) {
+    await page.mouse.move(
+      pad.x + 40 + step * 14,
+      pad.y + pad.height * (0.6 - Math.sin(step / 2) * 0.18)
+    );
+  }
+  await page.mouse.up();
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: path.join(shots, '06-signature-pad.png') });
+
+  await page.click('text=Place signature');
+  await page.waitForTimeout(900);
+
+  const signatureCount = await page.evaluate(
+    () =>
+      document.querySelectorAll('[role="listitem"][aria-label="Signature"]')
+        .length
+  );
+  check(
+    'signature is placed on the page',
+    signatureCount === 1,
+    `${signatureCount} signatures`
+  );
+
+  await page.click('[aria-label="Add today\'s date"]');
+  await page.waitForTimeout(500);
+  const dateText = await page.evaluate(() => {
+    const items = [...document.querySelectorAll('[role="listitem"]')];
+    return items.map((item) => item.getAttribute('aria-label')).join(' | ');
+  });
+  check(
+    'date stamp is placed',
+    /Text: \d/.test(dateText),
+    dateText.slice(0, 80)
+  );
+  await page.screenshot({ path: path.join(shots, '07-signed.png') });
+
   /* 6c. Export round-trip: the saved file must reopen with the same pages. */
   const downloadPromise = page.waitForEvent('download', { timeout: 30_000 });
   await page.click('text=Download');
@@ -268,8 +362,25 @@ try {
   const { size } = await stat(exported);
   check('export produces a file', size > 500, `${size} bytes`);
 
-  const header = (await readFile(exported)).subarray(0, 5).toString('latin1');
+  const exportedBytes = await readFile(exported);
+  const header = exportedBytes.subarray(0, 5).toString('latin1');
   check('exported file is a PDF', header === '%PDF-', header);
+
+  // Decompress page 1 and look for the actual drawing operators. Checking the
+  // raw bytes for "/Subtype /Image" would only prove an image was *embedded*;
+  // this proves it was also *drawn*, which is the claim that matters — an
+  // annotation that exists only on screen is not an edit.
+  const drawn = await inspectFirstPage(exported);
+  check(
+    'signature is drawn into the exported page',
+    drawn.hasImageDraw,
+    drawn.imageOps || 'no Do operator'
+  );
+  check(
+    'date text is written into the exported page',
+    drawn.text.includes('August') || /\d{4}/.test(drawn.text),
+    drawn.text || 'no text found'
+  );
 
   /* 6d. The sub-routes are real, indexable pages. */
   const mergeResponse = await fetch(`${BASE}/pdf/merge`);

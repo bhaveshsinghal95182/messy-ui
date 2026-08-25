@@ -148,6 +148,84 @@ export const pdfTools: PdfTool[] = [
     curated: true,
   },
   {
+    slug: 'sign',
+    mode: 'sign',
+    heading: 'Sign a PDF',
+    title: 'Sign a PDF Free - Add Your Signature in the Browser',
+    description:
+      'Draw, type or upload a signature and place it on any page. Runs entirely in your browser, so the document you are signing is never uploaded.',
+    intro:
+      'Sign with a mouse, a finger or a stylus, type your name in a script face, or upload a photo of your handwritten signature — the white paper is dropped automatically so only the ink lands on the page. Signatures you create can be saved in this browser for next time.',
+    steps: [
+      'Open the PDF you need to sign.',
+      'Choose Draw, Type or Upload.',
+      'Drag the signature into place and resize it to fit the line.',
+      'Download the signed document.',
+    ],
+    keywords: [
+      'sign pdf',
+      'sign pdf online free',
+      'add signature to pdf',
+      'esign pdf',
+      'electronic signature pdf',
+      'draw signature on pdf',
+      'sign pdf without uploading',
+    ],
+    faq: [
+      PRIVACY_FAQ,
+      {
+        question: 'Is a drawn signature legally binding?',
+        answer:
+          'In many jurisdictions an electronic signature carries the same weight as a handwritten one, but the rules vary by country and by the kind of document. This tool produces the signature; whether a given document needs more than that is a legal question, not a technical one.',
+      },
+      {
+        question: 'Where are my saved signatures kept?',
+        answer:
+          'In this browser, on this device, using IndexedDB. They are never transmitted. Clearing your browsing data removes them, and they will not appear in another browser or on another machine.',
+      },
+      {
+        question: 'Can I use a real digital certificate instead?',
+        answer:
+          'Yes — a cryptographic signature using your own PKCS#12 certificate is supported as well, and unlike a drawn signature it can prove the document has not been altered since signing.',
+      },
+    ],
+    related: ['esign', 'merge', 'split'],
+    curated: true,
+  },
+  {
+    slug: 'esign',
+    mode: 'sign',
+    heading: 'eSign a PDF',
+    title: 'eSign PDF Free - Electronic Signatures in Your Browser',
+    description:
+      'Add an electronic signature to a PDF without an account and without uploading the file anywhere.',
+    intro:
+      'Everything an e-signature service does to a single document, minus the account and the upload. Draw, type or upload your signature, place it, add the date, and save.',
+    steps: [
+      'Open the document.',
+      'Create your signature by drawing, typing or uploading it.',
+      'Place it, and add initials or a date where the form asks for them.',
+      'Download the signed file.',
+    ],
+    keywords: [
+      'esign pdf',
+      'esign pdf free',
+      'electronic signature',
+      'digital signature pdf free',
+      'sign document online',
+    ],
+    faq: [
+      PRIVACY_FAQ,
+      {
+        question: 'How is this different from a signing service?',
+        answer:
+          'A signing service routes a document between several parties and keeps an audit trail on its servers. This signs a document you already have, on your own machine. If you need countersigning and an audit trail across parties, a service is the right tool; if you just need your own signature on a file, this avoids handing the document over.',
+      },
+    ],
+    related: ['sign', 'merge', 'split'],
+    curated: true,
+  },
+  {
     slug: 'rotate',
     mode: 'rotate',
     heading: 'Rotate PDF pages',

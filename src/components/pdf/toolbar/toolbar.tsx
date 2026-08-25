@@ -1,12 +1,14 @@
 'use client';
 
 import {
+  CalendarDays,
   Download,
   FolderOpen,
   PanelLeft,
   Printer,
   Redo2,
   Scissors,
+  Signature,
   Undo2,
 } from 'lucide-react';
 import { usePdf, usePdfDispatch } from '../pdf-store-provider';
@@ -28,6 +30,8 @@ interface ToolbarProps {
   onSplit: () => void;
   onInsertBlank: () => void;
   onAddImage: () => void;
+  onSign: () => void;
+  onAddDate: () => void;
   busy: boolean;
 }
 
@@ -44,6 +48,8 @@ const Toolbar = ({
   onSplit,
   onInsertBlank,
   onAddImage,
+  onSign,
+  onAddDate,
   busy,
 }: ToolbarProps) => {
   const dispatch = usePdfDispatch();
@@ -132,6 +138,36 @@ const Toolbar = ({
           so a narrow window keeps one toolbar rather than growing a second. */}
       <div className="flex items-center gap-0.5 overflow-x-auto">
         <AnnotateTools onAddImage={onAddImage} />
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Add signature"
+              disabled={!hasDocument}
+              onClick={onSign}
+            >
+              <Signature className="size-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Draw, type or upload a signature</TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Add today's date"
+              disabled={!hasDocument}
+              onClick={onAddDate}
+            >
+              <CalendarDays className="size-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Stamp today&apos;s date</TooltipContent>
+        </Tooltip>
       </div>
 
       <Separator orientation="vertical" className="mx-1 h-6" />

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { format } from 'date-fns';
 import {
   PdfStoreProvider,
   usePdf,
@@ -14,6 +15,9 @@ import ThumbnailSidebar from './sidebar/thumbnail-sidebar';
 import EmptyState from './empty-state';
 import PasswordPromptDialog from './dialogs/password-prompt-dialog';
 import SplitDialog from './dialogs/split-dialog';
+import SignatureDialog, {
+  type SignaturePayload,
+} from './signature/signature-dialog';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { useFileDrop } from '@/hooks/use-file-drop';
@@ -23,7 +27,7 @@ import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
 import { closeAllSources } from '@/lib/pdf/document';
 import { clearThumbnails } from '@/lib/pdf/render';
 import { createBlankPage } from '@/lib/pdf/pages/ops';
-import { clearAssets, getAsset, importImage } from '@/lib/pdf/assets';
+import { clearAssets, getAsset, importImage, putAsset } from '@/lib/pdf/assets';
 import { newId } from '@/lib/pdf/reducer';
 import { cn } from '@/lib/utils';
 
@@ -36,9 +40,11 @@ export interface PdfWorkspaceProps {
 }
 
 /** Sub-routes that should open a dialog as soon as a document is loaded. */
-const MODE_DIALOG: Record<string, 'split'> = {
+const MODE_DIALOG: Record<string, 'split' | 'sign'> = {
   split: 'split',
   'extract-pages': 'split',
+  sign: 'sign',
+  esign: 'sign',
 };
 
 const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
@@ -54,6 +60,9 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
    * the auto-open out of the render cycle.
    */
   const [splitOverride, setSplitOverride] = useState<boolean | null>(null);
+  const [signatureOverride, setSignatureOverride] = useState<boolean | null>(
+    null
+  );
 
   const {
     openFiles,
@@ -74,6 +83,106 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
     onDownload: handleDownload,
     onPrint: handlePrint,
   });
+
+  /**
+   * Stamps today's date as a text object.
+   *
+   * The companion to a signature: forms almost always want a date beside the
+   * signature line, and typing it by hand is the fiddliest part of signing a
+   * document in a browser.
+   */
+  const placeDate = useCallback(() => {
+    const state = getState();
+    const pageId = state.view.currentPageId ?? state.pages[0]?.id;
+    const page = state.pages.find((entry) => entry.id === pageId);
+    if (!page) return;
+
+    const size = state.sources[page.sourceId]?.pageSizes[page.sourceIndex];
+    const pageWidth = size?.width ?? 612;
+    const pageHeight = size?.height ?? 792;
+
+    dispatch({
+      type: 'ADD_OBJECT',
+      pageId: page.id,
+      object: {
+        id: newId(),
+        kind: 'text',
+        // Unambiguous across locales, unlike 03/04/2026.
+        text: format(new Date(), 'd MMMM yyyy'),
+        fontId: 'Helvetica',
+        size: 12,
+        color: { r: 0, g: 0, b: 0 },
+        align: 'left',
+        lineHeight: 1.2,
+        bold: false,
+        italic: false,
+        autoSize: false,
+        rect: { x: pageWidth * 0.6, y: pageHeight * 0.15, w: 140, h: 18 },
+        rotation: 0,
+        opacity: 1,
+        locked: false,
+        z: (state.objects[page.id]?.length ?? 0) + 1,
+        createdAt: Date.now(),
+      },
+    });
+    dispatch({ type: 'SET_TOOL', tool: 'select' });
+  }, [dispatch, getState]);
+
+  /**
+   * Places a finished signature on the current page.
+   *
+   * Sized to a third of the page width, which is roughly how large a signature
+   * sits on a printed form, and kept to its own aspect ratio — a stretched
+   * signature is immediately obvious.
+   */
+  const placeSignature = useCallback(
+    (signature: SignaturePayload) => {
+      const state = getState();
+      const pageId = state.view.currentPageId ?? state.pages[0]?.id;
+      const page = state.pages.find((entry) => entry.id === pageId);
+      if (!page) return;
+
+      const assetId = putAsset(
+        signature.bytes,
+        'image/png',
+        signature.width,
+        signature.height
+      );
+
+      const size = state.sources[page.sourceId]?.pageSizes[page.sourceIndex];
+      const pageWidth = size?.width ?? 612;
+      const pageHeight = size?.height ?? 792;
+
+      const width = pageWidth / (signature.variant === 'initials' ? 8 : 3);
+      const height = (signature.height / signature.width) * width;
+
+      dispatch({
+        type: 'ADD_OBJECT',
+        pageId: page.id,
+        object: {
+          id: newId(),
+          kind: 'signature',
+          assetId,
+          variant: signature.variant,
+          sourceKind: signature.sourceKind,
+          rect: {
+            x: (pageWidth - width) / 2,
+            // Placed low on the page, where a signature line usually is.
+            y: pageHeight * 0.15,
+            w: width,
+            h: height,
+          },
+          rotation: 0,
+          opacity: 1,
+          locked: false,
+          z: (state.objects[page.id]?.length ?? 0) + 1,
+          createdAt: Date.now(),
+        },
+      });
+      dispatch({ type: 'SET_TOOL', tool: 'select' });
+    },
+    [dispatch, getState]
+  );
 
   /**
    * Places an image on the current page.
@@ -194,6 +303,8 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
           onSplit={() => setSplitOverride(true)}
           onInsertBlank={insertBlank}
           onAddImage={addImage}
+          onSign={() => setSignatureOverride(true)}
+          onAddDate={placeDate}
           busy={isExporting}
         />
 
@@ -231,6 +342,14 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
           busy={isOpening}
           onSubmit={submitPassword}
           onCancel={cancelPassword}
+        />
+
+        <SignatureDialog
+          open={
+            signatureOverride ?? (hasDocument && MODE_DIALOG[mode] === 'sign')
+          }
+          onOpenChange={setSignatureOverride}
+          onPlace={placeSignature}
         />
 
         <SplitDialog

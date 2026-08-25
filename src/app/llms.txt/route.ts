@@ -1,4 +1,5 @@
 import { components, categories } from '@/config/components';
+import { curatedPdfTools } from '@/config/pdf';
 import { absoluteUrl, categoryPath, siteConfig } from '@/lib/seo';
 import { plainText } from '@/lib/text';
 
@@ -64,6 +65,41 @@ export function GET() {
       ''
     );
   }
+
+  // Standalone browser tools. Worth listing separately from the components:
+  // an agent asked to "merge two PDFs" wants a tool it can point a person at,
+  // not a React component to install.
+  lines.push(
+    '## Tools',
+    '',
+    'Browser-based utilities that need no account and no server. Files are',
+    'processed on the user device and are never uploaded.',
+    '',
+    `### PDF Editor`,
+    '',
+    `- URL: ${absoluteUrl('/pdf')}`,
+    '- Description: Edit, annotate, merge, split, sign, redact, OCR and',
+    '  password-protect PDFs entirely client-side.',
+    ''
+  );
+
+  for (const tool of curatedPdfTools) {
+    lines.push(
+      `### ${tool.heading}`,
+      '',
+      `- URL: ${absoluteUrl(`/pdf/${tool.slug}`)}`,
+      `- Description: ${tool.description}`,
+      ''
+    );
+  }
+
+  lines.push(
+    '### LeetCode Timer',
+    '',
+    `- URL: ${absoluteUrl('/timer')}`,
+    '- Description: Fullscreen countdown timer for timed coding practice.',
+    ''
+  );
 
   return new Response(lines.join('\n'), {
     headers: {

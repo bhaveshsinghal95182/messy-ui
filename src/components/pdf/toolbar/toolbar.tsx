@@ -1,8 +1,17 @@
 'use client';
 
-import { Download, FolderOpen, PanelLeft, Redo2, Undo2 } from 'lucide-react';
+import {
+  Download,
+  FolderOpen,
+  PanelLeft,
+  Printer,
+  Redo2,
+  Scissors,
+  Undo2,
+} from 'lucide-react';
 import { usePdf, usePdfDispatch } from '../pdf-store-provider';
 import ZoomControls from './zoom-controls';
+import PageTools from './page-tools';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -14,6 +23,10 @@ import {
 interface ToolbarProps {
   onOpen: () => void;
   onDownload: () => void;
+  onPrint: () => void;
+  onSplit: () => void;
+  onInsertBlank: () => void;
+  busy: boolean;
 }
 
 /**
@@ -22,7 +35,14 @@ interface ToolbarProps {
  * Marked `role="toolbar"` so assistive technology announces it as one control
  * group rather than a run of loose buttons.
  */
-const Toolbar = ({ onOpen, onDownload }: ToolbarProps) => {
+const Toolbar = ({
+  onOpen,
+  onDownload,
+  onPrint,
+  onSplit,
+  onInsertBlank,
+  busy,
+}: ToolbarProps) => {
   const dispatch = usePdfDispatch();
   const hasDocument = usePdf((state) => state.pages.length > 0);
   const sidebar = usePdf((state) => state.view.sidebar);
@@ -103,15 +123,55 @@ const Toolbar = ({ onOpen, onDownload }: ToolbarProps) => {
         <TooltipContent>Redo</TooltipContent>
       </Tooltip>
 
+      <Separator orientation="vertical" className="mx-1 h-6" />
+
+      {/* Page operations collapse away on small screens, where the thumbnail
+          rail's context menu carries the same actions. */}
+      <div className="hidden items-center gap-1 lg:flex">
+        <PageTools onInsertBlank={onInsertBlank} />
+      </div>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Split or extract pages"
+            disabled={!hasDocument}
+            onClick={onSplit}
+          >
+            <Scissors className="size-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Split or extract pages</TooltipContent>
+      </Tooltip>
+
       <div className="flex-1" />
 
       <ZoomControls />
 
       <Separator orientation="vertical" className="mx-1 h-6" />
 
-      <Button size="sm" onClick={onDownload} disabled={!hasDocument}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Print"
+            disabled={!hasDocument || busy}
+            onClick={onPrint}
+          >
+            <Printer className="size-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Print</TooltipContent>
+      </Tooltip>
+
+      <Button size="sm" onClick={onDownload} disabled={!hasDocument || busy}>
         <Download className="size-4" />
-        <span className="hidden sm:inline">Download</span>
+        <span className="hidden sm:inline">
+          {busy ? 'Saving…' : 'Download'}
+        </span>
       </Button>
     </div>
   );

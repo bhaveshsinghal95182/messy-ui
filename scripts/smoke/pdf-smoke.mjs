@@ -16,7 +16,7 @@
  */
 
 import { createRequire } from 'node:module';
-import { mkdir } from 'node:fs/promises';
+import { mkdir, readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 
 /**
@@ -87,6 +87,17 @@ await mkdir(shots, { recursive: true });
 
 const browser = await chromium.launch();
 const context = await browser.newContext({ acceptDownloads: true });
+
+/**
+ * Headless Chromium exposes `showSaveFilePicker` but can never show the picker,
+ * so the promise hangs and the export appears to do nothing. Removing it makes
+ * the run take the anchor-download fallback — which is also the path every
+ * Firefox and Safari user gets, so it is the more widely exercised branch.
+ */
+await context.addInitScript(() => {
+  delete window.showSaveFilePicker;
+});
+
 const page = await context.newPage();
 
 const consoleErrors = [];
@@ -186,6 +197,60 @@ try {
     () => document.querySelector('canvas').style.width
   );
   check('zoom changes page size', before !== after, `${before} -> ${after}`);
+
+  /* 6b. Page operations mutate the working document, and undo reverses them. */
+  await page.click('[aria-label="Page 2"]');
+  await page.waitForTimeout(400);
+  await page.click('[aria-label="Delete page"]');
+  await page.waitForTimeout(600);
+  const afterDelete = await page.evaluate(
+    () => document.querySelectorAll('[data-page-id]').length
+  );
+  check('delete page removes it', afterDelete === 2, `${afterDelete} pages`);
+
+  await page.keyboard.press('Control+z');
+  await page.waitForTimeout(600);
+  const afterUndo = await page.evaluate(
+    () => document.querySelectorAll('[data-page-id]').length
+  );
+  check('undo restores the page', afterUndo === 3, `${afterUndo} pages`);
+
+  /* 6c. Export round-trip: the saved file must reopen with the same pages. */
+  const downloadPromise = page.waitForEvent('download', { timeout: 30_000 });
+  await page.click('text=Download');
+  const download = await downloadPromise;
+  const exported = path.join(samples, 'exported.pdf');
+  await download.saveAs(exported);
+  const { size } = await stat(exported);
+  check('export produces a file', size > 500, `${size} bytes`);
+
+  const header = (await readFile(exported)).subarray(0, 5).toString('latin1');
+  check('exported file is a PDF', header === '%PDF-', header);
+
+  /* 6d. The sub-routes are real, indexable pages. */
+  const mergeResponse = await fetch(`${BASE}/pdf/merge`);
+  const mergeHtml = await mergeResponse.text();
+  check(
+    '/pdf/merge is server-rendered',
+    mergeResponse.status === 200 && mergeHtml.includes('Merge PDFs'),
+    `status ${mergeResponse.status}`
+  );
+  check(
+    '/pdf/merge has its own canonical',
+    mergeHtml.includes('/pdf/merge"') || mergeHtml.includes('/pdf/merge<'),
+    'canonical link present'
+  );
+
+  const sitemap = await (await fetch(`${BASE}/sitemap.xml`)).text();
+  check(
+    'sitemap lists the PDF tools',
+    sitemap.includes('/pdf</loc>') || sitemap.includes('/pdf<'),
+    ''
+  );
+  check('sitemap lists /pdf/merge', sitemap.includes('/pdf/merge'));
+
+  const llms = await (await fetch(`${BASE}/llms.txt`)).text();
+  check('llms.txt lists the PDF editor', llms.includes('PDF Editor'));
 
   /* 7. Encrypted files prompt rather than failing silently. */
   await page.goto(`${BASE}/pdf`, { waitUntil: 'networkidle' });

@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
 import { components, categories } from '@/config/components';
 import { curatedTimers } from '@/config/timers';
+import { curatedPdfTools } from '@/config/pdf';
 import { absoluteUrl, categoryPath, siteConfig } from '@/lib/seo';
 
 /**
@@ -75,5 +76,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticPages, ...componentPages, ...categoryPages, ...timerPages];
+  // Same rule as the timers: unrecognised /pdf/* slugs open a working editor
+  // but are noindex, so only the curated tools appear here.
+  const pdfToolPages: MetadataRoute.Sitemap = curatedPdfTools.map((tool) => ({
+    url: absoluteUrl(`/pdf/${tool.slug}`),
+    lastModified: currentDate,
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }));
+
+  return [
+    ...staticPages,
+    ...componentPages,
+    ...categoryPages,
+    ...timerPages,
+    ...pdfToolPages,
+  ];
 }

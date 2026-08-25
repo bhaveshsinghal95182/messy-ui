@@ -97,11 +97,49 @@ async function encryptedDocument() {
   return doc.save();
 }
 
+/**
+ * A self-signed RSA-2048 certificate packaged as PKCS#12, passphrase "test".
+ *
+ * Self-signed on purpose: it is enough to exercise the whole signing path, and
+ * a signature made with it is genuinely "integrity valid, trust unknown" —
+ * which is exactly the distinction the verifier is meant to report.
+ */
+async function testCertificate() {
+  const forge = (await import('node-forge')).default;
+
+  const keys = forge.pki.rsa.generateKeyPair(2048);
+  const cert = forge.pki.createCertificate();
+  cert.publicKey = keys.publicKey;
+  cert.serialNumber = '01';
+  cert.validity.notBefore = new Date();
+  cert.validity.notAfter = new Date();
+  cert.validity.notAfter.setFullYear(cert.validity.notBefore.getFullYear() + 5);
+
+  const attrs = [
+    { name: 'commonName', value: 'Messy UI Smoke Test' },
+    { name: 'organizationName', value: 'messy-ui' },
+    { shortName: 'OU', value: 'Testing' },
+  ];
+  cert.setSubject(attrs);
+  cert.setIssuer(attrs);
+  cert.sign(keys.privateKey, forge.md.sha256.create());
+
+  const p12 = forge.pkcs12.toPkcs12Asn1(keys.privateKey, [cert], 'test', {
+    algorithm: '3des',
+  });
+  const der = forge.asn1.toDer(p12).getBytes();
+
+  const bytes = new Uint8Array(der.length);
+  for (let i = 0; i < der.length; i += 1) bytes[i] = der.charCodeAt(i) & 0xff;
+  return bytes;
+}
+
 const fixtures = [
   ['text-3page.pdf', textDocument],
   ['rotated.pdf', rotatedDocument],
   ['large-200page.pdf', largeDocument],
   ['encrypted-user.pdf', encryptedDocument],
+  ['test-cert.p12', testCertificate],
 ];
 
 await mkdir(outDir, { recursive: true });

@@ -19,6 +19,7 @@ import SignatureDialog, {
   type SignaturePayload,
 } from './signature/signature-dialog';
 import SecurityDialog from './dialogs/security-dialog';
+import CertificateDialog from './signature/certificate-dialog';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { useFileDrop } from '@/hooks/use-file-drop';
@@ -69,6 +70,7 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
   const [securityOverride, setSecurityOverride] = useState<boolean | null>(
     null
   );
+  const [certificateOpen, setCertificateOpen] = useState(false);
 
   const {
     openFiles,
@@ -312,6 +314,7 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
           onSign={() => setSignatureOverride(true)}
           onAddDate={placeDate}
           onSecurity={() => setSecurityOverride(true)}
+          onCertificateSign={() => setCertificateOpen(true)}
           busy={isExporting}
         />
 
@@ -349,6 +352,11 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
           busy={isOpening}
           onSubmit={submitPassword}
           onCancel={cancelPassword}
+        />
+
+        <CertificateDialog
+          open={certificateOpen}
+          onOpenChange={setCertificateOpen}
         />
 
         <SecurityDialog

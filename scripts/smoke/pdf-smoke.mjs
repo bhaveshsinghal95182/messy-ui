@@ -16,7 +16,7 @@
  */
 
 import { createRequire } from 'node:module';
-import { mkdir, readFile, stat } from 'node:fs/promises';
+import { mkdir, readFile, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 /**
@@ -158,6 +158,109 @@ const isEncrypted = async (file, password = 'smoke-secret') => {
     encrypted,
     opensWithPassword,
     detail: `isEncrypted=${encrypted}, password accepted`,
+  };
+};
+
+/**
+ * Verifies a PDF signature in Node, using node-forge directly.
+ *
+ * Deliberately independent of the app's own verify.ts: asking the code under
+ * test whether its own output is valid proves very little. This re-implements
+ * the check from the raw bytes — pull /ByteRange, reassemble the signed spans,
+ * and ask forge whether the PKCS#7 blob covers them.
+ */
+const verifySignedPdf = async (file) => {
+  const require = createRequire(import.meta.url);
+  const forge = require('node-forge');
+  const bytes = await readFile(file);
+  const raw = bytes.toString('latin1');
+
+  const match = /\/ByteRange\s*\[\s*(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s*\]/.exec(
+    raw
+  );
+  if (!match) return { ok: false, detail: 'no /ByteRange found' };
+
+  const ranges = [+match[1], +match[2], +match[3], +match[4]];
+  const hex = raw
+    .slice(ranges[0] + ranges[1], ranges[2])
+    .replace(/[<>\s]/g, '')
+    .replace(/(00)+$/, '');
+
+  let message;
+  try {
+    message = forge.pkcs7.messageFromAsn1(
+      forge.asn1.fromDer(forge.util.createBuffer(forge.util.hexToBytes(hex)))
+    );
+  } catch (error) {
+    return { ok: false, detail: `PKCS#7 parse failed: ${error.message}` };
+  }
+
+  const signed = Buffer.concat([
+    bytes.subarray(ranges[0], ranges[0] + ranges[1]),
+    bytes.subarray(ranges[2], ranges[2] + ranges[3]),
+  ]);
+
+  // node-forge's pkcs7 verify() throws "not yet implemented", so the check is
+  // done by hand. Two things must both hold, and only checking the second
+  // would let content be swapped while the signature still "verified":
+  //   1. the messageDigest attribute equals the digest of the signed spans
+  //   2. the RSA signature over the authenticated attributes is valid
+  const capture = message.rawCapture;
+  const cert = message.certificates?.[0];
+
+  const contentDigest = forge.md.sha256
+    .create()
+    .update(signed.toString('latin1'))
+    .digest()
+    .getBytes();
+
+  let attributeDigest = null;
+  for (const attribute of capture.authenticatedAttributes ?? []) {
+    if (
+      forge.asn1.derToOid(attribute.value[0].value) ===
+      forge.pki.oids.messageDigest
+    ) {
+      attributeDigest = attribute.value[1].value[0].value;
+    }
+  }
+  const digestMatches = attributeDigest === contentDigest;
+
+  // Signed over the attributes re-encoded as a universal SET, not the [0]
+  // IMPLICIT tag they carry inside the message.
+  const attributeSet = forge.asn1.create(
+    forge.asn1.Class.UNIVERSAL,
+    forge.asn1.Type.SET,
+    true,
+    capture.authenticatedAttributes ?? []
+  );
+  const attributeHash = forge.md.sha256
+    .create()
+    .update(forge.asn1.toDer(attributeSet).getBytes())
+    .digest()
+    .getBytes();
+
+  let signatureValid = false;
+  try {
+    signatureValid = cert.publicKey.verify(attributeHash, capture.signature);
+  } catch (error) {
+    return { ok: false, detail: `RSA verify threw: ${error.message}` };
+  }
+
+  const verified = digestMatches && signatureValid;
+
+  const signer = cert?.subject?.getField('CN')?.value ?? 'unknown';
+  // The signature must reach the end of the file, or content was appended
+  // after signing and is not covered by it.
+  const coversAll = ranges[2] + ranges[3] >= bytes.length - 2;
+
+  return {
+    ok: verified && coversAll,
+    verified,
+    coversAll,
+    signer,
+    detail:
+      `digestMatches=${digestMatches}, rsaValid=${signatureValid}, ` +
+      `coversWholeFile=${coversAll}, signer=${signer}`,
   };
 };
 
@@ -473,6 +576,63 @@ try {
     'the chosen password opens it',
     locked.opensWithPassword,
     locked.detail
+  );
+
+  /* 6f. Cryptographic signing, then verified in Node rather than in the
+     browser that produced it. This is the riskiest path in the whole feature —
+     the Buffer shim, the CJS interop, and the byte-range splice all have to be
+     right or the signature is silently worthless. */
+  await page.click('[aria-label="Sign with a certificate"]');
+  await page.waitForSelector('#cert-passphrase', { timeout: 10_000 });
+
+  const chooser = page.waitForEvent('filechooser');
+  await page.click('button:has-text("Choose a certificate file")');
+  await (await chooser).setFiles(path.join(samples, 'test-cert.p12'));
+  await page.waitForTimeout(400);
+
+  await page.fill('#cert-passphrase', 'test');
+  // Blur triggers the certificate preview, which is also a parse check.
+  await page.click('#sign-reason');
+  await page.waitForTimeout(2500);
+
+  const certPreview = await page.evaluate(
+    () => document.body.innerText.match(/Messy UI Smoke Test/)?.[0] ?? ''
+  );
+  check(
+    'certificate is read and previewed',
+    certPreview === 'Messy UI Smoke Test',
+    certPreview || 'no preview shown'
+  );
+  await page.screenshot({ path: path.join(shots, '08-certificate.png') });
+
+  const signedDownload = page.waitForEvent('download', { timeout: 60_000 });
+  await page.click('button:has-text("Sign and download")');
+  const signedFile = path.join(samples, 'exported-signed.pdf');
+  await (await signedDownload).saveAs(signedFile);
+
+  const signature = await verifySignedPdf(signedFile);
+  check('signature verifies in Node', signature.ok, signature.detail);
+  check(
+    'signature covers the whole file',
+    signature.coversAll === true,
+    signature.detail
+  );
+
+  // Negative control. A verifier that returns true unconditionally would pass
+  // every check above, so flip one byte inside the signed range and confirm
+  // the result actually changes.
+  const tamperedFile = path.join(samples, 'exported-tampered.pdf');
+  const original = await readFile(signedFile);
+  const tampered = Buffer.from(original);
+  // Byte 200 is inside the first signed span for any real PDF.
+  tampered[200] = tampered[200] ^ 0xff;
+  await writeFile(tamperedFile, tampered);
+
+  const tamperedResult = await verifySignedPdf(tamperedFile);
+  check(
+    'a tampered file fails verification',
+    tamperedResult.ok === false,
+    tamperedResult.detail
   );
 
   /* 7. Encrypted files prompt rather than failing silently. */

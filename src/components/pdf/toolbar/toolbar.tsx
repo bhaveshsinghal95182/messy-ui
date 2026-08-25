@@ -9,6 +9,7 @@ import {
   Printer,
   Redo2,
   Scissors,
+  ShieldCheck,
   Signature,
   Undo2,
 } from 'lucide-react';
@@ -34,6 +35,7 @@ interface ToolbarProps {
   onSign: () => void;
   onAddDate: () => void;
   onSecurity: () => void;
+  onCertificateSign: () => void;
   busy: boolean;
 }
 
@@ -53,6 +55,7 @@ const Toolbar = ({
   onSign,
   onAddDate,
   onSecurity,
+  onCertificateSign,
   busy,
 }: ToolbarProps) => {
   const dispatch = usePdfDispatch();
@@ -209,6 +212,21 @@ const Toolbar = ({
           </Button>
         </TooltipTrigger>
         <TooltipContent>Password and permissions</TooltipContent>
+      </Tooltip>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Sign with a certificate"
+            disabled={!hasDocument}
+            onClick={onCertificateSign}
+          >
+            <ShieldCheck className="size-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Sign with a PKCS#12 certificate</TooltipContent>
       </Tooltip>
 
       <div className="flex-1" />

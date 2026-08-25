@@ -213,7 +213,9 @@ function sanitizeCatalog(doc: PDFDocument, lib: PdfLibModule) {
   catalog.delete(PDFName.of('OpenAction'));
   catalog.delete(PDFName.of('AA'));
 
-  const names = catalog.lookup(PDFName.of('Names'), PDFDict);
+  // lookupMaybe: the typed `lookup` throws rather than returning undefined
+  // when the key is absent, and most documents have no /Names tree at all.
+  const names = catalog.lookupMaybe(PDFName.of('Names'), PDFDict);
   if (names) {
     // Document-level JavaScript, and the embedded-file tree.
     names.delete(PDFName.of('JavaScript'));

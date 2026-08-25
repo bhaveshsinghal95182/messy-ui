@@ -15,6 +15,8 @@ import {
   rasterizeRedactedPage,
 } from '../ops/redact';
 import { applyFormValues } from '../ops/forms';
+import { applyOcrLayer } from '../ocr/text-layer';
+import type { OcrPageResult } from '../ocr/ocr';
 import { toQuadrant } from '../geometry';
 import type {
   ExportSettings,
@@ -41,6 +43,12 @@ export interface ExportOptions {
   /** Restrict the export to these page entries, in this order (for split). */
   pages?: PageEntry[];
   settings?: Partial<ExportSettings>;
+  /**
+   * Recognised text to write back as an invisible layer. Passed in rather than
+   * held in state because OCR results are large and transient — the user
+   * either exports them straight away or discards them.
+   */
+  ocr?: OcrPageResult[];
 }
 
 /**
@@ -203,6 +211,15 @@ export async function exportPdf(
     for (const { page, entry } of annotated) {
       await drawObjects(context, page, state.objects[entry.id]);
     }
+  }
+
+  // The invisible OCR layer goes on before anything is flattened, so the words
+  // land over the page image rather than under a later replacement.
+  if (options.ocr?.length) {
+    const pageIndexById = new Map(
+      drawn.map(({ entry }, index) => [entry.id, index])
+    );
+    await applyOcrLayer(await loadPdfLib(), doc, options.ocr, pageIndexById);
   }
 
   // Form values are written before metadata so a flatten, which turns fields

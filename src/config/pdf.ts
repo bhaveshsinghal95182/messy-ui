@@ -563,6 +563,50 @@ export const pdfTools: PdfTool[] = [
     curated: true,
   },
   {
+    slug: 'ocr',
+    mode: 'ocr',
+    heading: 'OCR a scanned PDF',
+    title: 'OCR PDF Free - Make a Scan Searchable in Your Browser',
+    description:
+      'Recognise the text in a scanned PDF and make it searchable, without uploading the document anywhere.',
+    intro:
+      'A scan is a picture of a page: there is no text in the file to select, search or copy. OCR reads the words from the pixels and writes them back as an invisible layer sitting exactly over the printed ones, so the page looks identical but its text can be found and copied. The recognition and the language model both run on your device.',
+    steps: [
+      'Open the scanned PDF.',
+      'Open the OCR panel and start.',
+      'Each page is read at 300 DPI; the first run also loads the language model.',
+      'Save the searchable copy.',
+    ],
+    keywords: [
+      'ocr pdf',
+      'make pdf searchable',
+      'scanned pdf to text',
+      'ocr pdf free',
+      'searchable pdf',
+      'ocr without uploading',
+    ],
+    faq: [
+      PRIVACY_FAQ,
+      {
+        question: 'Does the language model come from a third party?',
+        answer:
+          'No. Both the recognition engine and the English model are served from this site, not a CDN — a tool promising no third-party requests should not quietly make one the moment you use a feature. The model is about 3 MB and your browser caches it after the first run.',
+      },
+      {
+        question: 'How accurate is it?',
+        answer:
+          'Good on clean, straight scans of ordinary printed text; worse on handwriting, low resolution, heavy skew or unusual typefaces. Words the engine is not confident about are left out rather than filling your document with plausible-looking nonsense.',
+      },
+      {
+        question: 'Does the page look any different afterwards?',
+        answer:
+          'No. The recognised text is drawn in an invisible rendering mode over the original image, so nothing is painted — you see the scan exactly as before, but selecting and searching now work.',
+      },
+    ],
+    related: ['extract-text', 'compress', 'redact'],
+    curated: true,
+  },
+  {
     slug: 'rotate',
     mode: 'rotate',
     heading: 'Rotate PDF pages',

@@ -22,6 +22,7 @@ import SignatureDialog, {
 import SecurityDialog from './dialogs/security-dialog';
 import StampDialog from './dialogs/stamp-dialog';
 import ConvertDialog from './dialogs/convert-dialog';
+import OcrDialog from './dialogs/ocr-dialog';
 import MetadataDialog from './dialogs/metadata-dialog';
 import CertificateDialog from './signature/certificate-dialog';
 import { Toaster } from '@/components/ui/sonner';
@@ -48,7 +49,7 @@ export interface PdfWorkspaceProps {
 /** Sub-routes that should open a dialog as soon as a document is loaded. */
 const MODE_DIALOG: Record<
   string,
-  'split' | 'sign' | 'security' | 'stamp' | 'convert'
+  'split' | 'sign' | 'security' | 'stamp' | 'convert' | 'ocr'
 > = {
   split: 'split',
   'extract-pages': 'split',
@@ -61,6 +62,7 @@ const MODE_DIALOG: Record<
   compress: 'convert',
   'pdf-to-image': 'convert',
   'extract-text': 'convert',
+  ocr: 'ocr',
 };
 
 const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
@@ -86,6 +88,7 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
   const [stampOverride, setStampOverride] = useState<boolean | null>(null);
   const [metadataOpen, setMetadataOpen] = useState(false);
   const [convertOverride, setConvertOverride] = useState<boolean | null>(null);
+  const [ocrOverride, setOcrOverride] = useState<boolean | null>(null);
 
   const {
     openFiles,
@@ -334,6 +337,7 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
           onStamp={() => setStampOverride(true)}
           onMetadata={() => setMetadataOpen(true)}
           onConvert={() => setConvertOverride(true)}
+          onOcr={() => setOcrOverride(true)}
           busy={isExporting}
         />
 
@@ -380,6 +384,11 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
           busy={isOpening}
           onSubmit={submitPassword}
           onCancel={cancelPassword}
+        />
+
+        <OcrDialog
+          open={ocrOverride ?? (hasDocument && MODE_DIALOG[mode] === 'ocr')}
+          onOpenChange={setOcrOverride}
         />
 
         <ConvertDialog

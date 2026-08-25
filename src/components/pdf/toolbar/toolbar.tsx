@@ -11,6 +11,7 @@ import {
   PanelLeft,
   Printer,
   Redo2,
+  ScanText,
   Scissors,
   ShieldCheck,
   Signature,
@@ -43,6 +44,7 @@ interface ToolbarProps {
   onStamp: () => void;
   onMetadata: () => void;
   onConvert: () => void;
+  onOcr: () => void;
   busy: boolean;
 }
 
@@ -66,6 +68,7 @@ const Toolbar = ({
   onStamp,
   onMetadata,
   onConvert,
+  onOcr,
   busy,
 }: ToolbarProps) => {
   const dispatch = usePdfDispatch();
@@ -311,6 +314,21 @@ const Toolbar = ({
           </Button>
         </TooltipTrigger>
         <TooltipContent>Print</TooltipContent>
+      </Tooltip>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Make a scan searchable"
+            disabled={!hasDocument || busy}
+            onClick={onOcr}
+          >
+            <ScanText className="size-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>OCR: make a scan searchable</TooltipContent>
       </Tooltip>
 
       <Tooltip>

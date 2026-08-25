@@ -67,4 +67,57 @@ async function copyPdfjs() {
   console.log(`[copy-static-assets] pdfjs-dist ${version} -> public/pdfjs`);
 }
 
+/**
+ * Tesseract's WASM core and its English language model.
+ *
+ * Self-hosted rather than left to tesseract.js's default, which fetches both
+ * from jsDelivr at runtime. The whole promise of this tool is that using it
+ * makes no third-party requests; quietly pulling a 3 MB model from a CDN the
+ * moment someone OCRs a document would break that, even though the document
+ * itself never moves.
+ *
+ * The "best_int" model is used over the standard one: 2.9 MB against 10.9 MB
+ * for accuracy that is indistinguishable on ordinary documents.
+ */
+async function copyTesseract() {
+  const dest = path.join(root, 'public', 'tesseract');
+  await rm(dest, { recursive: true, force: true });
+  await mkdir(path.join(dest, 'lang'), { recursive: true });
+
+  const core = packageRoot('tesseract.js-core');
+
+  // All three LSTM variants, because tesseract.js feature-detects at runtime
+  // and asks for whichever the browser supports — copying only one means the
+  // request 404s on machines that support a different level, which surfaces as
+  // an opaque "failed to execute importScripts".
+  //
+  // Only the "-lstm" builds are shipped: they drop the legacy pre-4.0 engine,
+  // which nothing here uses, and halve the size. The threaded builds are
+  // deliberately excluded — they need SharedArrayBuffer, which needs COOP/COEP
+  // headers, which would break analytics, web fonts and every cross-origin
+  // image on the rest of the site.
+  for (const variant of ['', '-simd', '-relaxedsimd']) {
+    for (const extension of ['.js', '.wasm', '.wasm.js']) {
+      const file = `tesseract-core${variant}-lstm${extension}`;
+      await copyInto(path.join(core, file), path.join(dest, file));
+    }
+  }
+
+  const worker = path.join(
+    packageRoot('tesseract.js'),
+    'dist',
+    'worker.min.js'
+  );
+  await copyInto(worker, path.join(dest, 'worker.min.js'));
+
+  const lang = packageRoot('@tesseract.js-data/eng');
+  await copyInto(
+    path.join(lang, '4.0.0_best_int', 'eng.traineddata.gz'),
+    path.join(dest, 'lang', 'eng.traineddata.gz')
+  );
+
+  console.log('[copy-static-assets] tesseract core + eng -> public/tesseract');
+}
+
 await copyPdfjs();
+await copyTesseract();

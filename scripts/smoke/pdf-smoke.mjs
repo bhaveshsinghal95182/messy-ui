@@ -848,6 +848,62 @@ try {
     `${compressedPages} pages`
   );
 
+  /* 6k. OCR, end to end and without a synthetic fixture.
+     A real scan is produced first by flattening a text document to images with
+     the tool's own raster compression — that yields a page of genuine
+     typography with no text objects, which is exactly what OCR has to cope
+     with, and tests both features against each other. */
+  await page.goto(`${BASE}/pdf`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('text=Drop a PDF here');
+  await openFile(page, path.join(samples, 'text-3page.pdf'));
+
+  await page.click('[aria-label="Compress and convert"]');
+  await page.waitForSelector('text=Flatten to images', { timeout: 10_000 });
+  await page.click('button:has-text("Flatten to images")');
+  await page.waitForTimeout(300);
+
+  const flattenDownload = page.waitForEvent('download', { timeout: 90_000 });
+  await page.click('button:has-text("Compress and download")');
+  const scanFile = path.join(samples, 'generated-scan.pdf');
+  await (await flattenDownload).saveAs(scanFile);
+
+  const scanTextObjects = await pageText(scanFile, 0);
+  check(
+    'flattening produces a page with no text objects',
+    scanTextObjects.trim() === '',
+    scanTextObjects.slice(0, 40) || '(none)'
+  );
+
+  await page.goto(`${BASE}/pdf`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('text=Drop a PDF here');
+  await openFile(page, scanFile);
+
+  await page.click('[aria-label="Make a scan searchable"]');
+  await page.waitForSelector('button:has-text("Start")', { timeout: 10_000 });
+  await page.click('button:has-text("Start")');
+
+  // The first run also loads and initialises the language model.
+  await page.waitForSelector('button:has-text("Save searchable PDF")', {
+    timeout: 240_000,
+  });
+  const ocrStatus = await page.evaluate(
+    () => document.body.innerText.match(/Found [\d,]+ words[^.]*\./)?.[0] ?? ''
+  );
+  check('OCR recognises text on the scan', ocrStatus.length > 0, ocrStatus);
+  await page.screenshot({ path: path.join(shots, '10-ocr.png') });
+
+  const ocrDownload = page.waitForEvent('download', { timeout: 60_000 });
+  await page.click('button:has-text("Save searchable PDF")');
+  const searchableFile = path.join(samples, 'exported-searchable.pdf');
+  await (await ocrDownload).saveAs(searchableFile);
+
+  const searchableText = await pageText(searchableFile, 0);
+  check(
+    'the OCR output is genuinely searchable',
+    /MESSYUI|SMOKE|MARKER|Page/i.test(searchableText),
+    searchableText.trim().slice(0, 70) || '(no text)'
+  );
+
   /* 7. Encrypted files prompt rather than failing silently. */
   await page.goto(`${BASE}/pdf`, { waitUntil: 'networkidle' });
   await page.waitForSelector('text=Drop a PDF here');

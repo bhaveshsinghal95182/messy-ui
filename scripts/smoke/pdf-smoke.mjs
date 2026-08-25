@@ -264,6 +264,92 @@ const verifySignedPdf = async (file) => {
   };
 };
 
+/** Opens a file in the editor by synthesising a drop event. */
+const openFile = async (page, file) => {
+  await page.evaluate(() => {
+    document.querySelector('#smoke-file-input')?.remove();
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.id = 'smoke-file-input';
+    document.body.append(input);
+  });
+  await (await page.$('#smoke-file-input')).setInputFiles(file);
+  await page.evaluate(() => {
+    const input = document.querySelector('#smoke-file-input');
+    const transfer = new DataTransfer();
+    for (const file of input.files) transfer.items.add(file);
+    window.dispatchEvent(
+      Object.assign(new Event('drop', { bubbles: true }), {
+        dataTransfer: transfer,
+      })
+    );
+  });
+  await page.waitForSelector('canvas', { timeout: 30_000 });
+  await page.waitForTimeout(2500);
+};
+
+/** Reads back the values of an exported form, to prove they were written. */
+const readFormValues = async (file) => {
+  const require = createRequire(import.meta.url);
+  const { PDFDocument } = require('@cantoo/pdf-lib');
+  const doc = await PDFDocument.load(await readFile(file), {
+    ignoreEncryption: true,
+  });
+  try {
+    return Object.fromEntries(
+      doc
+        .getForm()
+        .getFields()
+        .map((field) => [
+          field.getName(),
+          typeof field.getText === 'function'
+            ? (field.getText() ?? '')
+            : typeof field.isChecked === 'function'
+              ? field.isChecked()
+              : typeof field.getSelected === 'function'
+                ? field.getSelected()
+                : '',
+        ])
+    );
+  } catch {
+    return {};
+  }
+};
+
+/** Extracts all text from a PDF page, for the redaction check. */
+const pageText = async (file, pageIndex = 0) => {
+  const require = createRequire(import.meta.url);
+  const { PDFDocument, PDFArray } = require('@cantoo/pdf-lib');
+  const zlib = require('node:zlib');
+
+  const doc = await PDFDocument.load(await readFile(file), {
+    ignoreEncryption: true,
+  });
+  const contents = doc.getPage(pageIndex).node.Contents();
+  const streams =
+    contents instanceof PDFArray
+      ? contents.asArray().map((ref) => doc.context.lookup(ref))
+      : [contents];
+
+  let body = '';
+  for (const stream of streams) {
+    const bytes = stream.getContents ? stream.getContents() : stream.contents;
+    try {
+      body += zlib.inflateSync(Buffer.from(bytes)).toString('latin1');
+    } catch {
+      body += Buffer.from(bytes).toString('latin1');
+    }
+  }
+
+  const hexText = (body.match(/<([0-9A-Fa-f]+)> Tj/g) ?? [])
+    .map((m) =>
+      Buffer.from(m.slice(1, m.indexOf('>')), 'hex').toString('latin1')
+    )
+    .join(' ');
+  const literalText = (body.match(/\(([^)]*)\) Tj/g) ?? []).join(' ');
+  return `${hexText} ${literalText}`;
+};
+
 await mkdir(shots, { recursive: true });
 
 const browser = await chromium.launch();
@@ -633,6 +719,78 @@ try {
     'a tampered file fails verification',
     tamperedResult.ok === false,
     tamperedResult.detail
+  );
+
+  /* 6g. Redaction must actually destroy the text, not cover it. This is the
+     claim the tool makes most loudly, so it gets the strongest check: extract
+     the text from the exported page and confirm the words are simply gone. */
+  await page.goto(`${BASE}/pdf`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('text=Drop a PDF here');
+  await openFile(page, path.join(samples, 'text-3page.pdf'));
+
+  const beforeRedaction = await page.evaluate(
+    () => document.querySelector('.textLayer')?.textContent ?? ''
+  );
+  check(
+    'marker text is present before redacting',
+    beforeRedaction.includes('MESSYUI-SMOKE-MARKER'),
+    beforeRedaction.slice(0, 50)
+  );
+
+  await page.click('[aria-label="Redact"]');
+  await page.waitForTimeout(300);
+
+  const redactBox = await page.evaluate(() => {
+    const rect = document
+      .querySelector('[data-page-id]')
+      .getBoundingClientRect();
+    return { x: rect.x, y: rect.y, width: rect.width };
+  });
+  // Cover the whole upper band of the page, which holds both text runs.
+  await page.mouse.move(redactBox.x + 20, redactBox.y + 60);
+  await page.mouse.down();
+  await page.mouse.move(redactBox.x + redactBox.width - 20, redactBox.y + 420, {
+    steps: 10,
+  });
+  await page.mouse.up();
+  await page.waitForTimeout(600);
+  await page.screenshot({ path: path.join(shots, '09-redaction.png') });
+
+  const redactedDownload = page.waitForEvent('download', { timeout: 60_000 });
+  await page.click('button:has-text("Download")');
+  const redactedFile = path.join(samples, 'exported-redacted.pdf');
+  await (await redactedDownload).saveAs(redactedFile);
+
+  const textAfter = await pageText(redactedFile, 0);
+  check(
+    'redacted text is gone from the exported file',
+    !textAfter.includes('MESSYUI-SMOKE-MARKER'),
+    textAfter.slice(0, 60) || '(no text objects on the page)'
+  );
+
+  /* 6h. Form filling, read back from the saved file. */
+  await page.goto(`${BASE}/pdf`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('text=Drop a PDF here');
+  await openFile(page, path.join(samples, 'form.pdf'));
+
+  await page.click('[aria-label="Fill form fields"]');
+  await page.waitForSelector('#form-fullName', { timeout: 15_000 });
+  check('form fields are detected', true);
+
+  await page.fill('#form-fullName', 'Ada Lovelace');
+  await page.click('#form-subscribe');
+  await page.waitForTimeout(400);
+
+  const formDownload = page.waitForEvent('download', { timeout: 60_000 });
+  await page.click('button:has-text("Download")');
+  const filledFile = path.join(samples, 'exported-form.pdf');
+  await (await formDownload).saveAs(filledFile);
+
+  const filled = await readFormValues(filledFile);
+  check(
+    'form values are written to the file',
+    filled.fullName === 'Ada Lovelace' && filled.subscribe === true,
+    JSON.stringify(filled)
   );
 
   /* 7. Encrypted files prompt rather than failing silently. */

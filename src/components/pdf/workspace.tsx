@@ -12,6 +12,7 @@ import {
 import Toolbar from './toolbar/toolbar';
 import PageList from './viewer/page-list';
 import ThumbnailSidebar from './sidebar/thumbnail-sidebar';
+import FormPanel from './panels/form-panel';
 import EmptyState from './empty-state';
 import PasswordPromptDialog from './dialogs/password-prompt-dialog';
 import SplitDialog from './dialogs/split-dialog';
@@ -19,6 +20,8 @@ import SignatureDialog, {
   type SignaturePayload,
 } from './signature/signature-dialog';
 import SecurityDialog from './dialogs/security-dialog';
+import StampDialog from './dialogs/stamp-dialog';
+import MetadataDialog from './dialogs/metadata-dialog';
 import CertificateDialog from './signature/certificate-dialog';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -42,13 +45,15 @@ export interface PdfWorkspaceProps {
 }
 
 /** Sub-routes that should open a dialog as soon as a document is loaded. */
-const MODE_DIALOG: Record<string, 'split' | 'sign' | 'security'> = {
+const MODE_DIALOG: Record<string, 'split' | 'sign' | 'security' | 'stamp'> = {
   split: 'split',
   'extract-pages': 'split',
   sign: 'sign',
   esign: 'sign',
   protect: 'security',
   unlock: 'security',
+  watermark: 'stamp',
+  'page-numbers': 'stamp',
 };
 
 const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
@@ -71,6 +76,8 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
     null
   );
   const [certificateOpen, setCertificateOpen] = useState(false);
+  const [stampOverride, setStampOverride] = useState<boolean | null>(null);
+  const [metadataOpen, setMetadataOpen] = useState(false);
 
   const {
     openFiles,
@@ -297,6 +304,7 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
     splitOverride ?? (hasDocument && MODE_DIALOG[mode] === 'split');
 
   const showThumbnails = hasDocument && sidebar === 'thumbnails';
+  const showForms = hasDocument && sidebar === 'forms';
 
   return (
     <TooltipProvider delayDuration={300}>
@@ -315,6 +323,8 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
           onAddDate={placeDate}
           onSecurity={() => setSecurityOverride(true)}
           onCertificateSign={() => setCertificateOpen(true)}
+          onStamp={() => setStampOverride(true)}
+          onMetadata={() => setMetadataOpen(true)}
           busy={isExporting}
         />
 
@@ -323,6 +333,15 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
             <div className="hidden w-40 shrink-0 md:block">
               <ThumbnailSidebar />
             </div>
+          )}
+
+          {showForms && (
+            <aside
+              aria-label="Form fields"
+              className="bg-card hidden w-72 shrink-0 overflow-y-auto border-r md:block"
+            >
+              <FormPanel />
+            </aside>
           )}
 
           <main id="pdf-page-list" className="min-w-0 flex-1">
@@ -353,6 +372,13 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
           onSubmit={submitPassword}
           onCancel={cancelPassword}
         />
+
+        <StampDialog
+          open={stampOverride ?? (hasDocument && MODE_DIALOG[mode] === 'stamp')}
+          onOpenChange={setStampOverride}
+        />
+
+        <MetadataDialog open={metadataOpen} onOpenChange={setMetadataOpen} />
 
         <CertificateDialog
           open={certificateOpen}

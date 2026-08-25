@@ -2,7 +2,9 @@
 
 import {
   CalendarDays,
+  ClipboardList,
   Download,
+  FileText,
   FolderOpen,
   Lock,
   PanelLeft,
@@ -11,6 +13,7 @@ import {
   Scissors,
   ShieldCheck,
   Signature,
+  Stamp,
   Undo2,
 } from 'lucide-react';
 import { usePdf, usePdfDispatch } from '../pdf-store-provider';
@@ -36,6 +39,8 @@ interface ToolbarProps {
   onAddDate: () => void;
   onSecurity: () => void;
   onCertificateSign: () => void;
+  onStamp: () => void;
+  onMetadata: () => void;
   busy: boolean;
 }
 
@@ -56,6 +61,8 @@ const Toolbar = ({
   onAddDate,
   onSecurity,
   onCertificateSign,
+  onStamp,
+  onMetadata,
   busy,
 }: ToolbarProps) => {
   const dispatch = usePdfDispatch();
@@ -227,6 +234,59 @@ const Toolbar = ({
           </Button>
         </TooltipTrigger>
         <TooltipContent>Sign with a PKCS#12 certificate</TooltipContent>
+      </Tooltip>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Page numbers and watermarks"
+            disabled={!hasDocument}
+            onClick={onStamp}
+          >
+            <Stamp className="size-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Page numbers and watermarks</TooltipContent>
+      </Tooltip>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Document properties"
+            disabled={!hasDocument}
+            onClick={onMetadata}
+          >
+            <FileText className="size-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Document properties</TooltipContent>
+      </Tooltip>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant={sidebar === 'forms' ? 'secondary' : 'ghost'}
+            size="icon"
+            aria-label="Fill form fields"
+            aria-pressed={sidebar === 'forms'}
+            disabled={!hasDocument}
+            onClick={() =>
+              dispatch({
+                type: 'SET_VIEW',
+                patch: {
+                  sidebar: sidebar === 'forms' ? 'thumbnails' : 'forms',
+                },
+              })
+            }
+          >
+            <ClipboardList className="size-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Fill form fields</TooltipContent>
       </Tooltip>
 
       <div className="flex-1" />

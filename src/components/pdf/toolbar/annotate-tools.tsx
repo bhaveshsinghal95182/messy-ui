@@ -3,6 +3,7 @@
 import {
   ArrowUpRight,
   Circle,
+  EyeOff,
   Highlighter,
   Image as ImageIcon,
   Minus,
@@ -33,6 +34,8 @@ const TOOLS: { id: ToolId; label: string; icon: typeof Type; key: string }[] = [
   { id: 'arrow', label: 'Arrow', icon: ArrowUpRight, key: 'A' },
   { id: 'whiteout', label: 'Whiteout', icon: SquareSlash, key: 'W' },
   { id: 'note', label: 'Note', icon: StickyNote, key: 'N' },
+  // Distinct from whiteout: this one genuinely destroys the content beneath.
+  { id: 'redaction', label: 'Redact', icon: EyeOff, key: 'X' },
 ];
 
 /** Tool selection. Marked with aria-pressed so the active tool is announced. */

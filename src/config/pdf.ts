@@ -306,6 +306,151 @@ export const pdfTools: PdfTool[] = [
     curated: true,
   },
   {
+    slug: 'redact',
+    mode: 'redact',
+    heading: 'Redact a PDF',
+    title: 'Redact PDF Free - Permanently Remove Text in Your Browser',
+    description:
+      'Black out text so it is genuinely gone, not merely covered. Redacted pages are flattened to images on export, in your browser.',
+    intro:
+      'Drawing a black rectangle over text does not remove it — the words stay in the file and come straight back out with copy-and-paste. That mistake has leaked real documents. Here, any page carrying a redaction is rendered to pixels with the redacted areas painted opaque, and the original text is not present in the saved file at all.',
+    steps: [
+      'Open the PDF.',
+      'Choose the redaction tool and drag over anything to remove.',
+      'Download. Pages with redactions are flattened; the rest are untouched.',
+      'Check the result by trying to select text in the redacted area.',
+    ],
+    keywords: [
+      'redact pdf',
+      'black out text pdf',
+      'remove text from pdf permanently',
+      'redact pdf free',
+      'pdf redaction tool',
+    ],
+    faq: [
+      PRIVACY_FAQ,
+      {
+        question: 'Is the text really removed?',
+        answer:
+          'Yes. The page is re-rendered as an image with the redaction painted on, and that image replaces the page. There is no text object left behind to select, search or extract — which is not true of tools that simply draw a filled rectangle.',
+      },
+      {
+        question: 'What does redaction cost me?',
+        answer:
+          'Redacted pages become images: their text is no longer selectable or searchable and the file is larger. Only pages you actually redact are affected; everything else keeps its original text.',
+      },
+      {
+        question: 'What about the metadata?',
+        answer:
+          'Worth clearing too. The document properties panel and the "remove metadata" option in the password panel strip the author, timestamps and any embedded scripts or attachments.',
+      },
+    ],
+    related: ['protect', 'sign', 'delete-pages'],
+    curated: true,
+  },
+  {
+    slug: 'fill-form',
+    mode: 'fill-form',
+    heading: 'Fill in a PDF form',
+    title: 'Fill PDF Forms Free - Complete and Flatten in Your Browser',
+    description:
+      'Fill in an interactive PDF form and optionally flatten it, entirely in your browser. Nothing is uploaded.',
+    intro:
+      'Interactive fields are detected automatically and listed in a side panel. Fill them in, then either keep the form editable or flatten it so the values are permanent and every reader shows the same thing.',
+    steps: [
+      'Open the form.',
+      'Open the form panel from the toolbar; every fillable field is listed.',
+      'Fill them in, and add text boxes anywhere the form lacks a field.',
+      'Choose whether to flatten, then download.',
+    ],
+    keywords: [
+      'fill pdf form',
+      'pdf form filler',
+      'complete pdf form free',
+      'flatten pdf form',
+      'fill and sign pdf',
+    ],
+    faq: [
+      PRIVACY_FAQ,
+      {
+        question: 'What if the form has no interactive fields?',
+        answer:
+          'Plenty of "forms" are just scans or flat documents with lines drawn on them. Add text boxes wherever you need to write, and they will be part of the saved file.',
+      },
+      {
+        question: 'Should I flatten?',
+        answer:
+          'Flatten if you are sending the completed form onwards: it makes the values permanent and guarantees every reader displays them identically. Leave it interactive if someone else still needs to edit it.',
+      },
+    ],
+    related: ['sign', 'esign', 'protect'],
+    curated: true,
+  },
+  {
+    slug: 'watermark',
+    mode: 'watermark',
+    heading: 'Add a watermark to a PDF',
+    title: 'Add a Watermark to a PDF Free - In Your Browser',
+    description:
+      'Stamp DRAFT, CONFIDENTIAL or any text across every page, with control over size, angle and opacity. Runs in your browser.',
+    intro:
+      'Add diagonal text across a page range, at whatever size and opacity suits. The watermark is added as an ordinary editable object, so you can move or delete any individual one before saving.',
+    steps: [
+      'Open the PDF.',
+      'Open the watermark panel and type your text.',
+      'Set the size, angle and opacity, and choose a page range.',
+      'Download.',
+    ],
+    keywords: [
+      'add watermark to pdf',
+      'watermark pdf free',
+      'pdf watermark online',
+      'stamp draft on pdf',
+    ],
+    faq: [
+      PRIVACY_FAQ,
+      {
+        question: 'Can a watermark be removed by someone else?',
+        answer:
+          'A watermark is ordinary page content, so a determined person with the right tools can strip it. It marks a document, it does not protect one — for that, use a password.',
+      },
+    ],
+    related: ['page-numbers', 'protect', 'merge'],
+    curated: true,
+  },
+  {
+    slug: 'page-numbers',
+    mode: 'page-numbers',
+    heading: 'Add page numbers to a PDF',
+    title: 'Add Page Numbers to a PDF Free - In Your Browser',
+    description:
+      'Number the pages of a PDF, with headers and footers, entirely in your browser.',
+    intro:
+      'Add page numbers in any corner, using placeholders like {page} and {pages}. The same panel handles headers and footers, including the date and the file name.',
+    steps: [
+      'Open the PDF.',
+      'Open the page numbers panel.',
+      'Choose the format, position and page range.',
+      'Download.',
+    ],
+    keywords: [
+      'add page numbers to pdf',
+      'number pdf pages',
+      'pdf header footer',
+      'page numbers pdf free',
+    ],
+    faq: [
+      PRIVACY_FAQ,
+      {
+        question: 'Can I start numbering from something other than 1?',
+        answer:
+          'Choose a page range so numbering begins where you want it. The numbers follow the current page order, so reorder the document first if you plan to.',
+      },
+    ],
+    related: ['watermark', 'merge', 'split'],
+    curated: true,
+  },
+  {
     slug: 'rotate',
     mode: 'rotate',
     heading: 'Rotate PDF pages',

@@ -9,6 +9,12 @@
 import type { PDFDocument, PDFPage, degrees as Degrees } from '@cantoo/pdf-lib';
 import { BLANK_SOURCE_ID, isBlankPage } from '../pages/ops';
 import { createDrawContext, drawObjects } from './draw-objects';
+import {
+  drawRedactedPage,
+  pagesNeedingRedaction,
+  rasterizeRedactedPage,
+} from '../ops/redact';
+import { applyFormValues } from '../ops/forms';
 import { toQuadrant } from '../geometry';
 import type {
   ExportSettings,
@@ -51,6 +57,11 @@ export function canExportInPlace(
   state: PdfEditorState,
   pages: PageEntry[]
 ): boolean {
+  // A redacted page is replaced by a flattened image, which means building a
+  // new document — there is no in-place edit that removes the original content
+  // with the certainty redaction requires.
+  if (pagesNeedingRedaction(state).size > 0) return false;
+
   const sourceIds = new Set(pages.map((page) => page.sourceId));
   if (sourceIds.size !== 1) return false;
 
@@ -119,6 +130,7 @@ export async function exportPdf(
   let doc: PDFDocument;
   /** Exported page index -> the entry it came from, for drawing annotations. */
   const drawn: { page: PDFPage; entry: PageEntry }[] = [];
+  const redactedPages = pagesNeedingRedaction(state);
 
   if (canExportInPlace(state, pages)) {
     doc = await loadSourceDocument(state.sources[pages[0].sourceId]);
@@ -155,6 +167,24 @@ export async function exportPdf(
         continue;
       }
 
+      // A redacted page never gets copied: it is replaced by an image of
+      // itself with the redactions burned into the pixels, so the original
+      // text is not present in the output at all.
+      if (redactedPages.has(entry.id)) {
+        const raster = await rasterizeRedactedPage(state, entry);
+        if (raster) {
+          await drawRedactedPage(doc, doc.getPageCount(), raster);
+          drawn.push({ page: doc.getPage(doc.getPageCount() - 1), entry });
+          continue;
+        }
+        // Rasterising failed: refuse rather than silently exporting a document
+        // whose redactions did not take effect.
+        throw new Error(
+          'A redacted page could not be flattened, so the export was stopped ' +
+            'rather than saving a file where the redaction had no effect.'
+        );
+      }
+
       const sourceDoc = await loadOnce(entry.sourceId);
       const [copied] = await doc.copyPages(sourceDoc, [entry.sourceIndex]);
       applyPageGeometry(copied, entry, degrees);
@@ -174,6 +204,10 @@ export async function exportPdf(
       await drawObjects(context, page, state.objects[entry.id]);
     }
   }
+
+  // Form values are written before metadata so a flatten, which turns fields
+  // into page content, happens while the document is still otherwise intact.
+  await applyFormValues(doc, state.forms, settings.flattenForms);
 
   applyMetadata(doc, state, settings);
 

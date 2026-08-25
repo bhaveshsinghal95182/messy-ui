@@ -134,11 +134,38 @@ async function testCertificate() {
   return bytes;
 }
 
+/** An AcroForm with one of each field type the panel knows how to render. */
+async function formDocument() {
+  const doc = await PDFDocument.create();
+  const font = await doc.embedFont(StandardFonts.Helvetica);
+  const page = doc.addPage([612, 792]);
+  const form = doc.getForm();
+
+  page.drawText('Smoke test form', { x: 72, y: 720, size: 20, font });
+
+  page.drawText('Full name', { x: 72, y: 670, size: 11, font });
+  const name = form.createTextField('fullName');
+  name.setText('');
+  name.addToPage(page, { x: 72, y: 640, width: 300, height: 22 });
+
+  page.drawText('Subscribe', { x: 72, y: 600, size: 11, font });
+  const subscribe = form.createCheckBox('subscribe');
+  subscribe.addToPage(page, { x: 160, y: 598, width: 16, height: 16 });
+
+  page.drawText('Plan', { x: 72, y: 550, size: 11, font });
+  const plan = form.createDropdown('plan');
+  plan.addOptions(['Basic', 'Standard', 'Premium']);
+  plan.addToPage(page, { x: 160, y: 544, width: 160, height: 22 });
+
+  return doc.save();
+}
+
 const fixtures = [
   ['text-3page.pdf', textDocument],
   ['rotated.pdf', rotatedDocument],
   ['large-200page.pdf', largeDocument],
   ['encrypted-user.pdf', encryptedDocument],
+  ['form.pdf', formDocument],
   ['test-cert.p12', testCertificate],
 ];
 

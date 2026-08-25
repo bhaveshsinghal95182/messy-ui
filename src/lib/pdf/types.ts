@@ -275,7 +275,12 @@ export interface ToolSettings {
 /* -------------------------------------------------------------------------- */
 
 export type FitMode = 'width' | 'page' | 'none';
-export type SidebarPanel = 'thumbnails' | 'search' | 'outline' | 'none';
+export type SidebarPanel =
+  | 'thumbnails'
+  | 'forms'
+  | 'search'
+  | 'outline'
+  | 'none';
 
 export interface ViewState {
   zoom: number;

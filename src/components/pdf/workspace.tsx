@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import {
   PdfStoreProvider,
   usePdf,
@@ -22,6 +23,8 @@ import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
 import { closeAllSources } from '@/lib/pdf/document';
 import { clearThumbnails } from '@/lib/pdf/render';
 import { createBlankPage } from '@/lib/pdf/pages/ops';
+import { clearAssets, getAsset, importImage } from '@/lib/pdf/assets';
+import { newId } from '@/lib/pdf/reducer';
 import { cn } from '@/lib/utils';
 
 export interface PdfWorkspaceProps {
@@ -73,6 +76,71 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
   });
 
   /**
+   * Places an image on the current page.
+   *
+   * Sized to fit within half the page width while keeping its aspect ratio, so
+   * a photo straight off a phone camera doesn't land many times larger than the
+   * page it is being placed on.
+   */
+  const addImage = useCallback(() => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.addEventListener('change', () => {
+      const file = input.files?.[0];
+      if (!file) return;
+
+      void (async () => {
+        try {
+          const state = getState();
+          const pageId = state.view.currentPageId ?? state.pages[0]?.id;
+          const page = state.pages.find((entry) => entry.id === pageId);
+          if (!page) return;
+
+          const assetId = await importImage(file);
+          const asset = getAsset(assetId);
+          if (!asset) return;
+
+          const size =
+            state.sources[page.sourceId]?.pageSizes[page.sourceIndex];
+          const pageWidth = size?.width ?? 612;
+          const pageHeight = size?.height ?? 792;
+
+          const width = Math.min(pageWidth / 2, asset.width);
+          const height = (asset.height / asset.width) * width;
+
+          dispatch({
+            type: 'ADD_OBJECT',
+            pageId: page.id,
+            object: {
+              id: newId(),
+              kind: 'image',
+              assetId,
+              fit: 'contain',
+              rect: {
+                x: (pageWidth - width) / 2,
+                y: (pageHeight - height) / 2,
+                w: width,
+                h: height,
+              },
+              rotation: 0,
+              opacity: 1,
+              locked: false,
+              z: (state.objects[page.id]?.length ?? 0) + 1,
+              createdAt: Date.now(),
+            },
+          });
+          dispatch({ type: 'SET_TOOL', tool: 'select' });
+        } catch (error) {
+          console.error(error);
+          toast.error('Could not add that image');
+        }
+      })();
+    });
+    input.click();
+  }, [dispatch, getState]);
+
+  /**
    * Inserts a blank page after the selected one, matching the size of its
    * neighbour so it doesn't stand out in a document of a non-Letter size.
    */
@@ -100,6 +168,7 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
     () => () => {
       void closeAllSources();
       clearThumbnails();
+      clearAssets();
     },
     []
   );
@@ -124,6 +193,7 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
           onPrint={handlePrint}
           onSplit={() => setSplitOverride(true)}
           onInsertBlank={insertBlank}
+          onAddImage={addImage}
           busy={isExporting}
         />
 

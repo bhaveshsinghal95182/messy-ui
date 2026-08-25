@@ -215,6 +215,50 @@ try {
   );
   check('undo restores the page', afterUndo === 3, `${afterUndo} pages`);
 
+  /* 6b-2. Annotation: pick a tool, drag out an object, confirm it exists.
+     Scroll back to the top first — clicking a thumbnail above moved the view,
+     and a drag aimed at a page that is off-screen lands nowhere. */
+  await page.evaluate(() => {
+    document.querySelector('[aria-label="Document pages"]')?.scrollTo(0, 0);
+  });
+  await page.waitForTimeout(800);
+
+  await page.click('[aria-label="Rectangle"]');
+  await page.waitForTimeout(300);
+
+  const pageBox = await page.evaluate(() => {
+    const element = document.querySelector('[data-page-id]');
+    const rect = element.getBoundingClientRect();
+    return { x: rect.x, y: rect.y, width: rect.width, height: rect.height };
+  });
+
+  await page.mouse.move(pageBox.x + 100, pageBox.y + 120);
+  await page.mouse.down();
+  await page.mouse.move(pageBox.x + 260, pageBox.y + 220, { steps: 12 });
+  await page.mouse.up();
+  await page.waitForTimeout(600);
+
+  const objectCount = await page.evaluate(
+    () => document.querySelectorAll('[role="listitem"]').length
+  );
+  check(
+    'drawing creates an object',
+    objectCount >= 1,
+    `${objectCount} objects`
+  );
+  await page.screenshot({ path: path.join(shots, '05-annotated.png') });
+
+  // Drawing returns to the select tool and selects the new object, so the
+  // resize handles should be present without any further clicking.
+  const handles = await page.evaluate(
+    () => document.querySelectorAll('[aria-label^="Resize"]').length
+  );
+  check(
+    'new object is selected with handles',
+    handles === 8,
+    `${handles} handles`
+  );
+
   /* 6c. Export round-trip: the saved file must reopen with the same pages. */
   const downloadPromise = page.waitForEvent('download', { timeout: 30_000 });
   await page.click('text=Download');

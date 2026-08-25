@@ -12,6 +12,7 @@ import {
 import { usePdf, usePdfDispatch } from '../pdf-store-provider';
 import ZoomControls from './zoom-controls';
 import PageTools from './page-tools';
+import AnnotateTools from './annotate-tools';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -26,6 +27,7 @@ interface ToolbarProps {
   onPrint: () => void;
   onSplit: () => void;
   onInsertBlank: () => void;
+  onAddImage: () => void;
   busy: boolean;
 }
 
@@ -41,6 +43,7 @@ const Toolbar = ({
   onPrint,
   onSplit,
   onInsertBlank,
+  onAddImage,
   busy,
 }: ToolbarProps) => {
   const dispatch = usePdfDispatch();
@@ -122,6 +125,14 @@ const Toolbar = ({
         </TooltipTrigger>
         <TooltipContent>Redo</TooltipContent>
       </Tooltip>
+
+      <Separator orientation="vertical" className="mx-1 h-6" />
+
+      {/* Annotation tools. The row scrolls horizontally rather than wrapping,
+          so a narrow window keeps one toolbar rather than growing a second. */}
+      <div className="flex items-center gap-0.5 overflow-x-auto">
+        <AnnotateTools onAddImage={onAddImage} />
+      </div>
 
       <Separator orientation="vertical" className="mx-1 h-6" />
 

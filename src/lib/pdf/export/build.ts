@@ -8,6 +8,7 @@
 
 import type { PDFDocument, PDFPage, degrees as Degrees } from '@cantoo/pdf-lib';
 import { BLANK_SOURCE_ID, isBlankPage } from '../pages/ops';
+import { createDrawContext, drawObjects } from './draw-objects';
 import { toQuadrant } from '../geometry';
 import type {
   ExportSettings,
@@ -114,11 +115,15 @@ export async function exportPdf(
   }
 
   let doc: PDFDocument;
+  /** Exported page index -> the entry it came from, for drawing annotations. */
+  const drawn: { page: PDFPage; entry: PageEntry }[] = [];
 
   if (canExportInPlace(state, pages)) {
     doc = await loadSourceDocument(state.sources[pages[0].sourceId]);
     pages.forEach((entry, index) => {
-      applyPageGeometry(doc.getPage(index), entry, degrees);
+      const page = doc.getPage(index);
+      applyPageGeometry(page, entry, degrees);
+      drawn.push({ page, entry });
     });
   } else {
     doc = await PDFDocument.create();
@@ -140,10 +145,11 @@ export async function exportPdf(
         const blank = entry as PageEntry & {
           blankSize?: { width: number; height: number };
         };
-        doc.addPage([
+        const page = doc.addPage([
           blank.blankSize?.width ?? 612,
           blank.blankSize?.height ?? 792,
         ]);
+        drawn.push({ page, entry });
         continue;
       }
 
@@ -151,6 +157,19 @@ export async function exportPdf(
       const [copied] = await doc.copyPages(sourceDoc, [entry.sourceIndex]);
       applyPageGeometry(copied, entry, degrees);
       doc.addPage(copied);
+      drawn.push({ page: copied, entry });
+    }
+  }
+
+  // Annotations are painted after every page exists, so the fonts and images
+  // they need are embedded once for the whole document rather than per page.
+  const annotated = drawn.filter(
+    ({ entry }) => (state.objects[entry.id]?.length ?? 0) > 0
+  );
+  if (annotated.length > 0) {
+    const context = await createDrawContext(await loadPdfLib(), doc);
+    for (const { page, entry } of annotated) {
+      await drawObjects(context, page, state.objects[entry.id]);
     }
   }
 

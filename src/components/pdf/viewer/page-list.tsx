@@ -26,7 +26,6 @@ const PageList = () => {
   const sources = usePdf((state) => state.sources);
   const zoom = usePdf((state) => state.view.zoom);
   const fit = usePdf((state) => state.view.fit);
-  const activeTool = usePdf((state) => state.activeTool);
 
   /** Each page's unscaled displayed size, i.e. with rotation applied. */
   const naturalSizes = useMemo(
@@ -149,7 +148,6 @@ const PageList = () => {
                 width={natural.width * zoom}
                 height={natural.height * zoom}
                 mounted={virtual.mounted}
-                interactiveText={activeTool === 'select'}
               />
             </div>
           );

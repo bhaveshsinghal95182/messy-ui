@@ -5,7 +5,28 @@ import {
   usePdfDispatch,
   usePdfState,
 } from '@/components/pdf/pdf-store-provider';
-import { MAX_ZOOM, MIN_ZOOM, ZOOM_STEP } from '@/lib/pdf/constants';
+import {
+  MAX_ZOOM,
+  MIN_ZOOM,
+  NUDGE_LARGE_PT,
+  NUDGE_PT,
+  ZOOM_STEP,
+} from '@/lib/pdf/constants';
+import type { ToolId } from '@/lib/pdf/types';
+
+/** Single-letter tool switches, mirroring the labels in the toolbar tooltips. */
+const TOOL_KEYS: Record<string, ToolId> = {
+  v: 'select',
+  t: 'text',
+  d: 'ink',
+  h: 'highlight',
+  r: 'rect',
+  e: 'ellipse',
+  l: 'line',
+  a: 'arrow',
+  w: 'whiteout',
+  n: 'note',
+};
 
 interface ShortcutHandlers {
   onOpen: () => void;
@@ -106,13 +127,85 @@ export function useKeyboardShortcuts({
           break;
         }
         case 'Escape':
+          // Escape both drops the selection and returns to the select tool, so
+          // one key always gets you out of whatever mode you are in.
           dispatch({
             type: 'SET_SELECTION',
             selection: { pageId: null, objectIds: [] },
           });
+          dispatch({ type: 'SET_TOOL', tool: 'select' });
           break;
-        default:
+
+        case 'Delete':
+        case 'Backspace': {
+          const { selection } = getState();
+          if (!selection.pageId || selection.objectIds.length === 0) break;
+          event.preventDefault();
+          dispatch({
+            type: 'DELETE_OBJECTS',
+            pageId: selection.pageId,
+            objectIds: selection.objectIds,
+          });
           break;
+        }
+
+        case 'ArrowUp':
+        case 'ArrowDown':
+        case 'ArrowLeft':
+        case 'ArrowRight': {
+          const state = getState();
+          const { selection } = state;
+          if (!selection.pageId || selection.objectIds.length === 0) break;
+          event.preventDefault();
+
+          const step = event.shiftKey ? NUDGE_LARGE_PT : NUDGE_PT;
+          // PDF space is y-up, so ArrowUp increases y.
+          const dx =
+            event.key === 'ArrowLeft'
+              ? -step
+              : event.key === 'ArrowRight'
+                ? step
+                : 0;
+          const dy =
+            event.key === 'ArrowDown'
+              ? -step
+              : event.key === 'ArrowUp'
+                ? step
+                : 0;
+
+          const objects = state.objects[selection.pageId] ?? [];
+          dispatch({
+            type: 'UPDATE_OBJECTS',
+            pageId: selection.pageId,
+            patches: selection.objectIds.flatMap((objectId) => {
+              const object = objects.find((item) => item.id === objectId);
+              if (!object) return [];
+              return [
+                {
+                  objectId,
+                  patch: {
+                    rect: {
+                      ...object.rect,
+                      x: object.rect.x + dx,
+                      y: object.rect.y + dy,
+                    },
+                  },
+                },
+              ];
+            }),
+          });
+          break;
+        }
+
+        default: {
+          // Single-letter tool switches, the convention in every design tool.
+          const tool = TOOL_KEYS[event.key.toLowerCase()];
+          if (tool && !event.altKey) {
+            event.preventDefault();
+            dispatch({ type: 'SET_TOOL', tool });
+          }
+          break;
+        }
       }
     };
 

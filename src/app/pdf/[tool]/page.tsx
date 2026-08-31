@@ -17,7 +17,6 @@ import {
   PrivacyNote,
   SectionHeading,
 } from '../pdf-sections';
-import AdSlot from '@/components/pdf/ad-slot';
 
 interface PageProps {
   params: Promise<{ tool: string }>;
@@ -136,8 +135,6 @@ export default async function PdfToolPage({ params }: PageProps) {
             </ul>
           </>
         )}
-
-        <AdSlot id={tool.slug} />
 
         <PdfFooter />
       </section>

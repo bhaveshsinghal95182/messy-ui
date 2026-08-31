@@ -9,7 +9,6 @@
 import type { PDFDocument, PDFPage, degrees as Degrees } from '@cantoo/pdf-lib';
 import { BLANK_SOURCE_ID, isBlankPage } from '../pages/ops';
 import { createDrawContext, drawObjects } from './draw-objects';
-import { addAnnotations } from './annotations';
 import {
   drawRedactedPage,
   pagesNeedingRedaction,
@@ -208,20 +207,9 @@ export async function exportPdf(
     ({ entry }) => (state.objects[entry.id]?.length ?? 0) > 0
   );
   if (annotated.length > 0) {
-    const lib = await loadPdfLib();
-    const context = await createDrawContext(lib, doc);
-    // A link to a page has to resolve to the ref of the *exported* page, which
-    // is not the same page as the one the user clicked once pages have been
-    // reordered, deleted or merged in from another file.
-    const refByPageId = new Map(
-      drawn.map(({ page, entry }) => [entry.id, page.ref])
-    );
-    const resolvePageRef = (pageId: string) => refByPageId.get(pageId);
-
+    const context = await createDrawContext(await loadPdfLib(), doc);
     for (const { page, entry } of annotated) {
-      const objects = state.objects[entry.id];
-      await drawObjects(context, page, objects);
-      addAnnotations(lib, doc, page, objects, resolvePageRef);
+      await drawObjects(context, page, state.objects[entry.id]);
     }
   }
 

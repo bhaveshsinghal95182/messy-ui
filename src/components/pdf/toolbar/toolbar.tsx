@@ -14,9 +14,7 @@ import {
   ScanText,
   Scissors,
   ShieldCheck,
-  ShieldQuestionMark,
   Signature,
-  SlidersHorizontal,
   Stamp,
   Undo2,
 } from 'lucide-react';
@@ -43,7 +41,6 @@ interface ToolbarProps {
   onAddDate: () => void;
   onSecurity: () => void;
   onCertificateSign: () => void;
-  onVerifySignatures: () => void;
   onStamp: () => void;
   onMetadata: () => void;
   onConvert: () => void;
@@ -68,7 +65,6 @@ const Toolbar = ({
   onAddDate,
   onSecurity,
   onCertificateSign,
-  onVerifySignatures,
   onStamp,
   onMetadata,
   onConvert,
@@ -78,7 +74,6 @@ const Toolbar = ({
   const dispatch = usePdfDispatch();
   const hasDocument = usePdf((state) => state.pages.length > 0);
   const sidebar = usePdf((state) => state.view.sidebar);
-  const inspector = usePdf((state) => state.view.inspector);
   const canUndo = usePdf((state) => state.history.past.length > 0);
   const canRedo = usePdf((state) => state.history.future.length > 0);
 
@@ -87,7 +82,7 @@ const Toolbar = ({
       role="toolbar"
       aria-label="PDF tools"
       aria-controls="pdf-page-list"
-      className="bg-card flex h-12 shrink-0 items-center gap-1 overflow-x-auto border-b px-2"
+      className="bg-card flex h-12 shrink-0 items-center gap-1 border-b px-2"
     >
       <Tooltip>
         <TooltipTrigger asChild>
@@ -160,7 +155,7 @@ const Toolbar = ({
 
       {/* Annotation tools. The row scrolls horizontally rather than wrapping,
           so a narrow window keeps one toolbar rather than growing a second. */}
-      <div className="flex shrink-0 items-center gap-0.5">
+      <div className="flex items-center gap-0.5 overflow-x-auto">
         <AnnotateTools onAddImage={onAddImage} />
 
         <Tooltip>
@@ -196,13 +191,10 @@ const Toolbar = ({
 
       <Separator orientation="vertical" className="mx-1 h-6" />
 
-      {/* Page operations: individual buttons when there is room, the same
-          actions in an overflow menu when there is not. */}
-      <div className="hidden shrink-0 items-center gap-1 lg:flex">
+      {/* Page operations collapse away on small screens, where the thumbnail
+          rail's context menu carries the same actions. */}
+      <div className="hidden items-center gap-1 lg:flex">
         <PageTools onInsertBlank={onInsertBlank} />
-      </div>
-      <div className="flex shrink-0 items-center lg:hidden">
-        <PageTools onInsertBlank={onInsertBlank} variant="menu" />
       </div>
 
       <Tooltip>
@@ -248,21 +240,6 @@ const Toolbar = ({
           </Button>
         </TooltipTrigger>
         <TooltipContent>Sign with a PKCS#12 certificate</TooltipContent>
-      </Tooltip>
-
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label="Check signatures"
-            disabled={!hasDocument}
-            onClick={onVerifySignatures}
-          >
-            <ShieldQuestionMark className="size-4" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>Check existing signatures</TooltipContent>
       </Tooltip>
 
       <Tooltip>
@@ -318,25 +295,7 @@ const Toolbar = ({
         <TooltipContent>Fill form fields</TooltipContent>
       </Tooltip>
 
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant={inspector ? 'secondary' : 'ghost'}
-            size="icon"
-            aria-label="Toggle properties"
-            aria-pressed={inspector}
-            disabled={!hasDocument}
-            onClick={() =>
-              dispatch({ type: 'SET_VIEW', patch: { inspector: !inspector } })
-            }
-          >
-            <SlidersHorizontal className="size-4" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>Properties</TooltipContent>
-      </Tooltip>
-
-      <div className="min-w-2 flex-1" />
+      <div className="flex-1" />
 
       <ZoomControls />
 

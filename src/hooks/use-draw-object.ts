@@ -246,12 +246,6 @@ function buildObject(tool: ToolId, ctx: BuildContext): PdfObject | null {
         open: false,
       };
 
-    case 'link':
-      // An empty URL on purpose: the properties panel is where it gets one, and
-      // a link with no target is skipped on export rather than written as a
-      // dead annotation.
-      return { ...base, kind: 'link', target: { type: 'url', url: '' } };
-
     case 'rect':
     case 'ellipse':
     case 'line':

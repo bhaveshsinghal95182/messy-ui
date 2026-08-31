@@ -228,17 +228,7 @@ export function pdfReducer(
     /* ---------------------- Selection, tools, view ----------------------- */
 
     case 'SET_SELECTION':
-      return {
-        ...state,
-        selection: action.selection,
-        // Selecting something reveals its properties. Without this the panel
-        // is a toggle nobody would think to press, and on a phone there is no
-        // room to leave it open speculatively.
-        view:
-          action.selection.objectIds.length > 0 && !state.view.inspector
-            ? { ...state.view, inspector: true }
-            : state.view,
-      };
+      return { ...state, selection: action.selection };
 
     case 'SET_TOOL':
       return {

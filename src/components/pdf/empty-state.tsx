@@ -1,13 +1,11 @@
 'use client';
 
-import { FileUp, Images, Lock, MonitorSmartphone, WifiOff } from 'lucide-react';
+import { FileUp, Lock, MonitorSmartphone, WifiOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 interface EmptyStateProps {
   onOpen: () => void;
-  /** Builds a new PDF from picked images — the /pdf/image-to-pdf entry point. */
-  onImagesToPdf: () => void;
   isDragging: boolean;
   isOpening: boolean;
 }
@@ -31,12 +29,7 @@ const ASSURANCES = [
 ];
 
 /** The drop target shown before a document is open. */
-const EmptyState = ({
-  onOpen,
-  onImagesToPdf,
-  isDragging,
-  isOpening,
-}: EmptyStateProps) => {
+const EmptyState = ({ onOpen, isDragging, isOpening }: EmptyStateProps) => {
   return (
     <div className="flex h-full items-center justify-center overflow-y-auto p-6">
       <div className="w-full max-w-xl">
@@ -69,19 +62,6 @@ const EmptyState = ({
             Choose a file
           </Button>
         </button>
-
-        <div className="mt-4 text-center">
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={onImagesToPdf}
-            disabled={isOpening}
-          >
-            <Images className="size-4" />
-            Turn images into a PDF instead
-          </Button>
-        </div>
 
         <ul className="text-body mt-8 grid gap-4 sm:grid-cols-3">
           {ASSURANCES.map(({ icon: Icon, title, body }) => (

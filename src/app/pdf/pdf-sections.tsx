@@ -110,16 +110,9 @@ export function PdfFooter() {
       <Link href="/" className="text-primary underline underline-offset-4">
         {siteConfig.name}
       </Link>
-      . Free and account-free, permanently — see also the{' '}
+      . Free, open source and account-free — see also the{' '}
       <Link href="/timer" className="text-primary underline underline-offset-4">
         countdown timer
-      </Link>
-      . Building something similar? The{' '}
-      <Link
-        href="/pdf/kit"
-        className="text-primary underline underline-offset-4"
-      >
-        source is licensable
       </Link>
       .
     </p>

@@ -163,22 +163,12 @@ async function drawObject(
       return;
 
     case 'note':
-      // Drawn as a visible marker. A real /Text annotation dict would give a
-      // popup in Acrobat, and is worth adding once annotations are interactive.
-      page.drawRectangle({
-        x: rect.x,
-        y: rect.y,
-        width: rect.w,
-        height: rect.h,
-        color: color(lib, object.color),
-        opacity,
-      });
-      return;
-
     case 'link':
     case 'redaction':
-      // Links become annotation dicts, not drawn content; redactions are
-      // handled by rasterising the page.
+      // None of these are painted. Notes and links become entries in the page's
+      // /Annots array — see `export/annotations` — so the viewer draws them and
+      // their text and targets survive in the file. Redactions are handled by
+      // rasterising the page, in `ops/redact`.
       return;
 
     default: {

@@ -260,7 +260,8 @@ export type ToolId =
   | 'arrow'
   | 'whiteout'
   | 'redaction'
-  | 'note';
+  | 'note'
+  | 'link';
 
 /** Last-used settings per tool, so picking a tool again keeps your colour. */
 export interface ToolSettings {
@@ -286,6 +287,12 @@ export interface ViewState {
   zoom: number;
   fit: FitMode;
   sidebar: SidebarPanel;
+  /**
+   * The right-hand properties pane. Separate from `sidebar` rather than another
+   * member of it, because it is not an alternative to the thumbnail rail — you
+   * want both open at once.
+   */
+  inspector: boolean;
   /** Page currently filling most of the viewport, for the page indicator. */
   currentPageId: PageEntryId | null;
 }

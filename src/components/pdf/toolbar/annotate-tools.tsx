@@ -6,6 +6,7 @@ import {
   EyeOff,
   Highlighter,
   Image as ImageIcon,
+  Link2,
   Minus,
   MousePointer2,
   Pen,
@@ -34,6 +35,7 @@ const TOOLS: { id: ToolId; label: string; icon: typeof Type; key: string }[] = [
   { id: 'arrow', label: 'Arrow', icon: ArrowUpRight, key: 'A' },
   { id: 'whiteout', label: 'Whiteout', icon: SquareSlash, key: 'W' },
   { id: 'note', label: 'Note', icon: StickyNote, key: 'N' },
+  { id: 'link', label: 'Link', icon: Link2, key: 'K' },
   // Distinct from whiteout: this one genuinely destroys the content beneath.
   { id: 'redaction', label: 'Redact', icon: EyeOff, key: 'X' },
 ];

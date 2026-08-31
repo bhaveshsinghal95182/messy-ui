@@ -13,6 +13,8 @@ import Toolbar from './toolbar/toolbar';
 import PageList from './viewer/page-list';
 import ThumbnailSidebar from './sidebar/thumbnail-sidebar';
 import FormPanel from './panels/form-panel';
+import PropertiesPanel from './panels/properties-panel';
+import ModeHint from './mode-hint';
 import EmptyState from './empty-state';
 import PasswordPromptDialog from './dialogs/password-prompt-dialog';
 import SplitDialog from './dialogs/split-dialog';
@@ -25,6 +27,7 @@ import ConvertDialog from './dialogs/convert-dialog';
 import OcrDialog from './dialogs/ocr-dialog';
 import MetadataDialog from './dialogs/metadata-dialog';
 import CertificateDialog from './signature/certificate-dialog';
+import SignatureInspector from './signature/signature-inspector';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { useFileDrop } from '@/hooks/use-file-drop';
@@ -36,7 +39,22 @@ import { clearThumbnails } from '@/lib/pdf/render';
 import { createBlankPage } from '@/lib/pdf/pages/ops';
 import { clearAssets, getAsset, importImage, putAsset } from '@/lib/pdf/assets';
 import { newId } from '@/lib/pdf/reducer';
+import { loadToolDefaults } from '@/lib/pdf/tool-defaults-storage';
+import type { ToolId } from '@/lib/pdf/types';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer';
 
 export interface PdfWorkspaceProps {
   /**
@@ -54,7 +72,6 @@ const MODE_DIALOG: Record<
   split: 'split',
   'extract-pages': 'split',
   sign: 'sign',
-  esign: 'sign',
   protect: 'security',
   unlock: 'security',
   watermark: 'stamp',
@@ -70,6 +87,8 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
   const dispatch = usePdfDispatch();
   const hasDocument = usePdf((state) => state.pages.length > 0);
   const sidebar = usePdf((state) => state.view.sidebar);
+  const inspector = usePdf((state) => state.view.inspector);
+  const isMobile = useIsMobile();
 
   /**
    * `null` means the user has not opened or dismissed the split dialog yet, so
@@ -85,6 +104,7 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
     null
   );
   const [certificateOpen, setCertificateOpen] = useState(false);
+  const [signaturesOpen, setSignaturesOpen] = useState(false);
   const [stampOverride, setStampOverride] = useState<boolean | null>(null);
   const [metadataOpen, setMetadataOpen] = useState(false);
   const [convertOverride, setConvertOverride] = useState<boolean | null>(null);
@@ -217,6 +237,44 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
    * a photo straight off a phone camera doesn't land many times larger than the
    * page it is being placed on.
    */
+  /**
+   * Builds a new PDF from picked images, then opens it like any other file.
+   *
+   * Routing the result back through `openFiles` rather than into the store
+   * directly means the new document gets a source, thumbnails and an export
+   * path for free — it behaves exactly as if the user had opened it from disk.
+   */
+  const imagesToPdf = useCallback(() => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.multiple = true;
+    input.addEventListener('change', () => {
+      const files = Array.from(input.files ?? []);
+      if (files.length === 0) return;
+
+      void (async () => {
+        try {
+          const { imagesToPdf: build } =
+            await import('@/lib/pdf/optimize/compress');
+          const bytes = await build(files);
+          await openFiles([
+            new File([bytes as BlobPart], 'images.pdf', {
+              type: 'application/pdf',
+            }),
+          ]);
+        } catch (error) {
+          toast.error(
+            error instanceof Error
+              ? error.message
+              : 'Those images could not be converted.'
+          );
+        }
+      })();
+    });
+    input.click();
+  }, [openFiles]);
+
   const addImage = useCallback(() => {
     const input = document.createElement('input');
     input.type = 'file';
@@ -308,6 +366,19 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
     []
   );
 
+  // Restore the drawing defaults from the last session. Done here rather than
+  // in the initial state because reading localStorage during render would
+  // differ between the server and the client and break hydration.
+  useEffect(() => {
+    const stored = loadToolDefaults();
+    if (!stored) return;
+    for (const [tool, patch] of Object.entries(stored)) {
+      if (patch) {
+        dispatch({ type: 'SET_TOOL_DEFAULTS', tool: tool as ToolId, patch });
+      }
+    }
+  }, [dispatch]);
+
   // A sub-route like /pdf/split opens its dialog once there is something to
   // act on, so the deep link lands somewhere useful rather than on a dialog
   // with no document behind it.
@@ -316,6 +387,7 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
 
   const showThumbnails = hasDocument && sidebar === 'thumbnails';
   const showForms = hasDocument && sidebar === 'forms';
+  const showInspector = hasDocument && inspector;
 
   return (
     <TooltipProvider delayDuration={300}>
@@ -334,6 +406,7 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
           onAddDate={placeDate}
           onSecurity={() => setSecurityOverride(true)}
           onCertificateSign={() => setCertificateOpen(true)}
+          onVerifySignatures={() => setSignaturesOpen(true)}
           onStamp={() => setStampOverride(true)}
           onMetadata={() => setMetadataOpen(true)}
           onConvert={() => setConvertOverride(true)}
@@ -341,17 +414,19 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
           busy={isExporting}
         />
 
+        {hasDocument && <ModeHint mode={mode} onOpen={openPicker} />}
+
         <div className="flex min-h-0 flex-1">
-          {showThumbnails && (
-            <div className="hidden w-40 shrink-0 md:block">
+          {!isMobile && showThumbnails && (
+            <div className="w-40 shrink-0">
               <ThumbnailSidebar />
             </div>
           )}
 
-          {showForms && (
+          {!isMobile && showForms && (
             <aside
               aria-label="Form fields"
-              className="bg-card hidden w-72 shrink-0 overflow-y-auto border-r md:block"
+              className="bg-card w-72 shrink-0 overflow-y-auto border-r"
             >
               <FormPanel />
             </aside>
@@ -363,12 +438,85 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
             ) : (
               <EmptyState
                 onOpen={openPicker}
+                onImagesToPdf={imagesToPdf}
                 isDragging={isDragging}
                 isOpening={isOpening}
               />
             )}
           </main>
+
+          {!isMobile && showInspector && (
+            <aside
+              aria-label="Properties"
+              className="bg-card w-64 shrink-0 overflow-y-auto border-l"
+            >
+              <PropertiesPanel />
+            </aside>
+          )}
         </div>
+
+        {/*
+          The same three panels, as overlays.
+
+          Below 768px there is no room for a side rail, and the previous
+          `hidden md:block` meant the thumbnail and form buttons in the toolbar
+          still toggled state while nothing appeared — two controls that
+          visibly did nothing on a phone. These are the same components, so
+          page reordering, form filling and property editing all work on touch.
+        */}
+        {isMobile && (
+          <>
+            <Sheet
+              open={showThumbnails}
+              onOpenChange={(open) =>
+                !open &&
+                dispatch({ type: 'SET_VIEW', patch: { sidebar: 'none' } })
+              }
+            >
+              <SheetContent side="left" className="w-56 p-0">
+                <SheetHeader className="sr-only">
+                  <SheetTitle>Pages</SheetTitle>
+                </SheetHeader>
+                <div className="h-full overflow-y-auto">
+                  <ThumbnailSidebar />
+                </div>
+              </SheetContent>
+            </Sheet>
+
+            <Drawer
+              open={showForms}
+              onOpenChange={(open) =>
+                !open &&
+                dispatch({ type: 'SET_VIEW', patch: { sidebar: 'none' } })
+              }
+            >
+              <DrawerContent>
+                <DrawerHeader className="pb-0">
+                  <DrawerTitle>Form fields</DrawerTitle>
+                </DrawerHeader>
+                <div className="max-h-[70dvh] overflow-y-auto">
+                  <FormPanel />
+                </div>
+              </DrawerContent>
+            </Drawer>
+
+            <Drawer
+              open={showInspector}
+              onOpenChange={(open) =>
+                dispatch({ type: 'SET_VIEW', patch: { inspector: open } })
+              }
+            >
+              <DrawerContent>
+                <DrawerHeader className="pb-0">
+                  <DrawerTitle>Properties</DrawerTitle>
+                </DrawerHeader>
+                <div className="max-h-[70dvh] overflow-y-auto">
+                  <PropertiesPanel />
+                </div>
+              </DrawerContent>
+            </Drawer>
+          </>
+        )}
 
         {/* A full-window drop affordance, so a drag anywhere reads as valid. */}
         <div
@@ -408,6 +556,11 @@ const WorkspaceInner = ({ mode = 'edit' }: PdfWorkspaceProps) => {
         <CertificateDialog
           open={certificateOpen}
           onOpenChange={setCertificateOpen}
+        />
+
+        <SignatureInspector
+          open={signaturesOpen}
+          onOpenChange={setSignaturesOpen}
         />
 
         <SecurityDialog

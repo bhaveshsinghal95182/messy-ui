@@ -1,6 +1,13 @@
 'use client';
 
-import { Copy, FilePlus2, RotateCcw, RotateCw, Trash2 } from 'lucide-react';
+import {
+  Copy,
+  FilePlus2,
+  MoreHorizontal,
+  RotateCcw,
+  RotateCw,
+  Trash2,
+} from 'lucide-react';
 import { usePdf, usePdfDispatch } from '../pdf-store-provider';
 import { Button } from '@/components/ui/button';
 import {
@@ -8,6 +15,12 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 /**
  * Page operations for the currently selected page.
@@ -16,7 +29,18 @@ import {
  * on page 1 — an unlabelled "delete" that removes a page the user wasn't
  * looking at is the kind of thing that loses work.
  */
-const PageTools = ({ onInsertBlank }: { onInsertBlank: () => void }) => {
+interface PageToolsProps {
+  onInsertBlank: () => void;
+  /**
+   * `menu` collapses the same actions into an overflow dropdown for narrow
+   * screens. They used to be dropped entirely below `lg`, on the claim that the
+   * thumbnail rail's context menu covered them — but that rail is itself hidden
+   * below `md`, so on a phone there was no way to rotate or delete a page.
+   */
+  variant?: 'buttons' | 'menu';
+}
+
+const PageTools = ({ onInsertBlank, variant = 'buttons' }: PageToolsProps) => {
   const dispatch = usePdfDispatch();
   const selectedPageId = usePdf((state) => state.selection.pageId);
   const hasPages = usePdf((state) => state.pages.length > 0);
@@ -64,6 +88,35 @@ const PageTools = ({ onInsertBlank }: { onInsertBlank: () => void }) => {
         target && dispatch({ type: 'DELETE_PAGES', pageIds: [target] }),
     },
   ];
+
+  if (variant === 'menu') {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Page actions"
+            disabled={!hasPages}
+          >
+            <MoreHorizontal className="size-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start">
+          {actions.map(({ label, icon: Icon, disabled: isDisabled, run }) => (
+            <DropdownMenuItem
+              key={label}
+              disabled={isDisabled}
+              onSelect={() => run()}
+            >
+              <Icon className="size-4" />
+              {label}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  }
 
   return (
     <>

@@ -111,6 +111,7 @@ const TOOL_IDS: ToolId[] = [
   'whiteout',
   'redaction',
   'note',
+  'link',
 ];
 
 const toolDefaults = () =>
@@ -151,7 +152,13 @@ export const createInitialState = (): PdfEditorState => ({
   selection: { pageId: null, objectIds: [] },
   activeTool: 'select',
   toolDefaults: toolDefaults(),
-  view: { zoom: 1, fit: 'width', sidebar: 'thumbnails', currentPageId: null },
+  view: {
+    zoom: 1,
+    fit: 'width',
+    sidebar: 'thumbnails',
+    inspector: false,
+    currentPageId: null,
+  },
   history: { past: [], future: [], inTransaction: false },
   dirty: false,
   status: { busy: false, label: '', progress: null },

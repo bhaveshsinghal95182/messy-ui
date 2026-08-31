@@ -526,6 +526,44 @@ export const pdfTools: PdfTool[] = [
     curated: true,
   },
   {
+    slug: 'image-to-pdf',
+    mode: 'image-to-pdf',
+    heading: 'Convert images to a PDF',
+    title: 'JPG to PDF Free - Convert Images in Your Browser',
+    description:
+      'Turn JPGs, PNGs and other images into a single PDF, one page per image. Nothing is uploaded.',
+    intro:
+      'Pick as many images as you like and each becomes a page sized to fit it exactly, with no resampling and no quality loss. Reorder or rotate the pages afterwards, then save.',
+    steps: [
+      'Choose "Turn images into a PDF instead".',
+      'Select every image you want, in the order you want them.',
+      'Reorder or rotate pages in the sidebar if you need to.',
+      'Download the PDF.',
+    ],
+    keywords: [
+      'jpg to pdf',
+      'png to pdf',
+      'image to pdf',
+      'photos to pdf',
+      'convert images to pdf free',
+    ],
+    faq: [
+      PRIVACY_FAQ,
+      {
+        question: 'Are my images re-compressed?',
+        answer:
+          'JPEGs and PNGs are embedded byte for byte, so there is no second round of compression and no quality loss. Other formats are decoded by the browser and re-encoded as PNG, which is lossless.',
+      },
+      {
+        question: 'What page size do I get?',
+        answer:
+          'Each page is sized to its image, so nothing is cropped or letterboxed. If you need a uniform paper size, add the images to an existing document instead.',
+      },
+    ],
+    related: ['pdf-to-image', 'merge', 'compress'],
+    curated: true,
+  },
+  {
     slug: 'extract-text',
     mode: 'extract-text',
     heading: 'Extract text from a PDF',

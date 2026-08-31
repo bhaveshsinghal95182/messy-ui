@@ -26,6 +26,7 @@ const TOOL_KEYS: Record<string, ToolId> = {
   a: 'arrow',
   w: 'whiteout',
   n: 'note',
+  k: 'link',
   x: 'redaction',
 };
 

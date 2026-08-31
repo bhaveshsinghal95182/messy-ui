@@ -88,12 +88,12 @@ messy-ui/
 
 ## Scripts
 
-| Command               | Description                     |
-| --------------------- | ------------------------------- |
-| `pnpm dev`            | Start the development server    |
-| `pnpm build`          | Build for production            |
-| `pnpm start`          | Start the production server     |
-| `pnpm lint`           | Run ESLint                      |
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Start the development server |
+| `pnpm build` | Build for production |
+| `pnpm start` | Start the production server |
+| `pnpm lint` | Run ESLint |
 | `pnpm registry:build` | Build the shadcn registry files |
 
 ## Building the Registry
@@ -105,7 +105,6 @@ pnpm registry:build
 ```
 
 This will:
-
 1. Read all component directories in `registry/new-york/`
 2. Generate individual JSON files in `public/r/`
 3. Update the `registry.json` index file

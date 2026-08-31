@@ -87,7 +87,7 @@ const Toolbar = ({
       role="toolbar"
       aria-label="PDF tools"
       aria-controls="pdf-page-list"
-      className="bg-card flex h-12 shrink-0 items-center gap-1 border-b px-2"
+      className="bg-card flex h-12 shrink-0 items-center gap-1 overflow-x-auto border-b px-2"
     >
       <Tooltip>
         <TooltipTrigger asChild>
@@ -160,7 +160,7 @@ const Toolbar = ({
 
       {/* Annotation tools. The row scrolls horizontally rather than wrapping,
           so a narrow window keeps one toolbar rather than growing a second. */}
-      <div className="flex items-center gap-0.5 overflow-x-auto">
+      <div className="flex shrink-0 items-center gap-0.5">
         <AnnotateTools onAddImage={onAddImage} />
 
         <Tooltip>
@@ -198,10 +198,10 @@ const Toolbar = ({
 
       {/* Page operations: individual buttons when there is room, the same
           actions in an overflow menu when there is not. */}
-      <div className="hidden items-center gap-1 lg:flex">
+      <div className="hidden shrink-0 items-center gap-1 lg:flex">
         <PageTools onInsertBlank={onInsertBlank} />
       </div>
-      <div className="flex items-center lg:hidden">
+      <div className="flex shrink-0 items-center lg:hidden">
         <PageTools onInsertBlank={onInsertBlank} variant="menu" />
       </div>
 
@@ -336,7 +336,7 @@ const Toolbar = ({
         <TooltipContent>Properties</TooltipContent>
       </Tooltip>
 
-      <div className="flex-1" />
+      <div className="min-w-2 flex-1" />
 
       <ZoomControls />
 

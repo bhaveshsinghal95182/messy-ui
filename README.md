@@ -25,6 +25,46 @@ I think AI did a good job in making this code and it can most certainly support 
 
 So, I let you the reader be the judge, should I've used AI in this?
 
+## The PDF toolkit
+
+Alongside the component library, this repo hosts a complete PDF editor at
+[`/pdf`](https://messyui.dev/pdf) that runs **entirely in the browser**. There
+is no upload endpoint and no server-side processing — the file never leaves the
+device it is opened on. You can disconnect from the network after the page
+loads and everything still works.
+
+What it does:
+
+| Area     | Features                                                                                                  |
+| -------- | --------------------------------------------------------------------------------------------------------- |
+| Pages    | Merge, split, extract, reorder, rotate, duplicate, delete, insert blank                                   |
+| Annotate | Text, freehand ink, highlight, shapes, arrows, images, sticky notes, links, whiteout                      |
+| Redact   | Genuine redaction — affected pages are rasterised so the text underneath is destroyed, not merely covered |
+| Sign     | Draw, type or upload a signature, plus real cryptographic PKCS#12 signing and signature verification      |
+| Forms    | Detect, fill and flatten AcroForm fields                                                                  |
+| Security | Set or remove a password, set permissions, strip metadata, sanitise                                       |
+| Convert  | PDF to PNG/JPG, images to PDF, extract text, compress at three tiers                                      |
+| OCR      | Self-hosted Tesseract adds an invisible text layer, making scans searchable                               |
+
+Two things it deliberately does **not** do, because they cannot be done
+honestly client-side: validate a signature's trust chain against AATL or the EU
+trusted lists (that needs network calls we do not make), and arbitrary in-place
+text editing of existing content (subset fonts and reflow make this unreliable
+— it offers whiteout-and-retype instead, and says so).
+
+Every runtime asset, including the pdf.js worker and the Tesseract WASM core
+and language model, is served from this origin rather than a CDN. Fetching
+decoders from jsDelivr while claiming the document never leaves your device
+would be dishonest.
+
+### Licensing
+
+The PDF toolkit is **not** MIT licensed. It is source-available: free to read,
+run and use at messyui.dev, with a commercial licence required to ship it
+inside a product. See [`LICENSE-PDF`](./LICENSE-PDF). Everything else in this
+repository, including the component registry, is MIT — see
+[`LICENSE`](./LICENSE).
+
 ## Getting Started
 
 ### Prerequisites
@@ -88,12 +128,12 @@ messy-ui/
 
 ## Scripts
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Start the development server |
-| `pnpm build` | Build for production |
-| `pnpm start` | Start the production server |
-| `pnpm lint` | Run ESLint |
+| Command               | Description                     |
+| --------------------- | ------------------------------- |
+| `pnpm dev`            | Start the development server    |
+| `pnpm build`          | Build for production            |
+| `pnpm start`          | Start the production server     |
+| `pnpm lint`           | Run ESLint                      |
 | `pnpm registry:build` | Build the shadcn registry files |
 
 ## Building the Registry
@@ -105,6 +145,7 @@ pnpm registry:build
 ```
 
 This will:
+
 1. Read all component directories in `registry/new-york/`
 2. Generate individual JSON files in `public/r/`
 3. Update the `registry.json` index file

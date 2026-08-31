@@ -1,0 +1,59 @@
+messy-ui — licensing summary
+============================
+
+This repository is covered by two licences. Which one applies depends on which
+part of the tree the code lives in.
+
+1. Component registry and site — MIT
+------------------------------------
+
+Everything in this repository EXCEPT the PDF toolkit (see section 2) is
+released under the MIT licence reproduced below. That includes `registry/`,
+which is what `npx shadcn add` copies into your project, and the rest of the
+site.
+
+2. PDF toolkit — separate licence
+---------------------------------
+
+These paths are NOT covered by the MIT licence:
+
+    src/lib/pdf/
+    src/components/pdf/
+    src/app/pdf/
+    scripts/copy-static-assets.mjs
+    scripts/smoke/pdf-smoke.mjs
+
+They are source-available under the terms in `LICENSE-PDF`. In short: read it,
+learn from it, run it yourself, and use the hosted version at
+https://messyui.dev/pdf free of charge forever — but shipping it inside a
+product needs a commercial licence.
+
+Third-party code
+----------------
+
+`src/lib/pdf/sign/placeholder.ts` is derived from @signpdf
+(https://github.com/vbuch/node-signpdf), MIT licensed, and carries its
+attribution in the file header. Runtime dependencies keep their own licences.
+
+
+MIT License
+
+Copyright (c) 2026 Bhavesh Singhal
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

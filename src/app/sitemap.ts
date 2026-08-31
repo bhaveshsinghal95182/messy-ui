@@ -78,6 +78,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Same rule as the timers: unrecognised /pdf/* slugs open a working editor
   // but are noindex, so only the curated tools appear here.
+  const kitPage: MetadataRoute.Sitemap = [
+    {
+      url: absoluteUrl('/pdf/kit'),
+      lastModified: currentDate,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    },
+  ];
+
   const pdfToolPages: MetadataRoute.Sitemap = curatedPdfTools.map((tool) => ({
     url: absoluteUrl(`/pdf/${tool.slug}`),
     lastModified: currentDate,
@@ -91,5 +100,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...categoryPages,
     ...timerPages,
     ...pdfToolPages,
+    ...kitPage,
   ];
 }

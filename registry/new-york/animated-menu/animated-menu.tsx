@@ -19,6 +19,12 @@ export default function AnimatedMenu({ menuItems }: AnimatedMenuProps) {
   return (
     <>
       <button
+        type="button"
+        // The trigger renders two bars and no text, so it needs an explicit
+        // name and state - without them it reaches assistive tech as an
+        // unlabelled button with no indication of whether the menu is open.
+        aria-label={isActive ? 'Close menu' : 'Open menu'}
+        aria-expanded={isActive}
         className="m-5 w-14 h-14 bg-rose-600 rounded-2xl flex items-center justify-center z-10 relative"
         onClick={() => setIsActive((prev) => !prev)}
       >

@@ -45,6 +45,9 @@ const CommandBlock = ({
     <div className={cn('flex items-center justify-between', className)}>
       <div className="flex-1 overflow-x-auto">
         <SyntaxHighlighter
+          tabIndex={0}
+          role="region"
+          aria-label="Command"
           language="bash"
           style={theme as Record<string, React.CSSProperties>}
           customStyle={{
@@ -68,6 +71,8 @@ const CommandBlock = ({
           variant="ghost"
           size="sm"
           onClick={onCopy}
+          // Icon-only, so it needs an explicit name for screen readers.
+          aria-label={copied ? 'Command copied' : 'Copy command'}
           className="h-7 px-2 ml-4 shrink-0"
         >
           {copied ? (

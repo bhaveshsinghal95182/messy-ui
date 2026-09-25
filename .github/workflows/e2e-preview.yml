@@ -1,0 +1,50 @@
+name: E2E against preview deployment
+
+# Vercel reports each preview build back to GitHub as a deployment status.
+# Running the suite against that URL exercises the real build output -
+# redirects, metadata routes, static generation - rather than a local server.
+on:
+  deployment_status:
+
+concurrency:
+  group: e2e-preview-${{ github.event.deployment_status.target_url }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    name: E2E (preview)
+    if: github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run E2E against the preview URL
+        env:
+          BASE_URL: ${{ github.event.deployment_status.target_url }}
+        run: pnpm test:e2e --project=chromium
+
+      - name: Upload report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-preview
+          path: playwright-report/
+          retention-days: 7

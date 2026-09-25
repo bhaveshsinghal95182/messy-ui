@@ -1,11 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Search, Menu, X } from 'lucide-react';
+import { ChevronDown, Menu, Search, Timer, Wrench, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/layout/theme-toggle';
 import GithubIcon from '@/components/ui/github-icon';
 import { AnimatedIconHandle } from '@/components/ui/types';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import {
   CommandDialog,
   CommandEmpty,
@@ -15,6 +22,7 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { components, categories } from '@/config/components';
+import { availableTools } from '@/config/tools';
 
 interface HeaderProps {
   onMenuToggle?: () => void;
@@ -50,6 +58,10 @@ const Header = ({ onMenuToggle, isSidebarOpen }: HeaderProps) => {
           <Button
             variant="ghost"
             size="sm"
+            // Icon-only: without a name and a state this reaches assistive
+            // tech as an unlabelled button that gives no hint of what it does.
+            aria-label={isSidebarOpen ? 'Close navigation' : 'Open navigation'}
+            aria-expanded={isSidebarOpen}
             className="h-9 w-9 p-0"
             onClick={onMenuToggle}
           >
@@ -61,13 +73,21 @@ const Header = ({ onMenuToggle, isSidebarOpen }: HeaderProps) => {
           </Button>
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 font-semibold">
+          {/* The wordmark is hidden below `sm`, so without an explicit name
+              this link reaches assistive tech as a bare graphic on mobile. */}
+          <Link
+            href="/"
+            aria-label="messy-ui home"
+            className="flex items-center gap-2 font-semibold"
+          >
             <svg
               width="20"
               height="21"
               viewBox="0 0 460 480"
               className="text-primary"
               fill="currentColor"
+              aria-hidden="true"
+              focusable="false"
             >
               <path d="M 42 10 L 98 10 A 32 32 0 0 1 130 42 L 130 438 A 32 32 0 0 1 98 470 L 42 470 A 32 32 0 0 1 10 438 L 10 42 A 32 32 0 0 1 42 10 Z" />
               <path d="M 362 10 L 418 10 A 32 32 0 0 1 450 42 L 450 438 A 32 32 0 0 1 418 470 L 362 470 A 32 32 0 0 1 330 438 L 330 42 A 32 32 0 0 1 362 10 Z" />
@@ -99,13 +119,55 @@ const Header = ({ onMenuToggle, isSidebarOpen }: HeaderProps) => {
           {/* Spacer */}
           <div className="flex-1" />
 
+          {/* Standalone tools */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="h-9 gap-1.5 px-2 sm:px-3"
+                aria-label="Browse tools"
+              >
+                <Wrench className="h-4 w-4" aria-hidden="true" />
+                <span className="hidden md:inline">Tools</span>
+                <ChevronDown
+                  className="hidden h-3.5 w-3.5 text-muted-foreground md:block"
+                  aria-hidden="true"
+                />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-72">
+              <DropdownMenuLabel>Available tools</DropdownMenuLabel>
+              {availableTools.map((tool) => (
+                <DropdownMenuItem key={tool.href} asChild>
+                  <Link href={tool.href} className="items-start gap-3 py-2.5">
+                    <Timer
+                      className="mt-0.5 h-4 w-4 text-primary"
+                      aria-hidden="true"
+                    />
+                    <span className="grid gap-0.5">
+                      <span className="font-medium text-foreground">
+                        {tool.name}
+                      </span>
+                      <span className="text-xs leading-4 text-muted-foreground">
+                        {tool.description}
+                      </span>
+                    </span>
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           {/* Search */}
           <Button
             variant="outline"
+            // Below `sm` the label and the shortcut hint are both hidden, so
+            // the button collapses to a bare icon with no accessible name.
+            aria-label="Search components"
             className="relative h-9 w-9 p-0 sm:w-64 sm:justify-start sm:px-3 sm:py-2"
             onClick={() => setSearchOpen(true)}
           >
-            <Search className="h-4 w-4 sm:mr-2" />
+            <Search className="h-4 w-4 sm:mr-2" aria-hidden="true" />
             <span className="hidden sm:inline-flex text-muted-foreground text-sm">
               Search components...
             </span>

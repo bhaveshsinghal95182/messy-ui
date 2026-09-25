@@ -59,8 +59,12 @@
       ],
       "css": {
         "@keyframes shimmer": {
-          "0%": { "background-position": "200% 0" },
-          "100%": { "background-position": "-200% 0" }
+          "0%": {
+            "background-position": "200% 0"
+          },
+          "100%": {
+            "background-position": "-200% 0"
+          }
         },
         ".animate-shimmer": {
           "animation": "shimmer 1s infinite linear",
@@ -112,6 +116,19 @@
         {
           "path": "registry/new-york/cta-button/utils.ts",
           "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "progress-bar",
+      "type": "registry:component",
+      "title": "Progress Bar",
+      "description": "A reading progress bar that visualizes scroll position, driven by Framer Motion scroll progress.",
+      "dependencies": ["motion"],
+      "files": [
+        {
+          "path": "registry/new-york/progress-bar/progress-bar.tsx",
+          "type": "registry:component"
         }
       ]
     },

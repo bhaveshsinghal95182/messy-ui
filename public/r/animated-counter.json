@@ -4,7 +4,9 @@
   "type": "registry:component",
   "title": "Animated Counter",
   "description": "A number counter with odometer-style digit rotation animation using GSAP. Perfect for statistics, metrics, and dashboard displays.",
-  "dependencies": ["gsap"],
+  "dependencies": [
+    "gsap"
+  ],
   "files": [
     {
       "path": "registry/new-york/animated-counter/animated-counter.tsx",

@@ -13,17 +13,17 @@ flowchart TB
         COMPONENT["component.tsx"]
         INDEX["index.ts"]
     end
-    
+
     subgraph Config["📁 src/config/"]
         COMPONENTS_TS["components.ts"]
         TYPES["types.ts"]
     end
-    
+
     subgraph Page["📁 src/app/components/[slug]/"]
         PAGE["page.tsx"]
         ANIMATED["animated-content.tsx"]
     end
-    
+
     subgraph DocsComponents["📁 src/components/docs/"]
         PREVIEW["components-preview.tsx"]
         INSTALL["installation-section.tsx"]
@@ -74,11 +74,11 @@ sequenceDiagram
     Config->>Registry: Import meta, usageCode, componentCode
     Registry-->>Config: Return exports
     Config-->>Page: Return ComponentConfig
-    
+
     Page->>Preview: Pass ComponentConfig
     Preview->>Preview: Render lazy component
     Preview->>Preview: Display usageCode in Code tab
-    
+
     Page->>Install: Pass ComponentConfig
     Install->>Install: Generate CLI commands from registryUrl
     Install->>Install: Display componentCode for manual install
@@ -92,6 +92,7 @@ sequenceDiagram
 The `meta.ts` file is the central configuration for each component. It exports three things:
 
 ### 1. `usageCode` (string)
+
 A short, practical usage example shown in the **Preview → Code** tab.
 
 ```typescript
@@ -109,16 +110,17 @@ export default function ContentDivider() {
 ```
 
 ### 2. `componentFiles` (ComponentFileRef[])
+
 File references for **build-time loading**. Instead of duplicating component code as a string, you reference the actual source files:
 
 ```typescript
-import { ComponentFileRef } from "@/config/types";
+import { ComponentFileRef } from '@/config/types';
 
 export const componentFiles: ComponentFileRef[] = [
   {
-    filename: "separator.tsx",
-    targetPath: "ui/separator.tsx",
-    sourcePath: "./separator.tsx",
+    filename: 'separator.tsx',
+    targetPath: 'ui/separator.tsx',
+    sourcePath: './separator.tsx',
   },
 ];
 ```
@@ -126,50 +128,51 @@ export const componentFiles: ComponentFileRef[] = [
 These files are loaded at build time using `fs.readFileSync` in `components.ts`, keeping your code DRY.
 
 ### 3. `meta` (ComponentMeta)
+
 Configuration object with all metadata:
 
 ```typescript
 const meta: ComponentMeta = {
   // Identity
-  slug: "separator",
-  name: "Separator",
-  category: "Layout",
-  aliases: ["divider", "wobble-separator"],
-  
+  slug: 'separator',
+  name: 'Separator',
+  category: 'Layout',
+  aliases: ['divider', 'wobble-separator'],
+
   // SEO
-  seoTitle: "Separator - Interactive Wobble Animation | messy-ui",
-  seoDescription: "An interactive separator component...",
-  keywords: ["separator", "divider", "wobble animation"],
-  
+  seoTitle: 'Separator - Interactive Wobble Animation | messy-ui',
+  seoDescription: 'An interactive separator component...',
+  keywords: ['separator', 'divider', 'wobble animation'],
+
   // Behavior
-  sandbox: "inline",  // or "iframe" for isolated preview
-  registryUrl: "https://messyui.dev/r/separator.json",
-  
+  sandbox: 'inline', // or "iframe" for isolated preview
+  registryUrl: 'https://messyui.dev/r/separator.json',
+
   // Dependencies
-  dependencies: ["gsap"],
-  cliDependencies: [],  // For shadcn or other CLI installs
-  
+  dependencies: ['gsap'],
+  cliDependencies: [], // For shadcn or other CLI installs
+
   // UI Configuration
   props: [
     {
-      name: "baseY",
-      type: "number",
-      default: "50",
-      description: "Vertical position of the line",
-      control: "slider",
+      name: 'baseY',
+      type: 'number',
+      default: '50',
+      description: 'Vertical position of the line',
+      control: 'slider',
       min: 10,
       max: 90,
       step: 5,
     },
     // ... more props
   ],
-  
+
   // Optional
   notes: [
-    { type: "tip", message: "Adjust damping for more bounce." },
-    { type: "info", message: "Uses GSAP for animations." },
+    { type: 'tip', message: 'Adjust damping for more bounce.' },
+    { type: 'info', message: 'Uses GSAP for animations.' },
   ],
-  snippets: [],  // Additional CSS or config files
+  snippets: [], // Additional CSS or config files
 };
 ```
 
@@ -184,7 +187,7 @@ flowchart LR
     META["meta.ts<br/>usageCode"] --> CONFIG["components.ts<br/>ComponentConfig"]
     CONFIG --> PREVIEW["ComponentPreview"]
     PREVIEW --> CODE_TAB["Code Tab"]
-    
+
     style CODE_TAB fill:#4ade80,stroke:#22c55e
 ```
 
@@ -200,7 +203,7 @@ flowchart LR
     LOADER --> CONFIG["components.ts<br/>ComponentConfig"]
     CONFIG --> INSTALL["InstallationSection"]
     INSTALL --> MANUAL["Manual Tab"]
-    
+
     style LOADER fill:#fbbf24,stroke:#f59e0b
     style MANUAL fill:#60a5fa,stroke:#3b82f6
 ```
@@ -211,22 +214,22 @@ The `componentFiles` references are resolved at build time by `loadComponentFile
 
 ### Where `meta` Properties Go
 
-| Property | Used By | Purpose |
-|----------|---------|---------|
-| `slug` | URL routing | `/components/[slug]` |
-| `name` | Header, cards | Display name |
-| `category` | Filtering | Component gallery |
-| `aliases` | URL routing | Redirect old URLs |
-| `seoTitle` | `<title>` | Browser tab + Google |
-| `seoDescription` | `<meta>` | Search results |
-| `keywords` | Badge display | Tags under component |
-| `sandbox` | Preview | `inline` or `iframe` |
-| `registryUrl` | CLI tab | `npx shadcn add [url]` |
-| `dependencies` | Manual tab | `npm install [deps]` |
-| `cliDependencies` | Manual tab | Pre-install commands |
-| `props` | PropsTable | Documentation + Playground |
-| `notes` | Above tabs | Info/warning/tip boxes |
-| `snippets` | Manual tab | Additional code (CSS, etc.) |
+| Property          | Used By       | Purpose                     |
+| ----------------- | ------------- | --------------------------- |
+| `slug`            | URL routing   | `/components/[slug]`        |
+| `name`            | Header, cards | Display name                |
+| `category`        | Filtering     | Component gallery           |
+| `aliases`         | URL routing   | Redirect old URLs           |
+| `seoTitle`        | `<title>`     | Browser tab + Google        |
+| `seoDescription`  | `<meta>`      | Search results              |
+| `keywords`        | Badge display | Tags under component        |
+| `sandbox`         | Preview       | `inline` or `iframe`        |
+| `registryUrl`     | CLI tab       | `npx shadcn add [url]`      |
+| `dependencies`    | Manual tab    | `npm install [deps]`        |
+| `cliDependencies` | Manual tab    | Pre-install commands        |
+| `props`           | PropsTable    | Documentation + Playground  |
+| `notes`           | Above tabs    | Info/warning/tip boxes      |
+| `snippets`        | Manual tab    | Additional code (CSS, etc.) |
 
 ---
 
@@ -239,25 +242,25 @@ flowchart TB
         A2["Create meta.ts"]
         A3["Create index.ts"]
     end
-    
+
     subgraph Step2["Step 2: Export from index.ts"]
         B1["export { Component }"]
         B2["export { meta, usageCode, componentFiles }"]
     end
-    
+
     subgraph Step3["Step 3: Register in components.ts"]
         C1["Import from registry"]
         C2["Create lazy component"]
         C3["Call buildComponentConfig()"]
         C4["Add to components array"]
     end
-    
+
     subgraph Step4["Step 4: Available on Website"]
         D1["/components/[slug]"]
         D2["Gallery cards"]
         D3["Search results"]
     end
-    
+
     A1 --> B1
     A2 --> B2
     A3 --> Step3
@@ -274,7 +277,7 @@ flowchart TB
 In `src/config/components.ts`, the `buildComponentConfig` function merges everything:
 
 ```typescript
-import { loadComponentFiles, getRegistryPath } from "@/lib/component-loader";
+import { loadComponentFiles, getRegistryPath } from '@/lib/component-loader';
 
 function buildComponentConfig(
   meta: ComponentMeta,
@@ -283,10 +286,10 @@ function buildComponentConfig(
   componentCode: string | ComponentFile[]
 ): ComponentConfig {
   return {
-    ...meta,           // All metadata properties
-    component,         // Lazy-loaded React component
-    usageCode,         // Short usage example
-    componentCode,     // Full source for manual install
+    ...meta, // All metadata properties
+    component, // Lazy-loaded React component
+    usageCode, // Short usage example
+    componentCode, // Full source for manual install
   };
 }
 
@@ -295,7 +298,7 @@ buildComponentConfig(
   separatorMeta,
   Separator,
   separatorUsage,
-  loadComponentFiles(getRegistryPath("separator"), separatorFiles)
+  loadComponentFiles(getRegistryPath('separator'), separatorFiles)
 );
 ```
 
@@ -304,7 +307,9 @@ buildComponentConfig(
 ## Type Definitions
 
 ### ComponentMeta
+
 Static metadata stored in `meta.ts`:
+
 - Identity (slug, name, category, aliases)
 - SEO (seoTitle, seoDescription, keywords)
 - Configuration (sandbox, registryUrl)
@@ -313,7 +318,9 @@ Static metadata stored in `meta.ts`:
 - Optional (notes, snippets, thumbnailUrl)
 
 ### ComponentConfig
+
 Full config with component + code:
+
 - Everything from `ComponentMeta`
 - `component`: React component reference
 - `usageCode`: Preview code example
@@ -326,26 +333,26 @@ Full config with component + code:
 ```mermaid
 flowchart TB
     CONFIG["ComponentConfig"]
-    
+
     subgraph PreviewComponent["ComponentPreview"]
         TABS["Tabs: Preview | Code"]
-        
+
         subgraph PreviewTab["Preview Tab"]
             LAZY["Lazy load component"]
             DEVICE["DeviceFrame (desktop/tablet/mobile)"]
             PLAYGROUND["InteractivePropsPlayground"]
         end
-        
+
         subgraph CodeTab["Code Tab"]
             USAGE["Display usageCode"]
             SYNTAX["Syntax highlighting"]
         end
     end
-    
+
     CONFIG --> TABS
     TABS --> PreviewTab
     TABS --> CodeTab
-    
+
     LAZY --> DEVICE
     DEVICE --> PLAYGROUND
 ```
@@ -357,17 +364,17 @@ flowchart TB
 ```mermaid
 flowchart TB
     CONFIG["ComponentConfig"]
-    
+
     subgraph InstallSection["InstallationSection"]
         TABS2["Tabs: CLI | Manual"]
-        
+
         subgraph CLITab["CLI Tab"]
             REG_URL["registryUrl"]
             NPX["npx shadcn add [url]"]
             PNPM["pnpm dlx shadcn add [url]"]
             BUN["bunx shadcn add [url]"]
         end
-        
+
         subgraph ManualTab["Manual Tab"]
             STEP1["1. CLI Dependencies (shadcn, etc.)"]
             STEP2["2. NPM Dependencies"]
@@ -375,11 +382,11 @@ flowchart TB
             STEP4["4. Additional Snippets"]
         end
     end
-    
+
     CONFIG --> TABS2
     TABS2 --> CLITab
     TABS2 --> ManualTab
-    
+
     REG_URL --> NPX
     REG_URL --> PNPM
     REG_URL --> BUN
@@ -389,12 +396,12 @@ flowchart TB
 
 ## Quick Reference
 
-| What you want | Where it's defined | Where it's displayed |
-|---------------|-------------------|---------------------|
-| Live component preview | `[component].tsx` | Preview tab |
-| Short usage example | `meta.ts → usageCode` | Code tab |
-| Full component source | `meta.ts → componentCode` | Manual install |
-| CLI install command | `meta.ts → registryUrl` | CLI tab |
-| Props documentation | `meta.ts → props[]` | Props table + playground |
-| Dependencies | `meta.ts → dependencies` | Manual install step |
-| Notes/warnings | `meta.ts → notes[]` | Above installation tabs |
+| What you want          | Where it's defined        | Where it's displayed     |
+| ---------------------- | ------------------------- | ------------------------ |
+| Live component preview | `[component].tsx`         | Preview tab              |
+| Short usage example    | `meta.ts → usageCode`     | Code tab                 |
+| Full component source  | `meta.ts → componentCode` | Manual install           |
+| CLI install command    | `meta.ts → registryUrl`   | CLI tab                  |
+| Props documentation    | `meta.ts → props[]`       | Props table + playground |
+| Dependencies           | `meta.ts → dependencies`  | Manual install step      |
+| Notes/warnings         | `meta.ts → notes[]`       | Above installation tabs  |

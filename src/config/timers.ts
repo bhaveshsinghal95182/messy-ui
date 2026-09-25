@@ -552,9 +552,22 @@ export const TIMER_ALIASES: Record<string, string> = {
   'interview-timer': 'coding-interview-timer',
 };
 
+/**
+ * decodeURIComponent throws on malformed input, and a hand-typed URL like
+ * /timer/%25 reaches us as a bare "%". Fall back to the raw slug so the page
+ * still renders a working default instead of a 500.
+ */
+export const safeDecodeSlug = (slug: string) => {
+  try {
+    return decodeURIComponent(slug);
+  } catch {
+    return slug;
+  }
+};
+
 /** Resolves any slug to a timer, curated or derived. Never throws. */
 export function resolveTimer(slug: string): TimerPreset {
-  const normalised = decodeURIComponent(slug).toLowerCase();
+  const normalised = safeDecodeSlug(slug).toLowerCase();
 
   const curated = TIMER_INDEX.get(normalised);
   if (curated) return curated;

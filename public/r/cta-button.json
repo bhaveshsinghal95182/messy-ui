@@ -4,7 +4,12 @@
   "type": "registry:component",
   "title": "CTA Button",
   "description": "An animated call-to-action button with a traveling arrow and expanding background effect. Uses mix-blend-mode for automatic light/dark theme support.",
-  "dependencies": ["motion", "lucide-react", "clsx", "tailwind-merge"],
+  "dependencies": [
+    "motion",
+    "lucide-react",
+    "clsx",
+    "tailwind-merge"
+  ],
   "files": [
     {
       "path": "registry/new-york/cta-button/cta-button.tsx",

@@ -7,6 +7,7 @@ import { gruvboxDark, gruvboxLight } from '@/lib/gruvbox-theme';
 import { Check, Copy, Code } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 
 // Client-side only check using useSyncExternalStore
 const emptySubscribe = () => () => {};
@@ -30,7 +31,7 @@ const CodeBlock = ({
   collapsible = false,
   maxHeight = '400px',
 }: CodeBlockProps) => {
-  const [copied, setCopied] = useState(false);
+  const { copy, isCopied } = useCopyToClipboard();
   const [isExpanded, setIsExpanded] = useState(true);
   const { resolvedTheme } = useTheme();
 
@@ -42,12 +43,6 @@ const CodeBlock = ({
   );
 
   const isDark = isClient && resolvedTheme === 'dark';
-
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
 
   const theme = isDark ? gruvboxDark : gruvboxLight;
 
@@ -75,10 +70,12 @@ const CodeBlock = ({
           <Button
             variant="ghost"
             size="sm"
-            onClick={handleCopy}
+            onClick={() => void copy(code)}
+            // Icon-only, so it needs an explicit name for screen readers.
+            aria-label={isCopied() ? 'Code copied' : 'Copy code'}
             className="h-7 px-2"
           >
-            {copied ? (
+            {isCopied() ? (
               <Check className="w-4 h-4 text-green-500" />
             ) : (
               <Copy className="w-4 h-4" />
@@ -96,6 +93,12 @@ const CodeBlock = ({
         style={{ maxHeight: isExpanded ? maxHeight : 0 }}
       >
         <SyntaxHighlighter
+          // Forwarded onto the <pre>. It scrolls horizontally on narrow
+          // screens, so it has to be focusable and named or a keyboard user
+          // cannot reach the end of a long line.
+          tabIndex={0}
+          role="region"
+          aria-label={`${language} code`}
           language={language === 'tsx' ? 'typescript' : language}
           style={theme as Record<string, React.CSSProperties>}
           showLineNumbers={showLineNumbers}

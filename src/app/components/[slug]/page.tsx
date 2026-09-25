@@ -1,14 +1,11 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
+import { notFound, redirect } from 'next/navigation';
 import {
   getComponentBySlugOrAlias,
   getAllSlugsAndAliases,
   components,
 } from '@/config/components';
 import { resolveComponentCode } from '@/lib/component-loader';
-import { Button } from '@/components/ui/button';
 import JsonLd from '@/components/seo/json-ld';
 import {
   absoluteUrl,
@@ -77,22 +74,10 @@ export default async function ComponentPage({ params }: PageProps) {
   const component = getComponentBySlugOrAlias(slug);
 
   if (!component) {
-    return (
-      <div className="text-center py-12">
-        <h1 className="text-2xl font-bold text-foreground mb-4">
-          Component Not Found
-        </h1>
-        <p className="text-muted-foreground mb-6">
-          The component you&apos;re looking for doesn&apos;t exist.
-        </p>
-        <Button asChild>
-          <Link href="/">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Gallery
-          </Link>
-        </Button>
-      </div>
-    );
+    // notFound(), not a rendered "not found" page: returning 200 with
+    // "Component Not Found" copy is a soft 404, which search engines index as
+    // a real page and count against the site as thin content.
+    notFound();
   }
 
   // Redirect aliases to canonical URL for SEO

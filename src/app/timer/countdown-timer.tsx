@@ -35,9 +35,10 @@ const BLINK_THRESHOLD_MS = 10_000;
 /** Floor for the custom input only - a preset may be shorter than a minute. */
 const MIN_CUSTOM_MINUTES = 1;
 
-const minutesToMs = (minutes: number) => Math.round(minutes * 60 * 1000);
+/** Exported for unit tests - the boundaries below are easy to get subtly wrong. */
+export const minutesToMs = (minutes: number) => Math.round(minutes * 60 * 1000);
 
-const formatTime = (ms: number) => {
+export const formatTime = (ms: number) => {
   const total = Math.ceil(ms / 1000);
   const hours = Math.floor(total / 3600);
   const minutes = Math.floor((total % 3600) / 60);
@@ -311,6 +312,8 @@ const CountdownTimer = ({
         <div
           className="h-1 w-[min(70vw,32rem)] overflow-hidden rounded-full bg-border"
           role="progressbar"
+          // A progressbar without a name is announced as a bare percentage.
+          aria-label={`${heading} progress`}
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={Math.round(progress * 100)}

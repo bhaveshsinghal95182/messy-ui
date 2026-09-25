@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import React, { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { getComponentBySlugOrAlias } from '@/config/components';
+import { decodePreviewProps } from '@/lib/preview-props';
 import { Loader2 } from 'lucide-react';
 
 // Bare component renderer for the docs iframe - it duplicates the content of
@@ -29,34 +30,7 @@ export default async function PreviewPage({
 
   const Component = component.component;
 
-  const props: Record<string, unknown> = {};
-
-  for (const [key, value] of Object.entries(resolvedSearchParams)) {
-    if (value === undefined) continue;
-    const stringValue = Array.isArray(value) ? value[0] : value;
-
-    if (stringValue === 'true') props[key] = true;
-    else if (stringValue === 'false') props[key] = false;
-    else {
-      try {
-        if (
-          (stringValue.startsWith('[') && stringValue.endsWith(']')) ||
-          (stringValue.startsWith('{') && stringValue.endsWith('}'))
-        ) {
-          props[key] = JSON.parse(stringValue);
-        } else {
-          const num = parseFloat(stringValue);
-          if (!isNaN(num) && stringValue.trim() !== '') {
-            props[key] = num;
-          } else {
-            props[key] = stringValue;
-          }
-        }
-      } catch {
-        props[key] = stringValue;
-      }
-    }
-  }
+  const props = decodePreviewProps(resolvedSearchParams);
 
   return (
     <div className="min-h-screen bg-background text-foreground antialiased">

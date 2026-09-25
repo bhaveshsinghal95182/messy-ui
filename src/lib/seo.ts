@@ -56,7 +56,17 @@ export { toCategorySlug, categoryPath } from './category';
  * resolve - the page then redirects anything non-canonical to the real slug.
  */
 export function getCategoryBySlug(slug: string): string | undefined {
-  const normalised = toCategorySlug(decodeURIComponent(slug));
+  // decodeURIComponent throws on malformed input, and a hand-typed URL like
+  // /components/category/%25 reaches us as a bare "%". A bad slug should miss
+  // and 404, not 500.
+  let decoded: string;
+  try {
+    decoded = decodeURIComponent(slug);
+  } catch {
+    decoded = slug;
+  }
+
+  const normalised = toCategorySlug(decoded);
   return categories.find((category) => toCategorySlug(category) === normalised);
 }
 

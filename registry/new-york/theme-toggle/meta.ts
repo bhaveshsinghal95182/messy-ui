@@ -19,6 +19,16 @@ export const componentFiles: ComponentFileRef[] = [
     targetPath: 'ui/theme-toggle.tsx',
     sourcePath: './theme-toggle.tsx',
   },
+  {
+    filename: 'theme-toggle.css',
+    targetPath: 'ui/theme-toggle.css',
+    sourcePath: './theme-toggle.css',
+  },
+  {
+    filename: 'utils.ts',
+    targetPath: 'lib/utils.ts',
+    sourcePath: './utils.ts',
+  },
 ];
 
 // CSS code for manual installation
@@ -120,7 +130,7 @@ const meta: ComponentMeta = {
     'A theme toggle button with a stunning clip-path view transition animation. The theme change expands from the button in a smooth circular reveal effect.',
   seoTitle: 'Theme Toggle - React Component | messy-ui',
   seoDescription:
-    'A beautiful animated theme toggle with clip-path view transition. Smooth circular reveal animation when switching between dark and light mode. Self-contained CSS. Works with next-themes.',
+    'An animated theme toggle with a clip-path view transition - a circular reveal when switching dark and light mode. Self-contained CSS, works with next-themes.',
   keywords: [
     'theme toggle',
     'dark mode toggle',

@@ -36,6 +36,11 @@ export const componentFiles: ComponentFileRef[] = [
     targetPath: 'ui/hold-button.tsx',
     sourcePath: './hold-button.tsx',
   },
+  {
+    filename: 'utils.ts',
+    targetPath: 'lib/utils.ts',
+    sourcePath: './utils.ts',
+  },
 ];
 
 const meta: ComponentMeta = {
@@ -46,7 +51,7 @@ const meta: ComponentMeta = {
     'A confirmation button that fills up while being held, perfect for destructive or irreversible actions. Prevents accidental clicks by requiring a sustained press.',
   seoTitle: 'Hold Button - React Component | messy-ui',
   seoDescription:
-    'A hold-to-confirm button component with smooth fill animation for destructive actions. Prevents accidental clicks by requiring users to hold the button. Includes multiple variants, sizes, and visual feedback. Copy the code and use in your React project.',
+    'A hold-to-confirm button with a smooth fill animation that prevents accidental clicks on destructive actions. Multiple variants, sizes, and visual feedback.',
   keywords: [
     'hold button',
     'hold to confirm',
@@ -144,6 +149,7 @@ const meta: ComponentMeta = {
       default: '"destructive"',
       description: 'Visual style variant of the button',
       control: 'select',
+      options: ['destructive', 'warning', 'default'],
     },
     {
       name: 'size',
@@ -151,6 +157,7 @@ const meta: ComponentMeta = {
       default: '"md"',
       description: 'Size of the button',
       control: 'select',
+      options: ['sm', 'md', 'lg'],
     },
     {
       name: 'disabled',

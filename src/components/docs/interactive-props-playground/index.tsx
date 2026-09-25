@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { Copy, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { InteractivePropsPlaygroundProps } from './types';
 import { parseDefaultValue, generateUsageCode } from './utils';
 import { PropControl } from './controls';
 import RichTextLinks from '../rich-text-links';
+import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 
 export default function InteractivePropsPlayground({
   props,
@@ -14,7 +15,7 @@ export default function InteractivePropsPlayground({
   currentProps,
   componentName,
 }: InteractivePropsPlaygroundProps) {
-  const [copied, setCopied] = useState(false);
+  const { copy, isCopied } = useCopyToClipboard();
 
   const handleChange = useCallback(
     (name: string, value: unknown) => {
@@ -23,16 +24,9 @@ export default function InteractivePropsPlayground({
     [currentProps, onPropsChange]
   );
 
-  const handleCopyCode = useCallback(async () => {
-    const code = generateUsageCode(componentName, currentProps, props);
-    try {
-      await navigator.clipboard.writeText(code);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy code:', err);
-    }
-  }, [componentName, currentProps, props]);
+  const handleCopyCode = useCallback(() => {
+    void copy(generateUsageCode(componentName, currentProps, props));
+  }, [copy, componentName, currentProps, props]);
 
   // Filter out callback props
   const configurableProps = props.filter((p) => !p.type.includes('=>'));
@@ -57,7 +51,7 @@ export default function InteractivePropsPlayground({
           onClick={handleCopyCode}
           className="h-7 gap-1.5 text-xs"
         >
-          {copied ? (
+          {isCopied() ? (
             <>
               <Check className="h-3.5 w-3.5" />
               Copied!

@@ -34,7 +34,11 @@
   --popover-foreground: #141414;
 
   /* Slate blue is the brand accent — use text-primary / border-primary / ring-primary */
-  --primary: #4f6d7a;
+  /* Darkened from #4f6d7a: as link text it measured 4.30 on --background
+     and 4.02 on --card, both under the 4.5 AA threshold. Same hue, 10%
+     darker, now 5.04 and 4.72 - and it also improves
+     --primary-foreground on --primary, from 5.3 to 5.9. */
+  --primary: #47626e;
   --primary-foreground: #f5f5ed;
 
   --secondary: #d5d6c8;
@@ -49,6 +53,14 @@
   --accent-foreground: #141414;
 
   --destructive: #c8553d;
+
+  /* Callout tints are label text at 11px, so they need the 4.5:1 text
+     threshold rather than the 3:1 that suits the --chart-* tokens they used
+     to borrow. Same hues, darkened until they clear it on the tinted callout
+     background. */
+  --callout-tint-info: #445e69;
+  --callout-tint-tip: #4a5f4c;
+  --callout-tint-warning: #943f2d;
 
   --border: #c0c1b7;
   --input: #c0c1b7;
@@ -66,7 +78,7 @@
 
   --sidebar: #dcddd0;
   --sidebar-foreground: #141414;
-  --sidebar-primary: #4f6d7a;
+  --sidebar-primary: #47626e;
   --sidebar-primary-foreground: #f5f5ed;
   --sidebar-accent: #cdd2ca;
   --sidebar-accent-foreground: #141414;
@@ -110,6 +122,10 @@
   --accent-foreground: #edeee2;
 
   --destructive: #ec8f79;
+
+  --callout-tint-info: #82a6b5;
+  --callout-tint-tip: #90b492;
+  --callout-tint-warning: #ec8f79;
 
   --border: #34352d;
   --input: #34352d;
@@ -316,11 +332,11 @@
 }
 
 .callout-info {
-  --callout-tint: var(--chart-1);
+  --callout-tint: var(--callout-tint-info);
 }
 .callout-tip {
-  --callout-tint: var(--chart-2);
+  --callout-tint: var(--callout-tint-tip);
 }
 .callout-warning {
-  --callout-tint: var(--destructive);
+  --callout-tint: var(--callout-tint-warning);
 }

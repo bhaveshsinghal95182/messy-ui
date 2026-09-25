@@ -70,7 +70,8 @@ const meta: ComponentMeta = {
       default:
         '[{ "title": "Home", "href": "/" }, { "title": "Work", "href": "/work" }, { "title": "About", "href": "/about" }]',
       control: 'object-array',
-      description: '',
+      description:
+        'Links shown in the menu, each with a title and an href. Rendered in order, with a staggered entrance.',
     },
   ],
 };

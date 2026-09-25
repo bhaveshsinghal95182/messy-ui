@@ -8,6 +8,12 @@ function Table({ className, ...props }: React.ComponentProps<'table'>) {
   return (
     <div
       data-slot="table-container"
+      // A horizontally scrolling region has to be focusable, or a keyboard
+      // user cannot reach the columns that overflow. The role and label are
+      // what stop the focus stop from being announced as an unlabelled group.
+      tabIndex={0}
+      role="region"
+      aria-label="Table, scrollable"
       className="relative w-full overflow-x-auto"
     >
       <table

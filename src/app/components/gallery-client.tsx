@@ -205,7 +205,10 @@ function ComponentCard({ component }: ComponentCardProps) {
                   <div className="w-16 h-16 rounded-xl bg-background/50 border-2 border-dashed border-current flex items-center justify-center mb-3">
                     <ImageIcon className="w-8 h-8" />
                   </div>
-                  <span className="text-xs font-medium uppercase tracking-wider">
+                  {/* Full opacity, unlike the icon above it: at
+                      text-muted-foreground/50 this label measured 2.54:1,
+                      under the 4.5 AA threshold for text. */}
+                  <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground group-hover:text-primary">
                     Preview
                   </span>
                 </div>

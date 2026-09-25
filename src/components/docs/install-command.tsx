@@ -1,5 +1,4 @@
 'use client';
-import { useState } from 'react';
 import {
   Tabs,
   TabsContent,
@@ -9,6 +8,7 @@ import {
 } from '@/components/ui/tabs';
 import CommandBlock from './command-block';
 import { cn } from '@/lib/utils';
+import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 
 interface InstallCommandProps {
   packageName: string;
@@ -23,13 +23,7 @@ const packageManagers = [
 ];
 
 const InstallCommand = ({ packageName, className }: InstallCommandProps) => {
-  const [copied, setCopied] = useState<string | null>(null);
-
-  const handleCopy = async (command: string, id: string) => {
-    await navigator.clipboard.writeText(command);
-    setCopied(id);
-    setTimeout(() => setCopied(null), 2000);
-  };
+  const { copy, isCopied } = useCopyToClipboard();
 
   return (
     <div className={cn('rounded-xl overflow-hidden', className)}>
@@ -55,8 +49,8 @@ const InstallCommand = ({ packageName, className }: InstallCommandProps) => {
               <div className="px-4 py-3 bg-card">
                 <CommandBlock
                   command={command}
-                  onCopy={() => handleCopy(command, pm.id)}
-                  copied={copied === pm.id}
+                  onCopy={() => void copy(command, pm.id)}
+                  copied={isCopied(pm.id)}
                 />
               </div>
             </TabsContent>

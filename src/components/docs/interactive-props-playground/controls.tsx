@@ -182,22 +182,39 @@ export function ObjectArrayControl({ prop, value, onChange }: ControlProps) {
                 variant="ghost"
                 size="sm"
                 onClick={() => removeItem(index)}
+                // Icon-only, and there is one per row, so the name has to
+                // carry which row it removes.
+                aria-label={`Remove item ${index + 1}`}
                 className="h-7 px-2 text-muted-foreground hover:bg-rose-600!"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </Button>
             </div>
             <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">Title</Label>
+              {/* htmlFor/id, so each field is actually announced with its
+                  label rather than as an unlabelled text box. */}
+              <Label
+                htmlFor={`${prop.name}-${index}-title`}
+                className="text-xs text-muted-foreground"
+              >
+                Title
+              </Label>
               <Input
+                id={`${prop.name}-${index}-title`}
                 value={item.title}
                 onChange={(e) => updateItem(index, 'title', e.target.value)}
                 className="h-8"
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">Href</Label>
+              <Label
+                htmlFor={`${prop.name}-${index}-href`}
+                className="text-xs text-muted-foreground"
+              >
+                Href
+              </Label>
               <Input
+                id={`${prop.name}-${index}-href`}
                 value={item.href}
                 onChange={(e) => updateItem(index, 'href', e.target.value)}
                 className="h-8"

@@ -1,0 +1,38 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: '/'
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # One PR per ecosystem keeps the review surface small and means CI runs
+      # against the combination that would actually ship.
+      react:
+        patterns: ['react', 'react-dom', '@types/react', '@types/react-dom']
+      radix:
+        patterns: ['@radix-ui/*']
+      testing:
+        patterns:
+          [
+            'vitest',
+            '@vitest/*',
+            '@testing-library/*',
+            '@playwright/*',
+            'jsdom',
+          ]
+      dev-tooling:
+        patterns:
+          [
+            'eslint*',
+            'prettier*',
+            'typescript',
+            '@commitlint/*',
+            'husky',
+            'lint-staged',
+          ]
+
+  - package-ecosystem: github-actions
+    directory: '/'
+    schedule:
+      interval: weekly

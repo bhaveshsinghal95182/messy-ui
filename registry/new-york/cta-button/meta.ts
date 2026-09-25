@@ -29,6 +29,11 @@ export const componentFiles: ComponentFileRef[] = [
     targetPath: 'ui/cta-button.tsx',
     sourcePath: './cta-button.tsx',
   },
+  {
+    filename: 'utils.ts',
+    targetPath: 'lib/utils.ts',
+    sourcePath: './utils.ts',
+  },
 ];
 
 const meta: ComponentMeta = {
@@ -39,7 +44,7 @@ const meta: ComponentMeta = {
     'An animated call-to-action button with a traveling arrow and expanding background effect. Perfect for hero sections and prominent action triggers.',
   seoTitle: 'CTA Button - Animated React Component | messy-ui',
   seoDescription:
-    'An animated call-to-action button with traveling arrow and expanding background hover effect. Customizable colors, smooth Framer Motion animations. Copy the code and use in your React project.',
+    'An animated call-to-action button with a traveling arrow and expanding background on hover. Customizable colors, powered by Framer Motion.',
   keywords: [
     'cta button',
     'call to action',

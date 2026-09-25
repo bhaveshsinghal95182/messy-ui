@@ -1,0 +1,26 @@
+name: Release
+
+on:
+  push:
+    branches: [master]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    name: Maintain the release PR
+    runs-on: ubuntu-latest
+    steps:
+      # Reads the conventional commits commitlint already enforces, keeps a
+      # release PR open with the version bump and generated CHANGELOG, and tags
+      # the release when that PR is merged.
+      #
+      # There is no npm publish step: the package is private and distribution
+      # happens through the shadcn registry JSON served from the site, so the
+      # release artifact is the tag plus the changelog.
+      - uses: googleapis/release-please-action@v4
+        with:
+          config-file: .release-please-config.json
+          manifest-file: .release-please-manifest.json

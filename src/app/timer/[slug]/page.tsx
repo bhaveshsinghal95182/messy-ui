@@ -14,6 +14,7 @@ import {
   presetsFor,
   relatedTimers,
   resolveTimer,
+  safeDecodeSlug,
   timerFaq,
   TIMER_ALIASES,
 } from '@/config/timers';
@@ -61,7 +62,7 @@ export default async function TimerSlugPage({ params }: PageProps) {
   const { slug } = await params;
 
   // Permanent, so the alias never competes with the page it points at.
-  const alias = TIMER_ALIASES[decodeURIComponent(slug).toLowerCase()];
+  const alias = TIMER_ALIASES[safeDecodeSlug(slug).toLowerCase()];
   if (alias) permanentRedirect(`/timer/${alias}`);
 
   const preset = resolveTimer(slug);

@@ -25,6 +25,7 @@ import CodeBlock from './code-blocks';
 import InteractivePropsPlayground from './interactive-props-playground';
 import { parseDefaultValue } from './interactive-props-playground/utils';
 import { ComponentConfig } from '@/config/components';
+import { encodePreviewProps } from '@/lib/preview-props';
 import { cn } from '@/lib/utils';
 
 type DeviceType = 'desktop' | 'tablet' | 'mobile';
@@ -113,6 +114,11 @@ const ComponentPreview = ({ component, className }: ComponentPreviewProps) => {
                     variant="ghost"
                     size="sm"
                     onClick={() => setDevice(d)}
+                    // Icon-only, so it needs an explicit name, and the pressed
+                    // state is the only thing distinguishing the three.
+                    aria-label={`${d} preview`}
+                    aria-pressed={device === d}
+                    title={`${d} preview`}
                     className={cn('h-7 w-7 p-0', device === d && 'bg-muted')}
                   >
                     <Icon className="w-4 h-4" />
@@ -180,22 +186,9 @@ const ComponentPreview = ({ component, className }: ComponentPreviewProps) => {
             {component.sandbox === 'iframe' ? (
               <DeviceFrame device={device}>
                 <iframe
-                  src={`/preview/${component.slug}?${new URLSearchParams(
-                    Object.entries(mergedProps).reduce(
-                      (acc, [key, value]) => {
-                        if (value === undefined) return acc;
-
-                        if (Array.isArray(value) || typeof value === 'object') {
-                          acc[key] = JSON.stringify(value);
-                        } else {
-                          acc[key] = String(value);
-                        }
-
-                        return acc;
-                      },
-                      {} as Record<string, string>
-                    )
-                  ).toString()}`}
+                  src={`/preview/${component.slug}?${encodePreviewProps(
+                    mergedProps
+                  )}`}
                   className="w-full h-150 border-none bg-background"
                   title={`${component.name} preview`}
                 />

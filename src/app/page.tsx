@@ -185,7 +185,15 @@ export default function Page() {
             , so the CLI drops the source straight into your project. Nothing is
             hidden behind an npm package - you get the file, you own the file.
           </p>
-          <pre className="rounded-xl bg-card p-4 overflow-x-auto text-sm">
+          {/* Scrolls horizontally on narrow screens, so it needs to be a
+              focusable, named region or keyboard users cannot reach the end
+              of the command. */}
+          <pre
+            tabIndex={0}
+            role="region"
+            aria-label="Install command"
+            className="rounded-xl bg-card p-4 overflow-x-auto text-sm"
+          >
             <code className="font-mono text-foreground">
               npx shadcn@latest add https://messyui.dev/r/animated-counter.json
             </code>

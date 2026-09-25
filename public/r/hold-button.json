@@ -4,7 +4,10 @@
   "type": "registry:component",
   "title": "Hold Button",
   "description": "A confirmation button that fills up while being held, perfect for destructive or irreversible actions.",
-  "dependencies": ["clsx", "tailwind-merge"],
+  "dependencies": [
+    "clsx",
+    "tailwind-merge"
+  ],
   "files": [
     {
       "path": "registry/new-york/hold-button/hold-button.tsx",

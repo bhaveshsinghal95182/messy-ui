@@ -27,19 +27,21 @@ If your component is composite (e.g., `Tabs`, `Accordion`) and doesn't have a si
 
 1. Create a `registry/new-york/<component-name>/example.tsx` that exports a usage example (e.g., `export function ComponentNameCode()`).
    Make sure to add `"use client";` at the top of this file if it's being used as a preview.
+
    ```tsx
-   "use client";
-   import { ComponentName } from "./component-name";
-   
+   'use client';
+   import { ComponentName } from './component-name';
+
    export function ComponentNameCode() {
      return <ComponentName />;
    }
    ```
+
 2. Export this example in `index.ts`.
 3. In `src/config/components.ts`, lazy load this example instead of the component itself:
    ```typescript
    const ComponentName = lazy(() =>
-     import("@/registry/new-york/component-name").then((mod) => ({
+     import('@/registry/new-york/component-name').then((mod) => ({
        default: mod.ComponentNameCode,
      }))
    );
@@ -52,15 +54,15 @@ If your component is composite (e.g., `Tabs`, `Accordion`) and doesn't have a si
 Create `registry/new-york/<component-name>/<component-name>.tsx`:
 
 ```tsx
-"use client";
-import { /* hooks */ } from "react";
+'use client';
+import {} from /* hooks */ 'react';
 
 interface MyComponentProps {
   /** Document each prop with JSDoc */
   propName?: string;
 }
 
-export function MyComponent({ propName = "default" }: MyComponentProps) {
+export function MyComponent({ propName = 'default' }: MyComponentProps) {
   return <div>{/* component JSX */}</div>;
 }
 ```
@@ -72,7 +74,7 @@ export function MyComponent({ propName = "default" }: MyComponentProps) {
 Create `registry/new-york/<component-name>/meta.ts`:
 
 ```typescript
-import { ComponentMeta, ComponentFileRef } from "@/config/types";
+import { ComponentMeta, ComponentFileRef } from '@/config/types';
 
 // Usage example shown in preview Code tab
 export const usageCode = `import { MyComponent } from "@/components/my-component";
@@ -84,52 +86,52 @@ export default function Example() {
 // Component files to be loaded at build time
 export const componentFiles: ComponentFileRef[] = [
   {
-    filename: "my-component.tsx",
-    targetPath: "components/my-component.tsx",
-    sourcePath: "./my-component.tsx",
+    filename: 'my-component.tsx',
+    targetPath: 'components/my-component.tsx',
+    sourcePath: './my-component.tsx',
   },
 ];
 
 const meta: ComponentMeta = {
-  slug: "my-component",
-  name: "My Component",
-  category: "Buttons", // or Layout, Navigation, etc.
-  description: "Brief description of what the component does.",
-  seoTitle: "My Component - React Component | messy-ui",
-  seoDescription: "SEO-optimized description for search engines.",
-  keywords: ["keyword1", "keyword2", "react component"],
-  aliases: ["alternate-name"], // redirects to this component
-  sandbox: "inline", // or "iframe"
-  registryUrl: "https://messyui.dev/r/my-component.json",
-  dependencies: ["gsap", "motion"], // npm packages
+  slug: 'my-component',
+  name: 'My Component',
+  category: 'Buttons', // or Layout, Navigation, etc.
+  description: 'Brief description of what the component does.',
+  seoTitle: 'My Component - React Component | messy-ui',
+  seoDescription: 'SEO-optimized description for search engines.',
+  keywords: ['keyword1', 'keyword2', 'react component'],
+  aliases: ['alternate-name'], // redirects to this component
+  sandbox: 'inline', // or "iframe"
+  registryUrl: 'https://messyui.dev/r/my-component.json',
+  dependencies: ['gsap', 'motion'], // npm packages
   notes: [
-    { type: "tip", message: "Helpful tip for users" },
-    { type: "info", message: "Important information" },
-    { type: "warning", message: "Warning about usage" },
+    { type: 'tip', message: 'Helpful tip for users' },
+    { type: 'info', message: 'Important information' },
+    { type: 'warning', message: 'Warning about usage' },
   ],
   cliDependencies: [
     {
-      label: "Install cn utility",
+      label: 'Install cn utility',
       commands: {
-        npx: "npx shadcn@latest add lib/utils",
-        pnpm: "pnpm dlx shadcn@latest add lib/utils",
-        bun: "bunx shadcn@latest add lib/utils",
+        npx: 'npx shadcn@latest add lib/utils',
+        pnpm: 'pnpm dlx shadcn@latest add lib/utils',
+        bun: 'bunx shadcn@latest add lib/utils',
       },
     },
   ],
   props: [
     {
-      name: "propName",
-      type: "string",
+      name: 'propName',
+      type: 'string',
       default: '"default"',
-      description: "Description of this prop",
+      description: 'Description of this prop',
     },
     {
-      name: "size",
-      type: "number",
-      default: "100",
-      description: "Size in pixels",
-      control: "slider", // or "input", "switch", "select"
+      name: 'size',
+      type: 'number',
+      default: '100',
+      description: 'Size in pixels',
+      control: 'slider', // or "input", "switch", "select"
       min: 0,
       max: 200,
       step: 10,
@@ -147,8 +149,8 @@ export default meta;
 Create `registry/new-york/<component-name>/index.ts`:
 
 ```typescript
-import { MyComponent } from "./my-component";
-import meta, { usageCode, componentFiles } from "./meta";
+import { MyComponent } from './my-component';
+import meta, { usageCode, componentFiles } from './meta';
 
 export { MyComponent, meta, usageCode, componentFiles };
 ```
@@ -187,11 +189,11 @@ import {
   meta as myComponentMeta,
   usageCode as myComponentUsage,
   componentFiles as myComponentFiles,
-} from "@/registry/new-york/my-component";
+} from '@/registry/new-york/my-component';
 
 // Add lazy component
 const MyComponent = lazy(() =>
-  import("@/registry/new-york/my-component").then((mod) => ({
+  import('@/registry/new-york/my-component').then((mod) => ({
     default: mod.MyComponent,
   }))
 );
@@ -213,6 +215,7 @@ export const components: ComponentConfig[] = [
 ## Step 6: Generate Registry JSON (Optional)
 
 // turbo
+
 ```bash
 pnpm build:registry
 ```
@@ -223,12 +226,12 @@ This generates `public/r/<component-name>.json` for shadcn CLI.
 
 ## Prop Control Types
 
-| Control   | Use Case                         | Required Fields      |
-|-----------|----------------------------------|----------------------|
-| `input`   | Text/number input                | -                    |
-| `slider`  | Numeric range                    | `min`, `max`, `step` |
-| `switch`  | Boolean toggle                   | -                    |
-| `select`  | Enum/union types                 | -                    |
+| Control  | Use Case          | Required Fields      |
+| -------- | ----------------- | -------------------- |
+| `input`  | Text/number input | -                    |
+| `slider` | Numeric range     | `min`, `max`, `step` |
+| `switch` | Boolean toggle    | -                    |
+| `select` | Enum/union types  | -                    |
 
 ---
 

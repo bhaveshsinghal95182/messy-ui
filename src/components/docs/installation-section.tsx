@@ -13,6 +13,7 @@ import CodeBlock from './code-blocks';
 import CommandBlock from './command-block';
 import { ComponentConfig, ComponentFile } from '@/config/types';
 import { cn } from '@/lib/utils';
+import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 
 interface InstallationSectionProps {
   component: ComponentConfig;
@@ -52,7 +53,7 @@ const InstallationSection = ({
   component,
   className,
 }: InstallationSectionProps) => {
-  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const { copy, isCopied } = useCopyToClipboard();
   const [language, setLanguage] = useState<'ts' | 'js'>('ts');
 
   const files = useMemo((): ComponentFile[] => {
@@ -75,12 +76,6 @@ const InstallationSection = ({
   }, [component.componentCode, component.slug]);
 
   const hasJsVersion = useMemo(() => files.some((f) => f.jsCode), [files]);
-
-  const handleCopy = async (text: string, id: string) => {
-    await navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
-  };
 
   const hasCLIDeps =
     component.cliDependencies && component.cliDependencies.length > 0;
@@ -141,8 +136,8 @@ const InstallationSection = ({
                     <div className="px-4 py-3 bg-card">
                       <CommandBlock
                         command={command}
-                        onCopy={() => handleCopy(command, `cli-${runner.id}`)}
-                        copied={copiedId === `cli-${runner.id}`}
+                        onCopy={() => void copy(command, `cli-${runner.id}`)}
+                        copied={isCopied(`cli-${runner.id}`)}
                       />
                     </div>
                   </TabsContent>
@@ -200,14 +195,14 @@ const InstallationSection = ({
                                 <CommandBlock
                                   command={command}
                                   onCopy={() =>
-                                    handleCopy(
+                                    void copy(
                                       command,
                                       `dep-${depIndex}-${runner.id}`
                                     )
                                   }
-                                  copied={
-                                    copiedId === `dep-${depIndex}-${runner.id}`
-                                  }
+                                  copied={isCopied(
+                                    `dep-${depIndex}-${runner.id}`
+                                  )}
                                 />
                               </div>
                             </TabsContent>
@@ -254,8 +249,8 @@ const InstallationSection = ({
                         <div className="px-4 py-3 bg-card">
                           <CommandBlock
                             command={command}
-                            onCopy={() => handleCopy(command, `npm-${pm.id}`)}
-                            copied={copiedId === `npm-${pm.id}`}
+                            onCopy={() => void copy(command, `npm-${pm.id}`)}
+                            copied={isCopied(`npm-${pm.id}`)}
                           />
                         </div>
                       </TabsContent>
@@ -309,7 +304,15 @@ const InstallationSection = ({
               Copy and paste the following code into your project:
             </p>
 
-            {files.length === 1 ? (
+            {files.length === 0 ? (
+              // resolveComponentCode should have turned file refs into loaded
+              // files server-side. If it did not, degrade to a pointer at the
+              // CLI rather than crashing the whole page on files[0].
+              <p className="text-sm text-muted-foreground italic">
+                Source for this component is not available here - install it
+                with the CLI command above.
+              </p>
+            ) : files.length === 1 ? (
               <div className="space-y-2">
                 <p className="text-xs text-muted-foreground font-mono pl-1">
                   {files[0].targetPath}

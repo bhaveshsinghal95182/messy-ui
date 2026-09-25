@@ -34,7 +34,7 @@ const meta: ComponentMeta = {
     'An interactive separator with a wobbling string animation. The line bends toward the mouse cursor and oscillates with a satisfying spring effect when released.',
   seoTitle: 'Separator - Interactive Wobble Animation | messy-ui',
   seoDescription:
-    'An interactive separator component with physics-based wobble animation. The line follows your cursor and bounces back with customizable damping and frequency. Built with GSAP. Copy the code and use in your React project.',
+    'An interactive separator with physics-based wobble. The line follows your cursor and springs back, with customizable damping and frequency. Built with GSAP.',
   keywords: [
     'separator',
     'divider',

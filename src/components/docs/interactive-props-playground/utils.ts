@@ -27,6 +27,11 @@ export function formatPropValue(value: unknown, prop: PropDefinition): string {
   if (prop.control === 'object-array' || prop.type.includes('[]')) {
     return `{${JSON.stringify(value, null, 2)}}`;
   }
+  // A string holding a double quote cannot go in a JSX string attribute -
+  // `label="say "hi""` does not parse. Fall back to an expression container.
+  if (typeof value === 'string' && value.includes('"')) {
+    return `{${JSON.stringify(value)}}`;
+  }
   return `"${value}"`;
 }
 

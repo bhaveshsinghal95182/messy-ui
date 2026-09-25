@@ -67,6 +67,12 @@ export const gruvboxDark = {
   italic: { fontStyle: 'italic' },
 };
 
+/*
+ * Five token colours are darkened from stock gruvbox-light: as code text on
+ * the card background they measured between 2.67:1 and 4.46:1, under the 4.5
+ * AA threshold. Hues are unchanged, and gruvboxDark is untouched - it already
+ * clears AA against its own background.
+ */
 export const gruvboxLight = {
   'code[class*="language-"]': {
     color: '#3c3836',
@@ -100,10 +106,10 @@ export const gruvboxLight = {
     overflow: 'auto',
     borderRadius: '0.5rem',
   },
-  comment: { color: '#928374', fontStyle: 'italic' },
-  prolog: { color: '#928374' },
-  doctype: { color: '#928374' },
-  cdata: { color: '#928374' },
+  comment: { color: '#695e54', fontStyle: 'italic' },
+  prolog: { color: '#695e54' },
+  doctype: { color: '#695e54' },
+  cdata: { color: '#695e54' },
   punctuation: { color: '#3c3836' },
   property: { color: '#9d0006' },
   tag: { color: '#9d0006' },
@@ -112,25 +118,25 @@ export const gruvboxLight = {
   constant: { color: '#8f3f71' },
   symbol: { color: '#8f3f71' },
   deleted: { color: '#9d0006' },
-  selector: { color: '#79740e' },
-  'attr-name': { color: '#79740e' },
-  string: { color: '#79740e' },
-  char: { color: '#79740e' },
-  builtin: { color: '#79740e' },
-  inserted: { color: '#79740e' },
-  operator: { color: '#af3a03' },
-  entity: { color: '#af3a03', cursor: 'help' },
-  url: { color: '#af3a03' },
-  '.language-css .token.string': { color: '#af3a03' },
-  '.style .token.string': { color: '#af3a03' },
-  variable: { color: '#af3a03' },
-  atrule: { color: '#b57614' },
-  'attr-value': { color: '#b57614' },
-  function: { color: '#b57614' },
-  'class-name': { color: '#b57614' },
+  selector: { color: '#66610c' },
+  'attr-name': { color: '#66610c' },
+  string: { color: '#66610c' },
+  char: { color: '#66610c' },
+  builtin: { color: '#66610c' },
+  inserted: { color: '#66610c' },
+  operator: { color: '#ac3903' },
+  entity: { color: '#ac3903', cursor: 'help' },
+  url: { color: '#ac3903' },
+  '.language-css .token.string': { color: '#ac3903' },
+  '.style .token.string': { color: '#ac3903' },
+  variable: { color: '#ac3903' },
+  atrule: { color: '#86570f' },
+  'attr-value': { color: '#86570f' },
+  function: { color: '#86570f' },
+  'class-name': { color: '#86570f' },
   keyword: { color: '#9d0006' },
-  regex: { color: '#427b58' },
-  important: { color: '#427b58', fontWeight: 'bold' },
+  regex: { color: '#396a4c' },
+  important: { color: '#396a4c', fontWeight: 'bold' },
   bold: { fontWeight: 'bold' },
   italic: { fontStyle: 'italic' },
 };

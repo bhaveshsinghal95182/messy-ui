@@ -88,13 +88,18 @@ messy-ui/
 
 ## Scripts
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Start the development server |
-| `pnpm build` | Build for production |
-| `pnpm start` | Start the production server |
-| `pnpm lint` | Run ESLint |
-| `pnpm registry:build` | Build the shadcn registry files |
+| Command               | Description                            |
+| --------------------- | -------------------------------------- |
+| `pnpm dev`            | Start the development server           |
+| `pnpm build`          | Build for production                   |
+| `pnpm start`          | Start the production server            |
+| `pnpm lint`           | Run ESLint                             |
+| `pnpm typecheck`      | Type-check without emitting            |
+| `pnpm test`           | Run unit, contract and component tests |
+| `pnpm test:watch`     | Run tests in watch mode                |
+| `pnpm test:coverage`  | Run tests with the coverage gate       |
+| `pnpm test:e2e`       | Run the Playwright end-to-end suite    |
+| `pnpm registry:build` | Build the shadcn registry files        |
 
 ## Building the Registry
 
@@ -105,6 +110,7 @@ pnpm registry:build
 ```
 
 This will:
+
 1. Read all component directories in `registry/new-york/`
 2. Generate individual JSON files in `public/r/`
 3. Update the `registry.json` index file

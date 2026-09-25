@@ -13,8 +13,13 @@ const DocsLayout = ({ children }: DocsLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
 
-  // /timer is a standalone fullscreen utility, so it opts out of the docs chrome.
-  if (pathname?.startsWith('/preview') || pathname?.startsWith('/timer')) {
+  // /timer and /pdf are standalone fullscreen utilities, so they opt out of the
+  // docs chrome. The PDF editor in particular needs the full viewport height.
+  if (
+    pathname?.startsWith('/preview') ||
+    pathname?.startsWith('/timer') ||
+    pathname?.startsWith('/pdf')
+  ) {
     return <>{children}</>;
   }
 

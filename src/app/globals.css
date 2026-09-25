@@ -340,3 +340,73 @@
 .callout-warning {
   --callout-tint: var(--callout-tint-warning);
 }
+
+/* ---------------------------------------------------------------------------
+   pdf.js text layer (/pdf).
+
+   pdf.js positions a transparent <span> over every run of text on the page.
+   That layer is what makes the viewer accessible: the canvas is a bitmap and
+   conveys nothing to a screen reader or to find-in-page, whereas these spans
+   carry the document's real text, so selection, copy, Ctrl+F and assistive
+   technology all operate on the actual words.
+
+   Adapted from pdfjs-dist/web/pdf_viewer.css, trimmed to the rules the plain
+   TextLayer needs (the editor/annotation layers are not used here). The spans
+   are sized from --total-scale-factor, which page-view sets to the zoom level.
+--------------------------------------------------------------------------- */
+.textLayer {
+  color-scheme: only light;
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+  text-align: initial;
+  opacity: 1;
+  line-height: 1;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-size-adjust: none;
+  forced-color-adjust: none;
+  transform-origin: 0 0;
+  caret-color: CanvasText;
+  z-index: 0;
+
+  --min-font-size: 1;
+  --text-scale-factor: calc(var(--total-scale-factor) * var(--min-font-size));
+  --min-font-size-inv: calc(1 / var(--min-font-size));
+}
+
+.textLayer :is(span, br) {
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0% 0%;
+  user-select: text;
+}
+
+.textLayer > :not(.markedContent),
+.textLayer .markedContent span:not(.markedContent) {
+  z-index: 1;
+  --font-height: 0;
+  --scale-x: 1;
+  --rotate: 0deg;
+  font-size: calc(var(--text-scale-factor) * var(--font-height));
+  transform: rotate(var(--rotate)) scaleX(var(--scale-x))
+    scale(var(--min-font-size-inv));
+}
+
+.textLayer .markedContent {
+  display: contents;
+}
+
+/* Decorative glyphs pdf.js exposes as images shouldn't be selectable text. */
+.textLayer span[role='img'] {
+  user-select: none;
+  cursor: default;
+}
+
+/* The selection highlight has to read against the page, not the app theme,
+   because it sits over the document's own white artwork. */
+.textLayer ::selection {
+  background: color-mix(in srgb, var(--primary) 45%, transparent);
+}

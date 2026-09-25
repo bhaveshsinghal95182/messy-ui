@@ -133,11 +133,13 @@ describe('llms.txt', () => {
     // llms.txt format. It is the component descriptions, which pass through
     // plainText, that must not leak [[wiki]] or [md](link) syntax.
     const body = await GET().text();
-    const descriptions = body
-      .split('\n')
-      .filter((line) => line.startsWith('- Description:'));
+    const descriptionLines = (text: string) =>
+      text.split('\n').filter((line) => line.startsWith('- Description:'));
+    // The ## Tools section after the components carries its own descriptions.
+    const [componentSection] = body.split('\n## Tools\n');
+    const descriptions = descriptionLines(body);
 
-    expect(descriptions).toHaveLength(components.length);
+    expect(descriptionLines(componentSection)).toHaveLength(components.length);
     for (const line of descriptions) {
       expect(line).not.toMatch(/\[\[/);
       expect(line).not.toMatch(/\]\(/);
